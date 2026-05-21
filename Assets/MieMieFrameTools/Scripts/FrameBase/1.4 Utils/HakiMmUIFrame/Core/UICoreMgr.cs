@@ -39,10 +39,8 @@ namespace MieMieFrameWork.UI
         }
         public T ShowWindow<T>(bool isUseAnimation = false, Action action = null) where T : UIDataBase, new()
         {
-            var tShow = Time.realtimeSinceStartup;
             Type type = typeof(T);
             string uiName = type.Name;
-            Debug.Log($"[UICoreMgr.ShowWindow] 开始 [{uiName}] t={tShow:F3}");
 
             //查询字典
             if (uiDic.ContainsKey(uiName))
@@ -59,35 +57,19 @@ namespace MieMieFrameWork.UI
             T uiWindow = new T();
 
             //加载UI
-            var tLoad = Time.realtimeSinceStartup;
-            Debug.Log($"[UICoreMgr.ShowWindow] [{uiName}] 开始加载 Prefab t={tLoad:F3}");
             GameObject uiPrefab = UILoad.AddressableLoad(uiName);
-            var tLoadEnd = Time.realtimeSinceStartup;
-            Debug.Log($"[UICoreMgr.ShowWindow] [{uiName}] Prefab加载完成，耗时={(tLoadEnd - tLoad) * 1000:F1}ms t={tLoadEnd:F3}");
 
-            var tInstantiate = Time.realtimeSinceStartup;
             uiPrefab.transform.SetParent(UIRoot, false);
             uiWindow.BindGameObject(uiPrefab, UICamera);
-            var tBindEnd = Time.realtimeSinceStartup;
-            Debug.Log($"[UICoreMgr.ShowWindow] [{uiName}] Instantiate+BindGameObject，耗时={(tBindEnd - tInstantiate) * 1000:F1}ms t={tBindEnd:F3}");
 
             uiWindow.ApplyAniamtion = isUseAnimation;
 
             uiDic.Add(uiName, uiWindow);
 
-            var tAwake = Time.realtimeSinceStartup;
             uiWindow.OnAwake();
-            var tAwakeEnd = Time.realtimeSinceStartup;
-            Debug.Log($"[UICoreMgr.ShowWindow] [{uiName}] OnAwake，耗时={(tAwakeEnd - tAwake) * 1000:F1}ms t={tAwakeEnd:F3}");
-
-            var tOnShow = Time.realtimeSinceStartup;
             uiWindow.OnShow();
-            var tOnShowEnd = Time.realtimeSinceStartup;
-            Debug.Log($"[UICoreMgr.ShowWindow] [{uiName}] OnShow，耗时={(tOnShowEnd - tOnShow) * 1000:F1}ms t={tOnShowEnd:F3}");
 
             action?.Invoke();
-            var tTotal = Time.realtimeSinceStartup;
-            Debug.Log($"[UICoreMgr.ShowWindow] [{uiName}] 全部完成，总耗时={(tTotal - tShow) * 1000:F1}ms");
             return uiWindow;
         }
 
