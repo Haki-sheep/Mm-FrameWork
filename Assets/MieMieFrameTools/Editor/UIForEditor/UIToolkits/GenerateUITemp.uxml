@@ -28,6 +28,14 @@
                 </ui:VisualElement>
             </ui:Foldout>
         </ui:VisualElement>
+        <ui:Foldout text="路径设置" name="PathSettingsFoldout" value="false" style="margin-left: 8px; margin-right: 8px; margin-bottom: 4px;">
+            <ui:TextField label="默认生成目录" name="DefaultGenFolder" value="Assets/_Scripts/UI/" style="margin-top: 4px; margin-bottom: 4px;" />
+            <ui:VisualElement style="flex-direction: row; flex-wrap: wrap; margin-top: 4px;">
+                <ui:Button text="保存为默认" name="SaveDefaultFolderButton" style="width: 90px; margin-right: 6px;" />
+                <ui:Button text="清空路径记忆" name="ClearPathRecordsButton" style="width: 100px;" />
+            </ui:VisualElement>
+            <ui:Label name="PathRecordHint" text="预制体上次生成目录会自动记忆（仅存 Assets 相对路径）" style="font-size: 11px; color: rgba(180, 180, 180, 0.9); margin-top: 4px; white-space: normal;" />
+        </ui:Foldout>
         <ui:Button text="生成脚本" name="CreatButton" style="align-self: stretch; height: 30px; margin: 8px; font-size: 14px; -unity-font-style: bold;" />
     </ui:VisualElement>
 </ui:UXML>

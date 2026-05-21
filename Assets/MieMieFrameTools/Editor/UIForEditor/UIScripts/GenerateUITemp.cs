@@ -1,36 +1,25 @@
-using System;
 using System.Collections.Generic;
-using MieMieFrameWork;
-using MieMieFrameWork.Editor;
+using MieMieUITools.Editor;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 /// <summary>
-/// UI模板生成器编辑器窗口
-/// 用于快速生成UI预制体对应的脚本模板
+/// UI 脚本生成器窗口（独立工具，不依赖 FrameSetting）。
 /// </summary>
 public class GenerateUITemp : EditorWindow
 {
-    /// <summary>
-    /// UXML可视化树模板
-    /// </summary>
     [SerializeField]
     private VisualTreeAsset m_VisualTreeAsset = default;
 
-    /// <summary>
-    /// 根可视化元素
-    /// </summary>
     private VisualElement root;
 
-    // BaseInfoElement 基础信息区控件
     private TextField classNameField;
     private UnityEditor.UIElements.ObjectField prefabFieldGameObject;
     private TextField checkPathField;
     private Button selectButton;
     private Button defaultPathButton;
 
-    // 映射表区域控件
     private ScrollView mappingScrollView;
     private Button addMappingButton;
     private Button resetMappingButton;
@@ -39,13 +28,13 @@ public class GenerateUITemp : EditorWindow
     private Button saveMappingButton;
     private Button creatButton;
 
-    // 生成脚本相关
+    private TextField defaultGenFolderField;
+    private Button saveDefaultFolderButton;
+    private Button clearPathRecordsButton;
+
     private string className;
     private GameObject prefab;
 
-    /// <summary>
-    /// 编辑器菜单入口
-    /// </summary>
     [MenuItem("Tools/UI/GenerateUITemp")]
     public static void ShowExample()
     {
@@ -53,37 +42,25 @@ public class GenerateUITemp : EditorWindow
         wnd.titleContent = new GUIContent("GenerateUITemp");
     }
 
-    /// <summary>
-    /// 创建编辑器GUI
-    /// </summary>
     public void CreateGUI()
     {
         root = rootVisualElement;
         if (m_VisualTreeAsset == null)
         {
-            var config = UIPathConfigLocator.FindUIPathConfig() ?? UIPathConfigLocator.LoadOrCreateUIPathConfig();
-            string uxmlPath = null;
-            if (config != null)
-            {
-                UIPathConfigLocator.EnsureGenerateUITempPaths(config);
-                AssetDatabase.SaveAssets();
-                uxmlPath = config.GetGenerateUITempUxmlPath();
-            }
-
-            if (string.IsNullOrEmpty(uxmlPath))
-                uxmlPath = TryResolveUxmlPathWithoutConfig();
-
+            string uxmlPath = UIToolLocator.TryFindGenerateUITempUxmlPath(out string p) ? p : null;
             m_VisualTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(uxmlPath);
             if (m_VisualTreeAsset == null)
             {
                 Debug.LogError(
-                    $"GenerateUITemp.uxml 无法加载: {(uxmlPath ?? "(null)")}。请在菜单 Tools/UI/UIPathConfigEditor 中点击「自动扫描工程路径」，或检查工程中是否存在 GenerateUITemp.uxml。");
+                    $"GenerateUITemp.uxml 无法加载: {(uxmlPath ?? "(null)")}。请确认 UIForEditor/UIToolkits/GenerateUITemp.uxml 存在。");
                 return;
             }
         }
+
         root.Add(m_VisualTreeAsset.CloneTree());
 
         InitBaseInfoElement();
+        InitPathSettingsSection();
         InitMappingSection();
     }
 
@@ -103,6 +80,41 @@ public class GenerateUITemp : EditorWindow
         prefabFieldGameObject.RegisterValueChangedCallback(OnPrefabFieldGameObjectChanged);
         defaultPathButton.RegisterCallback<ClickEvent>(OnDefaultPathButtonClicked);
         selectButton.RegisterCallback<ClickEvent>(OnSelectButtonClicked);
+
+        if (checkPathField != null && string.IsNullOrEmpty(checkPathField.value))
+            checkPathField.value = UIGenPathSettings.GetDefaultFolder();
+    }
+
+    private void InitPathSettingsSection()
+    {
+        defaultGenFolderField = root.Q<TextField>("DefaultGenFolder");
+        saveDefaultFolderButton = root.Q<Button>("SaveDefaultFolderButton");
+        clearPathRecordsButton = root.Q<Button>("ClearPathRecordsButton");
+
+        if (defaultGenFolderField != null)
+            defaultGenFolderField.value = UIGenPathSettings.GetDefaultFolder();
+
+        saveDefaultFolderButton?.RegisterCallback<ClickEvent>(OnSaveDefaultFolderClicked);
+        clearPathRecordsButton?.RegisterCallback<ClickEvent>(OnClearPathRecordsClicked);
+    }
+
+    private void OnSaveDefaultFolderClicked(ClickEvent evt)
+    {
+        string folder = defaultGenFolderField != null
+            ? defaultGenFolderField.value
+            : checkPathField?.value;
+        UIGenPathSettings.SetDefaultFolder(folder);
+        if (defaultGenFolderField != null)
+            defaultGenFolderField.value = UIGenPathSettings.GetDefaultFolder();
+        EditorUtility.DisplayDialog("提示", $"默认生成目录已保存:\n{UIGenPathSettings.GetDefaultFolder()}", "确定");
+    }
+
+    private void OnClearPathRecordsClicked(ClickEvent evt)
+    {
+        if (!EditorUtility.DisplayDialog("确认", "清空所有预制体的「上次生成路径」记忆？", "确定", "取消"))
+            return;
+        UIGenPathSettings.ClearPrefabFolderRecords();
+        EditorUtility.DisplayDialog("提示", "路径记忆已清空", "确定");
     }
 
     private void OnPrefabFieldGameObjectChanged(ChangeEvent<UnityEngine.Object> evt)
@@ -139,47 +151,32 @@ public class GenerateUITemp : EditorWindow
 
     private void OnSelectButtonClicked(ClickEvent evt)
     {
-        string path = EditorUtility.OpenFolderPanel("选择生成文件夹", checkPathField.value, "");
-        if (!string.IsNullOrEmpty(path))
-        {
-            checkPathField.value = path;
-            if (prefab != null)
-            {
-                RecordPrefabPath(prefab, path);
-            }
-        }
+        string startDir = UIGenPathSettings.ToAbsoluteFolderForDialog(checkPathField.value);
+        string path = EditorUtility.OpenFolderPanel("选择生成文件夹", startDir, "");
+        if (string.IsNullOrEmpty(path)) return;
+
+        string assetPath = UIGenPathSettings.NormalizeFolderPath(path);
+        checkPathField.value = assetPath;
+        if (prefab != null)
+            RecordPrefabPath(prefab, assetPath);
     }
 
-    private static string TryResolveUxmlPathWithoutConfig()
+    private string GetRecordedPathForPrefab(GameObject targetPrefab)
     {
-        return UIPathConfigLocator.TryFindGenerateUITempUxmlPath(out string p) ? p : null;
-    }
-
-    private string GetRecordedPathForPrefab(GameObject prefab)
-    {
-        if (prefab == null) return null;
-        string prefabPath = AssetDatabase.GetAssetPath(prefab);
+        if (targetPrefab == null) return null;
+        string prefabPath = AssetDatabase.GetAssetPath(targetPrefab);
         if (string.IsNullOrEmpty(prefabPath)) return null;
         string guid = AssetDatabase.AssetPathToGUID(prefabPath);
-        var config = UIPathConfigLocator.FindUIPathConfig();
-        return config?.GetLastGenScriptPath(guid);
+        return UIGenPathSettings.GetLastFolderForPrefab(guid);
     }
 
-    private void RecordPrefabPath(GameObject prefab, string generatePath)
+    private void RecordPrefabPath(GameObject targetPrefab, string generatePath)
     {
-        if (prefab == null || string.IsNullOrEmpty(generatePath)) return;
-        string prefabPath = AssetDatabase.GetAssetPath(prefab);
+        if (targetPrefab == null || string.IsNullOrEmpty(generatePath)) return;
+        string prefabPath = AssetDatabase.GetAssetPath(targetPrefab);
         if (string.IsNullOrEmpty(prefabPath)) return;
         string guid = AssetDatabase.AssetPathToGUID(prefabPath);
-
-        var config = UIPathConfigLocator.FindUIPathConfig() ?? UIPathConfigLocator.LoadOrCreateUIPathConfig();
-        if (config == null)
-        {
-            Debug.LogError("[GenerateUITemp] 无法创建或找到 UIPathConfig，跳过路径记录。");
-            return;
-        }
-
-        config.SetGenScriptPath(guid, prefab.name, generatePath);
+        UIGenPathSettings.SetFolderForPrefab(guid, targetPrefab.name, generatePath);
     }
 
     #endregion
@@ -203,21 +200,16 @@ public class GenerateUITemp : EditorWindow
         saveMappingButton.RegisterCallback<ClickEvent>(OnSaveMappingClicked);
         creatButton.RegisterCallback<ClickEvent>(OnCreatButtonClicked);
 
-        RefreshMappingTable(); 
-    } 
+        RefreshMappingTable();
+    }
 
     private void RefreshMappingTable()
     {
         if (mappingScrollView == null) return;
 
         mappingScrollView.Clear();
-        var config = GetFrameSetting();
-        if (config == null || config.PrefixToComponentTypeMap == null) return;
-
-        foreach (var pair in config.PrefixToComponentTypeMap)
-        {
-            AddMappingRow(pair.Prefix, pair.ComponentType);
-        }
+        foreach (var pair in UIGenPathSettings.GetPrefixMappings())
+            AddMappingRow(pair.prefix, pair.componentType);
     }
 
     private void AddMappingRow(string prefixValue, string typeValue)
@@ -268,48 +260,30 @@ public class GenerateUITemp : EditorWindow
 
     private void OnResetMappingClicked(ClickEvent evt)
     {
-        var config = GetFrameSetting();
-        if (config == null) return;
-
-        if (!EditorUtility.DisplayDialog("确认重置", "确定要将映射表重置为默认？", "确定", "取消"))
+        if (!EditorUtility.DisplayDialog("确认重置", "确定要将映射表重置为内置默认？", "确定", "取消"))
             return;
 
-        config.PrefixToComponentTypeMap.Clear();
-        foreach (var kvp in GenerateUITool.DefaultPrefixToTypeMap)
-        {
-            config.PrefixToComponentTypeMap.Add(new PrefixComponentPair { Prefix = kvp.Key, ComponentType = kvp.Value });
-        }
-
-        EditorUtility.SetDirty(config);
-        AssetDatabase.SaveAssets();
+        UIGenPathSettings.ResetPrefixMappingsToBuiltIn();
+        UIGenPathSettings.InvalidateCache();
         GenerateUITool.RefreshPrefixToTypeMap();
         RefreshMappingTable();
-        EditorUtility.DisplayDialog("提示", "映射表已重置为默认", "确定");
+        EditorUtility.DisplayDialog("提示", "映射表已重置（已写入 UIGenPathSettings.json）", "确定");
     }
 
     private void OnSetNewDefaultClicked(ClickEvent evt)
     {
-        if (!EditorUtility.DisplayDialog("确认", "设置当前映射表为新默认？", "确定", "取消"))
+        if (!EditorUtility.DisplayDialog("确认", "将当前映射表保存到 UIGenPathSettings.json？", "确定", "取消"))
             return;
 
-        var config = GetFrameSetting();
-        if (config == null) return;
-
-        // 先保存当前UI数据到config
-        SaveMappingToConfig(config);
-        EditorUtility.DisplayDialog("提示", "已将当前映射设为新默认", "确定");
+        SaveMappingFromUI();
+        EditorUtility.DisplayDialog("提示", "映射已保存到 UIGenPath/UIGenPathSettings.json", "确定");
     }
 
     private void OnCopyMappingClicked(ClickEvent evt)
     {
-        var config = GetFrameSetting();
-        if (config == null) return;
-
-        System.Text.StringBuilder sb = new System.Text.StringBuilder();
-        foreach (var pair in config.PrefixToComponentTypeMap)
-        {
-            sb.AppendLine($"{pair.Prefix} -> {pair.ComponentType}");
-        }
+        var sb = new System.Text.StringBuilder();
+        foreach (var pair in UIGenPathSettings.GetPrefixMappings())
+            sb.AppendLine($"{pair.prefix} -> {pair.componentType}");
 
         EditorGUIUtility.systemCopyBuffer = sb.ToString();
         EditorUtility.DisplayDialog("提示", "映射表已复制到剪切板", "确定");
@@ -317,37 +291,30 @@ public class GenerateUITemp : EditorWindow
 
     private void OnSaveMappingClicked(ClickEvent evt)
     {
-        var config = GetFrameSetting();
-        if (config == null) return;
-
-        SaveMappingToConfig(config);
-        EditorUtility.SetDirty(config);
-        AssetDatabase.SaveAssets();
-        GenerateUITool.RefreshPrefixToTypeMap();
-
+        SaveMappingFromUI();
         saveMappingButton.style.backgroundColor = Color.clear;
-        EditorUtility.DisplayDialog("提示", "映射表已保存", "确定");
+        EditorUtility.DisplayDialog("提示", "映射表已保存到 UIGenPathSettings.json", "确定");
     }
 
-    private void SaveMappingToConfig(FrameSetting config)
+    private void SaveMappingFromUI()
     {
-        config.PrefixToComponentTypeMap.Clear();
-
+        var list = new List<UIPrefixMappingEntry>();
         foreach (var child in mappingScrollView.Children())
         {
-            // 必须用 className 查询；Q(".xxx") 会把字符串当成 name，永远匹配不到，导致保存成空表
             var prefixField = child.Q<TextField>(className: "mapping-prefix-field");
             var typeField = child.Q<TextField>(className: "mapping-type-field");
-
             if (prefixField == null || typeField == null) continue;
 
             string prefix = prefixField.value.Trim();
             string type = typeField.value.Trim();
-
             if (string.IsNullOrEmpty(prefix) || string.IsNullOrEmpty(type)) continue;
 
-            config.PrefixToComponentTypeMap.Add(new PrefixComponentPair { Prefix = prefix, ComponentType = type });
+            list.Add(new UIPrefixMappingEntry { prefix = prefix, componentType = type });
         }
+
+        UIGenPathSettings.SetPrefixMappings(list);
+        UIGenPathSettings.InvalidateCache();
+        GenerateUITool.RefreshPrefixToTypeMap();
     }
 
     private void OnCreatButtonClicked(ClickEvent evt)
@@ -370,28 +337,19 @@ public class GenerateUITemp : EditorWindow
             return;
         }
 
-        // 生成前先刷新映射表（确保最新）
-        var config = GetFrameSetting();
-        if (config != null)
+        SaveMappingFromUI();
+
+        string outputFolder = UIGenPathSettings.NormalizeFolderPath(checkPathField.value);
+        if (string.IsNullOrEmpty(outputFolder))
         {
-            SaveMappingToConfig(config);
-            EditorUtility.SetDirty(config);
-            AssetDatabase.SaveAssets();
-            GenerateUITool.RefreshPrefixToTypeMap();
+            EditorUtility.DisplayDialog("错误", "生成路径无效，请使用工程内 Assets/ 目录", "确定");
+            return;
         }
 
-        RecordPrefabPath(prefab, checkPathField.value);
+        checkPathField.value = outputFolder;
+        RecordPrefabPath(prefab, outputFolder);
 
-        GenerateUITool.GenerateUITemplates(
-            className,
-            prefab,
-            checkPathField.value
-        );
-    }
-
-    private static FrameSetting GetFrameSetting()
-    {
-        return UIPathConfigLocator.FindFrameSetting();
+        GenerateUITool.GenerateUITemplates(className, prefab, outputFolder);
     }
 
     #endregion

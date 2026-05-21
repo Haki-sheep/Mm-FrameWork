@@ -10,19 +10,6 @@ namespace MieMieFrameWork
     using MieMieFrameWork.Pool;
 
     /// <summary>
-    /// 前缀→组件类型映射对
-    /// </summary>
-    [System.Serializable]
-    public struct PrefixComponentPair
-    {
-        [LabelText("前缀"), HorizontalGroup("Pair")]
-        public string Prefix;
-
-        [LabelText("组件类型"), HorizontalGroup("Pair")]
-        public string ComponentType;
-    }
-
-    /// <summary>
     /// 游戏全局配置 - 框架级别的设置和配置管理
     /// 包含对象池配置、性能设置等
     /// </summary>
@@ -100,33 +87,6 @@ namespace MieMieFrameWork
 
         #endregion
 
-        #region  UI配置
-
-
-        [TabGroup("UI配置"), LabelText("前缀→组件类型映射"), SerializeField, Tooltip("前缀与对应组件类型的映射关系，GenerateUITool以此生成脚本字段")]
-        public List<PrefixComponentPair> PrefixToComponentTypeMap = new()
-        {
-            new() { Prefix = "Btn", ComponentType = "Button" },
-            new() { Prefix = "Img", ComponentType = "Image" },
-            new() { Prefix = "Text", ComponentType = "Text" },
-            new() { Prefix = "Tmp", ComponentType = "TextMeshProUGUI" },
-            new() { Prefix = "Toggle", ComponentType = "Toggle" },
-            new() { Prefix = "Tg", ComponentType = "Toggle" },
-            new() { Prefix = "Input", ComponentType = "InputField" },
-            new() { Prefix = "Ipt", ComponentType = "TMP_InputField" },
-            new() { Prefix = "Drop", ComponentType = "TMP_Dropdown" },
-            new() { Prefix = "Slider", ComponentType = "Slider" },
-            new() { Prefix = "Scroll", ComponentType = "ScrollRect" },
-            new() { Prefix = "ScrollView", ComponentType = "ScrollRect" },
-            new() { Prefix = "Panel", ComponentType = "RectTransform" },
-            new() { Prefix = "RawImg", ComponentType = "RawImage" },
-            new() { Prefix = "RawImage", ComponentType = "RawImage" },
-        };
-
-        [TabGroup("UI配置"), LabelText("启用自动收集交互组件"), SerializeField, Tooltip("自动收集Button、Toggle、InputField等交互组件，无需前缀")]
-        public bool AutoCollectInteractiveComponents = true;
-
-
         #region 初始化方法
 
         /// <summary>
@@ -192,7 +152,6 @@ namespace MieMieFrameWork
 
         #endregion
 
-        #endregion
 
 
         #region 编辑器功能

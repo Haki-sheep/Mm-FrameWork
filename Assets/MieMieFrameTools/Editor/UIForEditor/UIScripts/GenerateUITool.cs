@@ -8,8 +8,7 @@ using TMPro;
 using System.Linq;
 using System;
 using UnityEditor.Callbacks;
-using MieMieFrameWork;
-using MieMieFrameWork.Editor;
+using MieMieUITools.Editor;
 
 /// <summary>
 /// UI模版生成核心工具类 - 分部类方案
@@ -298,71 +297,21 @@ public class GenerateUITool
     // 多前缀解析分隔符
     private const char MULTI_PREFIX_SEPARATOR = ']';
 
-    // 默认前缀到组件类型的映射（当FrameSetting未配置时使用）
-    public static readonly Dictionary<string, string> DefaultPrefixToTypeMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-    {
-        { "Img", "Image" },
-        { "Image", "Image" },
-        { "Btn", "Button" },
-        { "Button", "Button" },
-        { "Text", "Text" },
-        { "Tmp", "TextMeshProUGUI" },
-        { "Toggle", "Toggle" },
-        { "Tg", "Toggle" },
-        { "Input", "InputField" },
-        { "Ipt", "TMP_InputField" },
-        { "Drop", "TMP_Dropdown" },
-        { "Slider", "Slider" },
-        { "Scroll", "ScrollRect" },
-        { "ScrollView", "ScrollRect" },
-        { "Panel", "RectTransform" },
-        { "RawImg", "RawImage" },
-        { "RawImage", "RawImage" },
-        { "RT", "RectTransform" },
-    };
+    /// <summary>内置默认前缀表（重置映射时使用）。</summary>
+    public static IReadOnlyDictionary<string, string> DefaultPrefixToTypeMap =>
+        UIGenPathSettings.GetBuiltInPrefixDefaults();
 
-    /// <summary>
-    /// 前缀到组件类型的映射（从FrameSetting读取，可编辑）
-    /// </summary>
+    /// <summary>当前前缀映射（来自 UIGenPath/UIGenPathSettings.json）。</summary>
     public static IReadOnlyDictionary<string, string> PrefixToTypeMap { get; private set; }
 
-    /// <summary>
-    /// 静态构造函数：从FrameSetting加载映射表
-    /// </summary>
     static GenerateUITool()
     {
         RefreshPrefixToTypeMap();
     }
 
-    /// <summary>
-    /// 从FrameSetting刷新映射表（供编辑器外部调用）
-    /// </summary>
     public static void RefreshPrefixToTypeMap()
     {
-        var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        var frameSetting = UIPathConfigLocator.FindFrameSetting();
-
-        if (frameSetting != null && frameSetting.PrefixToComponentTypeMap != null)
-        {
-            foreach (var pair in frameSetting.PrefixToComponentTypeMap)
-            {
-                if (!string.IsNullOrEmpty(pair.Prefix) && !string.IsNullOrEmpty(pair.ComponentType))
-                {
-                    dict[pair.Prefix] = pair.ComponentType;
-                }
-            }
-        }
-
-        // 如果配置为空，使用默认值
-        if (dict.Count == 0)
-        {
-            foreach (var kvp in DefaultPrefixToTypeMap)
-            {
-                dict[kvp.Key] = kvp.Value;
-            }
-        }
-
-        PrefixToTypeMap = dict;
+        PrefixToTypeMap = UIGenPathSettings.BuildPrefixToTypeDictionary();
     }
 
     // 扫描UI预制体组件 - 支持多前缀解析规则
@@ -800,13 +749,11 @@ public class GenerateUITool
         return comp.path;
     }
 
-    // ========== 需求4: 脚本编译完成后自动挂载 {ClassName}Gen.cs 到预制体UIContent ==========
+    // ========== 脚本编译完成后自动挂载 {ClassName}Gen.cs 到预制体 UIContent ==========
     //
-    //  市面正确做法：生成脚本后触发编译，等待编译完成后再执行挂载。
-    //  流程：RegisterGenScriptToPrefab（写入待挂载队列 + 触发编译）
+    //  流程：RegisterGenScriptToPrefab（SessionState 待挂载队列 + 触发编译）
     //      → AssetDatabase.Refresh() 触发编译
-    //      → DidReloadScripts 回调（此时 Gen 类型已编译完成）
-    //      → OnScriptsReloaded 挂载组件到预制体
+    //      → DidReloadScripts（Gen 类型已可用）→ OnScriptsReloaded 挂载
 
     [Serializable]
     private class PendingAttach
@@ -815,7 +762,8 @@ public class GenerateUITool
         public string prefabGuid;
     }
 
-    private const string PENDING_FILE = "Assets/MieMieFrameTools/Editor/UI/PendingAttaches.json";
+    private const string PendingAttachesSessionKey = "MieMieFrameWork.GenerateUITool.PendingAttaches";
+    private const string LegacyPendingAttachesFile = "Assets/MieMieFrameTools/Editor/UI/PendingAttaches.json";
 
     /// <summary>
     /// 生成时记录映射并立即触发挂载流程
@@ -896,13 +844,20 @@ public class GenerateUITool
 
     private static List<PendingAttach> LoadPendingAttaches()
     {
-        if (!File.Exists(PENDING_FILE)) return new List<PendingAttach>();
+        TryImportLegacyPendingAttachesFile();
+
+        string json = SessionState.GetString(PendingAttachesSessionKey, string.Empty);
+        if (string.IsNullOrEmpty(json))
+            return new List<PendingAttach>();
+
         try
         {
-            string json = File.ReadAllText(PENDING_FILE);
             return JsonUtility.FromJson<PendingAttachList>(json)?.items ?? new List<PendingAttach>();
         }
-        catch { return new List<PendingAttach>(); }
+        catch
+        {
+            return new List<PendingAttach>();
+        }
     }
 
     private static void SavePendingAttach(PendingAttach item)
@@ -922,16 +877,41 @@ public class GenerateUITool
 
     private static void SavePendingList(List<PendingAttach> list)
     {
+        if (list == null || list.Count == 0)
+        {
+            SessionState.EraseString(PendingAttachesSessionKey);
+            return;
+        }
+
+        SessionState.SetString(PendingAttachesSessionKey,
+            JsonUtility.ToJson(new PendingAttachList { items = list }));
+    }
+
+    /// <summary>
+    /// 一次性：从旧版 Assets 内 PendingAttaches.json 迁入 SessionState 后删除该文件。
+    /// </summary>
+    private static void TryImportLegacyPendingAttachesFile()
+    {
+        if (!File.Exists(LegacyPendingAttachesFile)) return;
+        if (!string.IsNullOrEmpty(SessionState.GetString(PendingAttachesSessionKey, string.Empty)))
+        {
+            AssetDatabase.DeleteAsset(LegacyPendingAttachesFile);
+            return;
+        }
+
         try
         {
-            string dir = Path.GetDirectoryName(PENDING_FILE);
-            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-            File.WriteAllText(PENDING_FILE, JsonUtility.ToJson(new PendingAttachList { items = list }, true));
+            string json = File.ReadAllText(LegacyPendingAttachesFile);
+            var imported = JsonUtility.FromJson<PendingAttachList>(json);
+            if (imported?.items != null && imported.items.Count > 0)
+                SavePendingList(imported.items);
         }
         catch (Exception e)
         {
-            Debug.LogWarning($"[GenerateUITool] 保存队列失败: {e.Message}");
+            Debug.LogWarning($"[GenerateUITool] 迁移旧 PendingAttaches.json 失败: {e.Message}");
         }
+
+        AssetDatabase.DeleteAsset(LegacyPendingAttachesFile);
     }
 
     [Serializable]
@@ -943,18 +923,12 @@ public class GenerateUITool
     /// <summary>
     /// 根据预制体GUID获取上次生成脚本的路径
     /// </summary>
-    public static string GetLastGenScriptPath(string prefabGuid)
-    {
-        var config = UIPathConfigLocator.FindUIPathConfig();
-        return config?.GetLastGenScriptPath(prefabGuid);
-    }
+    public static string GetLastGenScriptPath(string prefabGuid) =>
+        UIGenPathSettings.GetLastFolderForPrefab(prefabGuid);
 
     /// <summary>
     /// 获取默认UI脚本生成路径
     /// </summary>
-    public static string GetDefaultUIGenScriptPath()
-    {
-        var config = UIPathConfigLocator.FindUIPathConfig();
-        return config?.GetDefaultUIGenScriptPath() ?? "Assets/_Scripts/UI/";
-    }
+    public static string GetDefaultUIGenScriptPath() =>
+        UIGenPathSettings.GetDefaultFolder();
 }

@@ -1,0 +1,15 @@
+﻿{
+    "defaultFolder": "Assets/_Scripts/UI",
+    "prefabFolders": [
+        {
+            "guid": "e23e1e88e44cffb4f83d52e94b972e70",
+            "prefabName": "UITTTTemple",
+            "folder": "Assets/_Scripts/UI"
+        },
+        {
+            "guid": "1f848495a0569484996c4b5a04e07d20",
+            "prefabName": "UITTTTemple333",
+            "folder": "Assets/_Scripts/UI"
+        }
+    ]
+}

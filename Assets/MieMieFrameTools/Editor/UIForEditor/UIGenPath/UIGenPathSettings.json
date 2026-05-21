@@ -1,0 +1,35 @@
+﻿{
+    "defaultFolder": "Assets/_Scripts/UI",
+    "prefixMappings": [
+        { "prefix": "Img", "componentType": "Image" },
+        { "prefix": "Image", "componentType": "Image" },
+        { "prefix": "Btn", "componentType": "Button" },
+        { "prefix": "Button", "componentType": "Button" },
+        { "prefix": "Text", "componentType": "Text" },
+        { "prefix": "Tmp", "componentType": "TextMeshProUGUI" },
+        { "prefix": "Toggle", "componentType": "Toggle" },
+        { "prefix": "Tg", "componentType": "Toggle" },
+        { "prefix": "Input", "componentType": "InputField" },
+        { "prefix": "Ipt", "componentType": "TMP_InputField" },
+        { "prefix": "Drop", "componentType": "TMP_Dropdown" },
+        { "prefix": "Slider", "componentType": "Slider" },
+        { "prefix": "Scroll", "componentType": "ScrollRect" },
+        { "prefix": "ScrollView", "componentType": "ScrollRect" },
+        { "prefix": "Panel", "componentType": "RectTransform" },
+        { "prefix": "RawImg", "componentType": "RawImage" },
+        { "prefix": "RawImage", "componentType": "RawImage" },
+        { "prefix": "RT", "componentType": "RectTransform" }
+    ],
+    "prefabFolders": [
+        {
+            "guid": "e45c917829ace164795840bfcc928d8c",
+            "prefabName": "UITTTTemple222",
+            "folder": "Assets/_Scripts/UITest"
+        },
+        {
+            "guid": "e23e1e88e44cffb4f83d52e94b972e70",
+            "prefabName": "UITTTTemple",
+            "folder": "Assets/_Scripts/UI"
+        }
+    ]
+}

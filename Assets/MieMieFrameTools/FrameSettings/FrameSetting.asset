@@ -32,14 +32,10 @@ MonoBehaviour:
   <MaxSaveSlots>k__BackingField: 9
   <EnableSaveCompression>k__BackingField: 0
   PrefixToComponentTypeMap:
-  - Prefix: Img
-    ComponentType: Image
-  - Prefix: Image
-    ComponentType: Image
   - Prefix: Btn
     ComponentType: Button
-  - Prefix: Button
-    ComponentType: Button
+  - Prefix: Img
+    ComponentType: Image
   - Prefix: Text
     ComponentType: Text
   - Prefix: Tmp
@@ -66,6 +62,4 @@ MonoBehaviour:
     ComponentType: RawImage
   - Prefix: RawImage
     ComponentType: RawImage
-  - Prefix: RT
-    ComponentType: RectTransform
   AutoCollectInteractiveComponents: 1
