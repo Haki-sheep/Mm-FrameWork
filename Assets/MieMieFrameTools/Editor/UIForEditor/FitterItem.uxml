@@ -1,6 +1,0 @@
-<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <ui:VisualElement name="FitterItem" style="flex-grow: 0; flex-direction: row; flex-shrink: 0; width: 200px; height: 30px; margin: 2px; background-color: rgba(60, 60, 60, 0.3); border-radius: 3px;">
-        <ui:Label text="FitterItem" name="Name" style="width: auto; flex-grow: 1; flex-shrink: 1; font-size: 12px; -unity-text-align: middle-center;" />
-        <ui:Button text="删除" name="Delate" style="flex-grow: 0.2; flex-shrink: 1; margin-left: 5px;" />
-    </ui:VisualElement>
-</ui:UXML>

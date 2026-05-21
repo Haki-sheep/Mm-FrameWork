@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.boxqkrtm.ide.cursor": {
-      "version": "file:E:/AAAA学习资料/辅助技术与资源/Cursor/com.unity.ide.cursor-master1/com.unity.ide.cursor-master",
+      "version": "file:E:/AAAA学习资料/辅助技术与资源/Cursor/com.unity.ide.cursor-master/com.unity.ide.cursor-master",
       "depth": 0,
       "source": "local",
       "dependencies": {

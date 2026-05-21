@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.boxqkrtm.ide.cursor": "file:E:/AAAA学习资料/辅助技术与资源/Cursor/com.unity.ide.cursor-master1/com.unity.ide.cursor-master",
+    "com.boxqkrtm.ide.cursor": "file:E:/AAAA学习资料/辅助技术与资源/Cursor/com.unity.ide.cursor-master/com.unity.ide.cursor-master",
     "com.unity.addressables": "2.8.1",
     "com.unity.cinemachine": "3.1.5",
     "com.unity.ide.visualstudio": "2.0.26",

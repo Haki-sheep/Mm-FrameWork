@@ -240,7 +240,7 @@ public class GenerateUITool
         sb.AppendLine();
 
         // 分部类声明
-        sb.AppendLine($"internal class {className} : UI_WindowBase");
+        sb.AppendLine($"internal class {className} : UIWindowBase");
         sb.AppendLine("{");
 
         // View属性
