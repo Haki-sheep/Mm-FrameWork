@@ -11,47 +11,6 @@ namespace MieMieFrameWork.Editor
     /// </summary>
     public static class CheckFolder  
     {
-        #region 定位配置文件  
-        /// <summary>
-        /// 一键找到GameSetting配置文件
-        /// </summary>
-        [MenuItem("Tools/文件夹管理/定位FrameSetting配置文件")]
-        public static void PingGameSetting()
-        {
-            // 查找GameSetting配置文件
-            string[] guids = AssetDatabase.FindAssets("t:FrameSetting");
-
-            if (guids.Length == 0)
-            {
-                UnityEngine.Debug.LogWarning("[PingConfig] 未找到FrameSetting配置文件！");
-                EditorUtility.DisplayDialog("未找到配置文件", "未找到GameSetting配置文件，请确保配置文件存在于项目中。", "确定");
-                return;
-            }
-
-            if (guids.Length > 1)
-            {
-                UnityEngine.Debug.LogWarning($"[PingConfig] 找到多个FrameSetting配置文件({guids.Length}个)，将定位第一个。");
-            }
-
-            // 获取第一个找到的FrameSetting配置文件
-            string assetPath = AssetDatabase.GUIDToAssetPath(guids[0]);
-            Object frameSetting = AssetDatabase.LoadAssetAtPath<FrameSetting>(assetPath);
-
-            if (frameSetting != null)
-            {
-                // 在Project窗口中高亮显示该文件
-                EditorGUIUtility.PingObject(frameSetting);
-                // 选中该文件
-                Selection.activeObject = frameSetting;
-
-                UnityEngine.Debug.Log($"[PingConfig] 已定位到GameSetting配置文件: {assetPath}");
-            }
-            else
-            {
-                UnityEngine.Debug.LogError($"[PingConfig] 无法加载GameSetting配置文件: {assetPath}");
-            }
-        }
-        #endregion
         #region 查看路径菜单
 
         [MenuItem("Tools/文件夹管理/查看路径/打开Assets目录")]

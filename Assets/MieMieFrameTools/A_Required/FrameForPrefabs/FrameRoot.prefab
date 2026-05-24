@@ -415,7 +415,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1632e6c60d6f50845937fe7aa4d7235a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MieMieFrameWork.ModuleHub
-  <FrameSetting>k__BackingField: {fileID: 11400000, guid: 8eb2c5d89d6c19b4da64c1bba7482a73, type: 2}
   uICoreMgr: {fileID: 0}
 --- !u!114 &5294063972887282733
 MonoBehaviour:

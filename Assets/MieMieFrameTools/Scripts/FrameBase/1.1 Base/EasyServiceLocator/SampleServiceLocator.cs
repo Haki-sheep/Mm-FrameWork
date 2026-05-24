@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 /// <summary>
 /// 继承此接口的类可以被IOC容器管理
 /// </summary>
-public interface I_IOCContainer
+public interface IIOCContainer
 {
 
 }
@@ -17,9 +17,9 @@ public class IocContainer
 {
     private IocContainer iocContainer;
     //交互处理器字典
-    private Dictionary<Type, I_IOCContainer> ccCompDict = new();
+    private Dictionary<Type, IIOCContainer> ccCompDict = new();
 
-    public virtual void AddComp2Dict<T>(T t) where T : class, I_IOCContainer
+    public virtual void AddComp2Dict<T>(T t) where T : class, IIOCContainer
     { 
         ccCompDict.Add(typeof(T), t);
     }
@@ -34,7 +34,7 @@ public class IocContainer
             iocContainer = this;
     }
 
-    public bool TryGetComp<T>(out T t) where T : class, I_IOCContainer
+    public bool TryGetComp<T>(out T t) where T : class, IIOCContainer
     {
         if (ccCompDict.TryGetValue(typeof(T), out var i_ItemOperateHandler)
             && i_ItemOperateHandler is T handler)
@@ -46,7 +46,7 @@ public class IocContainer
         throw new KeyNotFoundException($"未注册[{typeof(T).Name}]类型的Handler");
     }
 
-    public T GetComp<T>() where T : class, I_IOCContainer
+    public T GetComp<T>() where T : class, IIOCContainer
     {
         if (ccCompDict.TryGetValue(typeof(T), out var i_ItemOperateHandler)
             && i_ItemOperateHandler is T handler)

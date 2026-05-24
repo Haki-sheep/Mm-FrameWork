@@ -3,7 +3,7 @@ namespace MieMieFrameWork.CharacterController
     using MieMieFrameWork.MMAnimation;
     using UnityEngine;
 
-    public interface I_CharacterControlBase : I_IOCContainer
+    public interface I_CharacterControlBase : IIOCContainer
     {
         public void Init(CharacterControlBase cc);
     }

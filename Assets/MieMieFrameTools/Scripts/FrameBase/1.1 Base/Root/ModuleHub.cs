@@ -11,8 +11,6 @@ namespace MieMieFrameWork
     /// </summary> 
     public class ModuleHub : SingletonMono<ModuleHub>  
     {
-        [field: SerializeField, LabelText("游戏设置")]
-        public FrameSetting FrameSetting { get; private set; }
         private Dictionary<Type, IManagerBase> managerDict = new Dictionary<Type, IManagerBase>();
         
         [SerializeField,LabelText("UI管理器")] 
@@ -43,13 +41,7 @@ namespace MieMieFrameWork
         {
             try
             {
-                if (this.FrameSetting is null) throw new Exception("游戏配置为空");
-                {
-                    //初始化配置文件
-                    this.FrameSetting.Initialize();
-                    //初始化所有管理器
-                    GetAllManager();
-                }
+                GetAllManager();
             }
             catch (System.Exception ex)
             {
