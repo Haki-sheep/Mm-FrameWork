@@ -1,0 +1,40 @@
+syntax = "proto3";
+option csharp_namespace = "Game.Save";
+
+// 游戏存档数据
+message SaveData {
+   MetaSave meta = 1; // 元信息
+   PlayerModuleSave player =2;
+   EquipmentModuleSave equpment=3;
+}
+
+
+message MetaSave{
+    int32 version = 1;//数据版本
+    int64 creatTime= 2;//存档创建时间
+    int64 lastSaveTime=3;//最后存档时间
+}
+
+//玩家模块-----------------
+message PlayerModuleSave{
+    string playerId = 1;        // 玩家唯一ID（UUID）
+    string playerName = 2;      // 玩家名称
+    int64 createTime = 3;       // 创建时间戳
+}
+
+//-----------------
+
+//装备模块------------------
+message EquipmentModuleSave{
+  repeated  EquipmentItem items =1;
+  //Map形式（key=instanceId，value=装备）
+  //map<string, EquipmentItem> itemMap = 1;
+  int32 activeSetIndex =2; //当前穿戴的装备套装编号
+}
+message EquipmentItem{
+  string instanceId=1;
+  int32 level =2;
+  int32 slotType=3;
+}
+
+//-----------------

@@ -1,0 +1,16 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+public  class TypeOrder
+{
+    public readonly int order;
+    public readonly Type type;
+
+    public TypeOrder(int order, Type type)
+    {
+        this.order = order;
+        this.type = type;
+    }
+}

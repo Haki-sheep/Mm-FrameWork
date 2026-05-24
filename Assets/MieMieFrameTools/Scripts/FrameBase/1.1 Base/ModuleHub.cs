@@ -73,6 +73,11 @@ namespace MieMieFrameWork
             }
         }
 
+        /// <summary>
+        /// 获取管理器优先级
+        /// </summary>
+        /// <param name="manager"></param>
+        /// <returns></returns>
         private static int GetManagerPriority(IManagerBase manager)
         {
             var managerType = manager.GetType();
@@ -81,6 +86,12 @@ namespace MieMieFrameWork
             return attr?.Priority ?? 0;
         }
 
+        /// <summary>
+        /// 获取管理器
+        /// </summary>
+        /// <typeparam name="T">管理器类型</typeparam>
+        /// <returns>管理器实例</returns>
+        /// <exception cref="Exception"></exception>
         public T GetManager<T>() where T : IManagerBase
         {
             if (managerDict.TryGetValue(typeof(T), out var manager))
@@ -99,14 +110,14 @@ namespace MieMieFrameWork
                 throw new Exception($"管理器 {typeof(T).Name} 不存在");
             }
         }
+
+        
         /// <summary>
         /// 清理框架资源
         /// </summary>
         private void CleanupFramework()
         {
-            // 清理事件中心
             EventCenter.ClearAllListeners();
-
         }
 
         #endregion

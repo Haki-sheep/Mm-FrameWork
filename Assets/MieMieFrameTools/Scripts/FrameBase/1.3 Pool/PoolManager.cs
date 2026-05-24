@@ -11,7 +11,7 @@ namespace MieMieFrameWork.Pool
     [ManagerAttribute(2)]
     public class PoolManager : MonoBehaviour, IManagerBase
     {
-        [SerializeField]
+        [SerializeField]    
         [LabelText("对象池根节点")]
         private Transform AllGameObjectRoot;
         public void Init()

@@ -6,6 +6,7 @@ namespace MieMieFrameWork
     /// <summary>
     /// TMono的生命周期代理
     /// </summary>
+    [ManagerAttribute(1)]
     public class MonoManager : MonoBehaviour, IManagerBase
     {
         public void Init()
