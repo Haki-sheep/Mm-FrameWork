@@ -1,14 +1,7 @@
 fileFormatVersion: 2
-guid: 88bfe6214cf979c43806dc85c8bf846b
+guid: d92d0eb8b980c6d44b5f0e64a620355b
 DefaultImporter:
   externalObjects: {}
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 89041
-  packageName: Odin Inspector and Serializer
-  packageVersion: 3.3.1.11
-  assetPath: Assets/ZMPackages/Library/Sirenix/Odin Inspector/Modules/Unity.Addressables.data
-  uploadId: 712389

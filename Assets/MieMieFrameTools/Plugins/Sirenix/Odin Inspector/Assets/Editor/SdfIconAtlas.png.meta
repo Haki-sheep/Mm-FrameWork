@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a138ce4f41cf2da419ef9aafd1a9f39f
+guid: 2a0112a98875dfd488b5d10bdb8a4903
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -126,10 +126,3 @@ TextureImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 89041
-  packageName: Odin Inspector and Serializer
-  packageVersion: 3.3.1.11
-  assetPath: Assets/ZMPackages/Library/Sirenix/Odin Inspector/Assets/Editor/SdfIconAtlas.png
-  uploadId: 712389
