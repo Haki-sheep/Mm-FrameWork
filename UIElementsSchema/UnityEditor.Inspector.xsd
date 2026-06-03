@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:editor="UnityEditor.UIElements" xmlns:engine="UnityEngine.UIElements" xmlns:AddressablesGUI="UnityEditor.AddressableAssets.GUIElements" xmlns="UnityEditor.AddressableAssets.Diagnostics" elementFormDefault="qualified" targetNamespace="UnityEditor.Inspector" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:editor="UnityEditor.UIElements" xmlns:engine="UnityEngine.UIElements" xmlns:AddressablesGUI="UnityEditor.AddressableAssets.GUIElements" xmlns="UnityEditor.Accessibility" elementFormDefault="qualified" targetNamespace="UnityEditor.Inspector" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import schemaLocation="UnityEngine.UIElements.xsd" namespace="UnityEngine.UIElements" />
   <xs:complexType name="ClippingPlanesType">
     <xs:complexContent mixed="false">
@@ -19,6 +19,7 @@
         <xs:attribute default="" name="binding-path" type="xs:string" use="optional" />
         <xs:attribute default="label" name="label" type="xs:string" use="optional" />
         <xs:attribute default="(0.00, 0.00)" name="value" type="xs:string" use="optional" />
+        <xs:attribute default="false" name="is-delayed" type="xs:boolean" use="optional" />
         <xs:attribute default="" name="content-container" type="xs:string" use="optional" />
         <xs:attribute default="" name="class" type="xs:string" use="optional" />
         <xs:attribute default="" name="style" type="xs:string" use="optional" />

@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:editor="UnityEditor.UIElements" xmlns:engine="UnityEngine.UIElements" xmlns:AddressablesGUI="UnityEditor.AddressableAssets.GUIElements" xmlns="UnityEditor.AddressableAssets.Diagnostics" elementFormDefault="qualified" targetNamespace="UnityEditor.AddressableAssets.GUIElements" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:editor="UnityEditor.UIElements" xmlns:engine="UnityEngine.UIElements" xmlns:AddressablesGUI="UnityEditor.AddressableAssets.GUIElements" xmlns="UnityEditor.Accessibility" elementFormDefault="qualified" targetNamespace="UnityEditor.AddressableAssets.GUIElements" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import schemaLocation="UnityEngine.UIElements.xsd" namespace="UnityEngine.UIElements" />
-  <xs:complexType name="LabeledLabelType">
+  <xs:complexType name="DocumentationButtonType">
     <xs:complexContent mixed="false">
       <xs:restriction base="engine:VisualElementType">
-        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-          <xs:element ref="engine:VisualElement" />
-        </xs:sequence>
         <xs:attribute default="" name="name" type="xs:string" use="optional" />
         <xs:attribute default="true" name="enabled" type="xs:boolean" use="optional" />
         <xs:attribute default="" name="view-data-key" type="xs:string" use="optional" />
@@ -15,17 +12,20 @@
         <xs:attribute default="None" name="usage-hints" type="engine:VisualElement_usage-hints_Type" use="optional" />
         <xs:attribute default="0" name="tabindex" type="xs:int" use="optional" />
         <xs:attribute default="false" name="focusable" type="xs:boolean" use="optional" />
-        <xs:attribute default="" name="class" type="xs:string" use="optional" />
-        <xs:attribute default="" name="content-container" type="xs:string" use="optional" />
-        <xs:attribute default="" name="style" type="xs:string" use="optional" />
-        <xs:attribute default="null" name="data-source" type="xs:string" use="optional" />
+        <xs:attribute default="Inherit" name="language-direction" type="engine:VisualElement_language-direction_Type" use="optional" />
+        <xs:attribute default="" name="data-source" type="xs:string" use="optional" />
         <xs:attribute default="" name="data-source-path" type="xs:string" use="optional" />
-        <xs:attribute default="null" name="data-source-type" type="xs:string" use="optional" />
+        <xs:attribute default="" name="data-source-type" type="xs:string" use="optional" />
+        <xs:attribute default="" name="m_-text" type="xs:string" use="optional" />
+        <xs:attribute default="index.html" name="m_-page" type="xs:string" use="optional" />
+        <xs:attribute default="" name="content-container" type="xs:string" use="optional" />
+        <xs:attribute default="" name="class" type="xs:string" use="optional" />
+        <xs:attribute default="" name="style" type="xs:string" use="optional" />
         <xs:anyAttribute processContents="lax" />
       </xs:restriction>
     </xs:complexContent>
   </xs:complexType>
-  <xs:element name="LabeledLabel" substitutionGroup="engine:VisualElement" type="AddressablesGUI:LabeledLabelType" />
+  <xs:element name="DocumentationButton" substitutionGroup="engine:VisualElement" type="AddressablesGUI:DocumentationButtonType" />
   <xs:simpleType name="Ribbon_alignment_Type">
     <xs:restriction base="xs:string">
       <xs:enumeration value="Auto" />
@@ -38,9 +38,6 @@
   <xs:complexType name="RibbonType">
     <xs:complexContent mixed="false">
       <xs:restriction base="engine:VisualElementType">
-        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-          <xs:element ref="AddressablesGUI:RibbonButton" />
-        </xs:sequence>
         <xs:attribute default="" name="name" type="xs:string" use="optional" />
         <xs:attribute default="true" name="enabled" type="xs:boolean" use="optional" />
         <xs:attribute default="" name="view-data-key" type="xs:string" use="optional" />
@@ -49,48 +46,22 @@
         <xs:attribute default="None" name="usage-hints" type="engine:VisualElement_usage-hints_Type" use="optional" />
         <xs:attribute default="0" name="tabindex" type="xs:int" use="optional" />
         <xs:attribute default="false" name="focusable" type="xs:boolean" use="optional" />
-        <xs:attribute default="" name="class" type="xs:string" use="optional" />
-        <xs:attribute default="" name="content-container" type="xs:string" use="optional" />
-        <xs:attribute default="" name="style" type="xs:string" use="optional" />
-        <xs:attribute default="null" name="data-source" type="xs:string" use="optional" />
+        <xs:attribute default="Inherit" name="language-direction" type="engine:VisualElement_language-direction_Type" use="optional" />
+        <xs:attribute default="" name="data-source" type="xs:string" use="optional" />
         <xs:attribute default="" name="data-source-path" type="xs:string" use="optional" />
-        <xs:attribute default="null" name="data-source-type" type="xs:string" use="optional" />
-        <xs:attribute default="Center" name="alignment" type="AddressablesGUI:Ribbon_alignment_Type" use="optional" />
+        <xs:attribute default="" name="data-source-type" type="xs:string" use="optional" />
+        <xs:attribute default="Auto" name="alignment" type="AddressablesGUI:Ribbon_alignment_Type" use="optional" />
         <xs:attribute default="false" name="show-help-button" type="xs:boolean" use="optional" />
         <xs:attribute default="false" name="show-menu-button" type="xs:boolean" use="optional" />
         <xs:attribute default="0" name="initial-option" type="xs:int" use="optional" />
+        <xs:attribute default="" name="content-container" type="xs:string" use="optional" />
+        <xs:attribute default="" name="class" type="xs:string" use="optional" />
+        <xs:attribute default="" name="style" type="xs:string" use="optional" />
         <xs:anyAttribute processContents="lax" />
       </xs:restriction>
     </xs:complexContent>
   </xs:complexType>
   <xs:element name="Ribbon" substitutionGroup="engine:VisualElement" type="AddressablesGUI:RibbonType" />
-  <xs:complexType name="DocumentationButtonType">
-    <xs:complexContent mixed="false">
-      <xs:restriction base="engine:VisualElementType">
-        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-          <xs:element ref="AddressablesGUI:DocumentationButton" />
-        </xs:sequence>
-        <xs:attribute default="" name="name" type="xs:string" use="optional" />
-        <xs:attribute default="true" name="enabled" type="xs:boolean" use="optional" />
-        <xs:attribute default="" name="view-data-key" type="xs:string" use="optional" />
-        <xs:attribute default="Position" name="picking-mode" type="engine:VisualElement_picking-mode_Type" use="optional" />
-        <xs:attribute default="" name="tooltip" type="xs:string" use="optional" />
-        <xs:attribute default="None" name="usage-hints" type="engine:VisualElement_usage-hints_Type" use="optional" />
-        <xs:attribute default="0" name="tabindex" type="xs:int" use="optional" />
-        <xs:attribute default="false" name="focusable" type="xs:boolean" use="optional" />
-        <xs:attribute default="" name="class" type="xs:string" use="optional" />
-        <xs:attribute default="" name="content-container" type="xs:string" use="optional" />
-        <xs:attribute default="" name="style" type="xs:string" use="optional" />
-        <xs:attribute default="null" name="data-source" type="xs:string" use="optional" />
-        <xs:attribute default="" name="data-source-path" type="xs:string" use="optional" />
-        <xs:attribute default="null" name="data-source-type" type="xs:string" use="optional" />
-        <xs:attribute default="" name="text" type="xs:string" use="optional" />
-        <xs:attribute default="index.html" name="page" type="xs:string" use="optional" />
-        <xs:anyAttribute processContents="lax" />
-      </xs:restriction>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:element name="DocumentationButton" substitutionGroup="engine:VisualElement" type="AddressablesGUI:DocumentationButtonType" />
   <xs:complexType name="RibbonButtonType">
     <xs:complexContent mixed="false">
       <xs:restriction base="engine:VisualElementType">
@@ -101,15 +72,25 @@
         <xs:attribute default="" name="tooltip" type="xs:string" use="optional" />
         <xs:attribute default="None" name="usage-hints" type="engine:VisualElement_usage-hints_Type" use="optional" />
         <xs:attribute default="0" name="tabindex" type="xs:int" use="optional" />
-        <xs:attribute default="false" name="focusable" type="xs:boolean" use="optional" />
-        <xs:attribute default="" name="class" type="xs:string" use="optional" />
-        <xs:attribute default="" name="content-container" type="xs:string" use="optional" />
-        <xs:attribute default="" name="style" type="xs:string" use="optional" />
-        <xs:attribute default="null" name="data-source" type="xs:string" use="optional" />
+        <xs:attribute default="true" name="focusable" type="xs:boolean" use="optional" />
+        <xs:attribute default="Inherit" name="language-direction" type="engine:VisualElement_language-direction_Type" use="optional" />
+        <xs:attribute default="" name="data-source" type="xs:string" use="optional" />
         <xs:attribute default="" name="data-source-path" type="xs:string" use="optional" />
-        <xs:attribute default="null" name="data-source-type" type="xs:string" use="optional" />
-        <xs:attribute default="Button" name="text" type="xs:string" use="optional" />
+        <xs:attribute default="" name="data-source-type" type="xs:string" use="optional" />
+        <xs:attribute default="" name="binding-path" type="xs:string" use="optional" />
+        <xs:attribute default="" name="text" type="xs:string" use="optional" />
+        <xs:attribute default="true" name="enable-rich-text" type="xs:boolean" use="optional" />
+        <xs:attribute default="true" name="emoji-fallback-support" type="xs:boolean" use="optional" />
+        <xs:attribute default="false" name="parse-escape-sequences" type="xs:boolean" use="optional" />
+        <xs:attribute default="false" name="selectable" type="xs:boolean" use="optional" />
+        <xs:attribute default="true" name="double-click-selects-word" type="xs:boolean" use="optional" />
+        <xs:attribute default="true" name="triple-click-selects-line" type="xs:boolean" use="optional" />
+        <xs:attribute default="true" name="display-tooltip-when-elided" type="xs:boolean" use="optional" />
+        <xs:attribute default="" name="icon-image" type="xs:string" use="optional" />
         <xs:attribute default="false" name="toggled" type="xs:boolean" use="optional" />
+        <xs:attribute default="" name="content-container" type="xs:string" use="optional" />
+        <xs:attribute default="" name="class" type="xs:string" use="optional" />
+        <xs:attribute default="" name="style" type="xs:string" use="optional" />
         <xs:anyAttribute processContents="lax" />
       </xs:restriction>
     </xs:complexContent>

@@ -1,0 +1,6 @@
+{
+  "protocPath": "E:/AAAA学习资料/Demo/哈基咩咩框架专用项目/HakiSheep-Framework/Assets/MieMieFrameTools/Editor/SaveForEditor/Protoc/protoc.exe",
+  "protoDirectory": "E:/AAAA学习资料/Demo/哈基咩咩框架专用项目/HakiSheep-Framework/Assets/MieMieFrameTools/A_Required/Configs",
+  "outputDirectory": "E:/AAAA学习资料/Demo/哈基咩咩框架专用项目/HakiSheep-Framework/Assets\\Scripts\\GameSave",
+  "csharpNamespace": "Game.Save"
+}
