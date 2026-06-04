@@ -1,3 +1,29 @@
 ﻿{
-    "entries": []
+    "enableProjectTree": true,
+    "treeLineColor": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 1.0
+    },
+    "entries": [
+        {
+            "folderGuid": "4b83384c10d39784d843c8b6ee33dc0a",
+            "iconGuid": "",
+            "displayName": "",
+            "rowColor": {
+                "r": 0.2199999988079071,
+                "g": 0.5199999809265137,
+                "b": 0.9200000166893005,
+                "a": 0.44999998807907107
+            },
+            "labelColor": {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+            },
+            "labelBold": true
+        }
+    ]
 }

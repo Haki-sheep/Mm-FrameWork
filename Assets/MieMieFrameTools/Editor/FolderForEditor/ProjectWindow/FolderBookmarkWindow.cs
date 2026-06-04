@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
@@ -15,13 +16,23 @@ namespace MieMieFrameWork.Editor
         public static void Open()
         {
             GetWindow<FolderBookmarkWindow>("文件夹收藏");
-        }
+        } 
 
         private void OnGUI()
         {
             EditorGUILayout.Space(4);
             EditorGUILayout.LabelField("常用文件夹收藏", EditorStyles.boldLabel);
-            EditorGUILayout.HelpBox("支持整行背景色、显示别名、文字颜色/加粗、自定义 Icon。点击路径可在 Project 中定位。", MessageType.Info);
+
+            EditorGUI.BeginChangeCheck();
+            bool enableTree = EditorGUILayout.Toggle("启用文件夹树形连线", FolderProjectSettings.EnableProjectTree);
+            Color treeColor = EditorGUILayout.ColorField("树形线条颜色", FolderProjectSettings.TreeLineColor);
+            if (EditorGUI.EndChangeCheck())
+            {
+                FolderProjectSettings.EnableProjectTree = enableTree;
+                FolderProjectSettings.TreeLineColor = treeColor;
+            }
+
+            EditorGUILayout.Space(4);
 
             using (new EditorGUILayout.HorizontalScope())
             {
@@ -66,7 +77,7 @@ namespace MieMieFrameWork.Editor
 
             using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
             {
-                DrawPreviewBar(entry, folderName);
+                DrawPreviewBar(entry, folderPath);
 
                 using (new EditorGUILayout.HorizontalScope())
                 {
@@ -115,7 +126,7 @@ namespace MieMieFrameWork.Editor
             }
         }
 
-        private static void DrawPreviewBar(FolderProjectEntry entry, string folderName)
+        private static void DrawPreviewBar(FolderProjectEntry entry, string folderPath)
         {
             Rect barRect = GUILayoutUtility.GetRect(0f, 22f, GUILayout.ExpandWidth(true));
             if (Event.current.type != EventType.Repaint)
@@ -131,7 +142,7 @@ namespace MieMieFrameWork.Editor
                 GUI.DrawTexture(iconRect, icon, ScaleMode.ScaleToFit);
             }
 
-            string label = string.IsNullOrEmpty(entry.displayName) ? folderName : entry.displayName;
+            string label = FolderProjectSettings.GetProjectLabelText(entry, folderPath);
             GUIStyle style = new(EditorStyles.boldLabel)
             {
                 fontStyle = entry.labelBold ? FontStyle.Bold : FontStyle.Normal,
@@ -160,7 +171,7 @@ namespace MieMieFrameWork.Editor
         internal static void PingFolder(string folderGuid)
         {
             string path = AssetDatabase.GUIDToAssetPath(folderGuid);
-            Object folder = AssetDatabase.LoadAssetAtPath<Object>(path);
+            UnityEngine.Object folder = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(path);
             if (folder == null)
                 return;
 
@@ -254,11 +265,18 @@ namespace MieMieFrameWork.Editor
                 return;
 
             FolderProjectEntry entry = FolderProjectSettings.Find(guid);
+
+            if (FolderProjectSettings.EnableProjectTree)
+            {
+                Color foldoutCover = GetFoldoutCoverColor(guid, entry);
+                FolderProjectTreeDrawer.Draw(path, rect, FolderProjectSettings.TreeLineColor, foldoutCover);
+            }
+
             if (!FolderProjectSettings.HasProjectStyle(entry))
                 return;
 
             bool hasRowColor = entry.rowColor.a > 0.01f;
-            bool hasAlias = !string.IsNullOrEmpty(entry.displayName);
+            bool shouldDrawLabel = FolderProjectSettings.HasCustomLabelStyle(entry);
             Texture2D customIcon = FolderProjectSettings.GetCustomIcon(guid);
 
             if (hasRowColor)
@@ -268,7 +286,7 @@ namespace MieMieFrameWork.Editor
             Rect iconRect = new(rect.x + IconPadding, rect.y + IconPadding, iconSize - IconPadding * 2f, iconSize - IconPadding * 2f);
             Rect labelRect = new(rect.x + iconSize + 2f, rect.y, rect.xMax - (rect.x + iconSize + 2f), rect.height);
 
-            if (hasAlias)
+            if (shouldDrawLabel)
             {
                 Color cover = hasRowColor
                     ? new Color(entry.rowColor.r, entry.rowColor.g, entry.rowColor.b, Mathf.Max(entry.rowColor.a, 0.85f))
@@ -281,7 +299,7 @@ namespace MieMieFrameWork.Editor
                     alignment = TextAnchor.MiddleLeft,
                     normal = { textColor = FolderProjectSettings.ResolveLabelColor(entry) }
                 };
-                GUI.Label(labelRect, entry.displayName, labelStyle);
+                GUI.Label(labelRect, FolderProjectSettings.GetProjectLabelText(entry, path), labelStyle);
             }
 
             if (customIcon != null)
@@ -301,7 +319,159 @@ namespace MieMieFrameWork.Editor
                 : new Color(0.76f, 0.76f, 0.76f);
         }
 
+        private static Color GetFoldoutCoverColor(string guid, FolderProjectEntry entry)
+        {
+            if (entry != null && entry.rowColor.a > 0.01f)
+                return new Color(entry.rowColor.r, entry.rowColor.g, entry.rowColor.b, Mathf.Max(entry.rowColor.a, 0.92f));
+
+            if (IsFolderSelected(guid))
+            {
+                return EditorGUIUtility.isProSkin
+                    ? new Color(0.17f, 0.36f, 0.53f)
+                    : new Color(0.20f, 0.41f, 0.72f);
+            }
+
+            return GetSkinBackgroundColor();
+        }
+
+        private static bool IsFolderSelected(string guid)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            foreach (UnityEngine.Object obj in Selection.objects)
+            {
+                if (AssetDatabase.GetAssetPath(obj) == path)
+                    return true;
+            }
+
+            return false;
+        }
+
         private static bool IsTreeRow(Rect rect) => rect.height > 0f && rect.height <= 20f;
+    }
+
+    internal static class FolderProjectTreeDrawer
+    {
+        private const float FillLineOffset = 14f;
+        private const float FoldoutWidth = 14f;
+        private const string BranchResourcePrefix =
+            "Assets/MieMieFrameTools/Plugins/Hierarchy Designer/Editor/Resources/Hierarchy Designer Tree Branch Icon Default ";
+
+        private static Texture2D _branchI;
+        private static Texture2D _branchL;
+        private static Texture2D _branchT;
+        private static Texture2D _branchTerminal;
+
+        private static readonly Dictionary<string, string[]> SubfolderCache = new();
+
+        static FolderProjectTreeDrawer()
+        {
+            EditorApplication.projectChanged += SubfolderCache.Clear;
+        }
+
+        public static void Draw(string folderPath, Rect rect, Color lineColor, Color foldoutCoverColor)
+        {
+            folderPath = NormalizePath(folderPath);
+            int depth = GetFolderDepth(folderPath);
+            if (depth <= 0)
+                return;
+
+            HideDefaultFoldout(rect, foldoutCoverColor);
+
+            EnsureBranchTextures();
+            if (_branchI == null)
+                return;
+
+            float size = rect.height;
+            float foldoutX = rect.x - FoldoutWidth;
+            float junctionX = foldoutX - FillLineOffset;
+            bool isLast = IsLastChildFolder(folderPath);
+
+            Color previousColor = GUI.color;
+            GUI.color = lineColor;
+
+            Texture2D connector = isLast ? _branchL : _branchT;
+            GUI.DrawTexture(new Rect(junctionX, rect.y, size, size), connector, ScaleMode.ScaleToFit);
+
+            float rectX = junctionX;
+            for (int level = depth - 1; level >= 1; level--)
+            {
+                rectX -= FillLineOffset;
+                string ancestorPath = GetPathAtDepth(folderPath, level);
+                if (IsLastChildFolder(ancestorPath))
+                    continue;
+
+                GUI.DrawTexture(new Rect(rectX, rect.y, size, size), _branchI, ScaleMode.ScaleToFit);
+            }
+
+            // 每个文件夹都用小方块替代原折叠箭头（不限于同级最后一个）
+            GUI.DrawTexture(new Rect(foldoutX, rect.y, size, size), _branchTerminal, ScaleMode.ScaleToFit);
+
+            GUI.color = previousColor;
+        }
+
+        private static void HideDefaultFoldout(Rect rect, Color coverColor)
+        {
+            EditorGUI.DrawRect(new Rect(rect.x - FoldoutWidth, rect.y, FoldoutWidth, rect.height), coverColor);
+        }
+
+        private static void EnsureBranchTextures()
+        {
+            if (_branchI != null)
+                return;
+
+            _branchI = LoadBranchTexture("I");
+            _branchL = LoadBranchTexture("L");
+            _branchT = LoadBranchTexture("T");
+            _branchTerminal = LoadBranchTexture("Terminal Bud");
+        }
+
+        private static Texture2D LoadBranchTexture(string suffix)
+        {
+            return AssetDatabase.LoadAssetAtPath<Texture2D>($"{BranchResourcePrefix}{suffix}.png");
+        }
+
+        private static int GetFolderDepth(string path)
+        {
+            if (string.IsNullOrEmpty(path) || path == "Assets")
+                return 0;
+
+            return path.Split('/').Length - 1;
+        }
+
+        private static string GetPathAtDepth(string path, int depth)
+        {
+            string[] parts = path.Split('/');
+            int count = Mathf.Clamp(depth + 1, 1, parts.Length);
+            return string.Join("/", parts, 0, count);
+        }
+
+        private static bool IsLastChildFolder(string folderPath)
+        {
+            folderPath = NormalizePath(folderPath);
+            string parentPath = Path.GetDirectoryName(folderPath)?.Replace('\\', '/');
+            if (string.IsNullOrEmpty(parentPath))
+                return true;
+
+            string[] siblings = GetSubfolders(parentPath);
+            return siblings.Length == 0 || siblings[siblings.Length - 1] == folderPath;
+        }
+
+        private static string[] GetSubfolders(string parentPath)
+        {
+            parentPath = NormalizePath(parentPath);
+            if (SubfolderCache.TryGetValue(parentPath, out string[] cached))
+                return cached;
+
+            string[] subfolders = AssetDatabase.GetSubFolders(parentPath);
+            for (int i = 0; i < subfolders.Length; i++)
+                subfolders[i] = NormalizePath(subfolders[i]);
+
+            Array.Sort(subfolders, StringComparer.OrdinalIgnoreCase);
+            SubfolderCache[parentPath] = subfolders;
+            return subfolders;
+        }
+
+        private static string NormalizePath(string path) => path?.Replace('\\', '/');
     }
 }
 #endif

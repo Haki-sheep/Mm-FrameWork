@@ -20,6 +20,8 @@ namespace MieMieFrameWork.Editor
     [Serializable]
     public class FolderProjectData
     {
+        public bool enableProjectTree = true;
+        public Color treeLineColor = new(1f, 1f, 1f, 0.9f);
         public List<FolderProjectEntry> entries = new();
     }
 
@@ -78,6 +80,26 @@ namespace MieMieFrameWork.Editor
 
         public static IReadOnlyList<FolderProjectEntry> GetEntries() => Load().entries;
 
+        public static bool EnableProjectTree
+        {
+            get => Load().enableProjectTree;
+            set
+            {
+                Load().enableProjectTree = value;
+                Save();
+            }
+        }
+
+        public static Color TreeLineColor
+        {
+            get => Load().treeLineColor.a > 0.01f ? Load().treeLineColor : new Color(1f, 1f, 1f, 0.9f);
+            set
+            {
+                Load().treeLineColor = value;
+                Save();
+            }
+        }
+
         public static FolderProjectEntry Find(string folderGuid)
         {
             foreach (FolderProjectEntry entry in Load().entries)
@@ -89,6 +111,23 @@ namespace MieMieFrameWork.Editor
         }
 
         public static bool IsBookmarked(string folderGuid) => Find(folderGuid) != null;
+
+        public static bool HasCustomLabelStyle(FolderProjectEntry entry)
+        {
+            if (entry == null) return false;
+            if (!string.IsNullOrEmpty(entry.displayName)) return true;
+            if (entry.labelColor.a > 0.01f) return true;
+            if (entry.labelBold) return true;
+            return false;
+        }
+
+        public static string GetProjectLabelText(FolderProjectEntry entry, string folderPath)
+        {
+            if (!string.IsNullOrEmpty(entry.displayName))
+                return entry.displayName;
+
+            return string.IsNullOrEmpty(folderPath) ? string.Empty : Path.GetFileName(folderPath);
+        }
 
         public static bool HasProjectStyle(FolderProjectEntry entry)
         {
