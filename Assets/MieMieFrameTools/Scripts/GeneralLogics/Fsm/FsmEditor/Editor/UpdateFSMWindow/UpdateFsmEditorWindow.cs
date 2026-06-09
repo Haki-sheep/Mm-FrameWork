@@ -25,7 +25,7 @@ namespace MieMieFrameWork.FSM
         private readonly List<string> _enumEntries = new();
         private Vector2 _scroll;
 
-        [MenuItem("Tools/FSM/FSM枚举生成器")]
+        [MenuItem("Tools/MieMieFrameWork/FSM/FSM枚举生成器")]
         public static void Open()
         {
             var window = GetWindow<UpdateFsmEditorWindow>("FSM枚举生成器");

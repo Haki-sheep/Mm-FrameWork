@@ -7,7 +7,7 @@ namespace Editor.Protobuf
 {
     public static class ProtobufMenu
     {
-        private const string MENU_ROOT = "Tools/Protobuf/";
+        private const string MENU_ROOT = "Tools/MieMieFrameWork/Protobuf/";
 
         [MenuItem(MENU_ROOT + "Protobuf 生成器", priority = 1000)]
         public static void OpenGenerator()

@@ -35,7 +35,7 @@ public class GenerateUITemp : EditorWindow
     private string className;
     private GameObject prefab;
 
-    [MenuItem("Tools/UI/GenerateUITemp")]
+    [MenuItem("Tools/MieMieFrameWork/UI/GenerateUITemp")]
     public static void ShowExample()
     {
         GenerateUITemp wnd = GetWindow<GenerateUITemp>();

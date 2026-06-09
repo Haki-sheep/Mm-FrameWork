@@ -34,7 +34,7 @@ namespace MieMieFrameWork.ChainedFsm.Editor
         private readonly List<StateClassEntry> _stateEntries = new();
         private Vector2 _scroll;
 
-        [MenuItem("Tools/FSM/链式FSM生成器")]
+        [MenuItem("Tools/MieMieFrameWork/FSM/链式FSM生成器")]
         public static void Open()
         {
             var window = GetWindow<ChinedFSMSqueueWindow>("链式FSM生成器");

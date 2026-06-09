@@ -40,7 +40,7 @@ public class DMVCCodeGeneratorWindow : EditorWindow
 
     #region 菜单入口
 
-    [MenuItem("Tools/DMVC/Code Generator")]
+    [MenuItem("Tools/MieMieFrameWork/DMVC/Code Generator")]
     public static void Open()
     {
         GetWindow<DMVCCodeGeneratorWindow>("DMVC Code Generator");

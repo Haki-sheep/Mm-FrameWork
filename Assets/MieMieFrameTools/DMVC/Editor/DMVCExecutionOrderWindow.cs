@@ -25,7 +25,7 @@ public class DMVCExecutionOrderWindow : EditorWindow
 
     #region 菜单入口
 
-    [MenuItem("Tools/DMVC/Execution Order")]
+    [MenuItem("Tools/MieMieFrameWork/DMVC/Execution Order")]
     public static void Open()
     {
         GetWindow<DMVCExecutionOrderWindow>("DMVC Execution Order");
