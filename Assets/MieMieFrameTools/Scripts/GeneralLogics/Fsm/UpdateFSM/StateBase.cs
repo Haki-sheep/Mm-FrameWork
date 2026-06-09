@@ -10,7 +10,7 @@ namespace MieMieFrameWork.FSM
     public abstract class StateBase 
     {
         //黑板数据引用
-        protected I_FsmBlackboard blackboard;
+        protected IFsmBlackboard blackboard;
 
         //状态名称
         public virtual string StateName => GetType().Name;
@@ -19,7 +19,7 @@ namespace MieMieFrameWork.FSM
         #region 生命周期方法
 
         //初始化状态 - 在状态被添加到状态机时调用
-        public virtual void Init(I_FsmBlackboard blackboard = null)
+        public virtual void Init(IFsmBlackboard blackboard = null)
         {
             this.blackboard = blackboard;
             OnInit();
@@ -84,7 +84,7 @@ namespace MieMieFrameWork.FSM
         /// <typeparam name="T">数据类型</typeparam>
         /// <param name="key">键名</param>
         /// <param name="value">值</param>
-        protected void SetBlackboardValue<T>(E_BlockBoardParme key, T value)
+        protected void SetBlackboardValue<T>(EBlockBoardParme key, T value)
         {
             blackboard?.SetValue(key, value);
         }
@@ -96,7 +96,7 @@ namespace MieMieFrameWork.FSM
         /// <param name="key">键名</param>
         /// <param name="defaultValue">默认值</param>
         /// <returns>数据值</returns>
-        protected T GetBlackboardValue<T>(E_BlockBoardParme key, T defaultValue = default)
+        protected T GetBlackboardValue<T>(EBlockBoardParme key, T defaultValue = default)
         {
             return blackboard != null ? blackboard.GetValue(key, defaultValue) : defaultValue;
         }
@@ -106,7 +106,7 @@ namespace MieMieFrameWork.FSM
         /// </summary>
         /// <param name="key">键名</param>
         /// <returns>是否包含</returns>
-        protected bool HasBlackboardKey(E_BlockBoardParme key)
+        protected bool HasBlackboardKey(EBlockBoardParme key)
         {
             return blackboard?.HasKey(key) ?? false;
         }
@@ -115,7 +115,7 @@ namespace MieMieFrameWork.FSM
         /// 移除黑板数据
         /// </summary>
         /// <param name="key">键名</param>
-        protected void RemoveBlackboardValue(E_BlockBoardParme key)
+        protected void RemoveBlackboardValue(EBlockBoardParme key)
         {
             blackboard?.RemoveValue(key);
         }

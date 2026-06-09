@@ -10,7 +10,7 @@ namespace MieMieFrameWork.FSM
     [Serializable]
     public class StateMachine 
     {
-        private I_FsmBlackboard blackboard;
+        private IFsmBlackboard blackboard;
         private Dictionary<Type, StateBase> statesDic = new();
 
         /// 状态机启动事件
@@ -29,7 +29,7 @@ namespace MieMieFrameWork.FSM
         /// <param name="owner">状态机拥有者</param>
         /// <param name="blackboard">黑板数据（可选）</param>
         /// <param name="statesList">预设状态列表（可选）</param>
-        public void Init(I_FsmBlackboard blackboard = null)
+        public void Init(IFsmBlackboard blackboard = null)
         {
             this.blackboard = blackboard;
             monoManager = ModuleHub.Instance.GetManager<MonoManager>();
