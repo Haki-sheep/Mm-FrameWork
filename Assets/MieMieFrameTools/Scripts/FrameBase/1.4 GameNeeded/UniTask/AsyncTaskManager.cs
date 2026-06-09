@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using static MieMieFrameWork.ModuleHub;
 
 /// <summary>
 /// 多线程任务调度管理器

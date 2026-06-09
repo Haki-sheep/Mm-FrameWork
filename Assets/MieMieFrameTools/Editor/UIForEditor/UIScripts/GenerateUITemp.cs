@@ -42,6 +42,7 @@ public class GenerateUITemp : EditorWindow
         wnd.titleContent = new GUIContent("GenerateUITemp");
     }
 
+    [System.Obsolete]
     public void CreateGUI()
     {
         root = rootVisualElement;
@@ -183,6 +184,8 @@ public class GenerateUITemp : EditorWindow
 
     #region 映射表区域
 
+    [System.Obsolete]
+
     private void InitMappingSection()
     {
         mappingScrollView = root.Q<ScrollView>("MappingScrollView");
@@ -317,6 +320,7 @@ public class GenerateUITemp : EditorWindow
         GenerateUITool.RefreshPrefixToTypeMap();
     }
 
+    [System.Obsolete]
     private void OnCreatButtonClicked(ClickEvent evt)
     {
         if (string.IsNullOrEmpty(className))

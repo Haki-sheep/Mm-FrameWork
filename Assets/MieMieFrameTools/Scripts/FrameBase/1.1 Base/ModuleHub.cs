@@ -5,16 +5,16 @@ namespace MieMieFrameWork
     using System.Linq;
     using MieMieFrameWork.UI;
     using Sirenix.OdinInspector;
-    using UnityEngine; 
+    using UnityEngine;
 
     /// <summary>
     /// 游戏根节点管理器 - 负责框架核心系统的初始化和管理
     /// </summary> 
-    public class ModuleHub : SingletonMono<ModuleHub>  
+    public class ModuleHub : SingletonMono<ModuleHub>
     {
-        private Dictionary<Type, IManagerBase> managerDict = new Dictionary<Type, IManagerBase>();
-        
-        [SerializeField,LabelText("UI管理器")] 
+        private readonly Dictionary<Type, IManagerBase> managerDict = new Dictionary<Type, IManagerBase>();
+
+        [SerializeField, LabelText("UI管理器")]
         private UICoreMgr uICoreMgr;
 
 
@@ -55,8 +55,8 @@ namespace MieMieFrameWork
             var managers = new List<IManagerBase>();
             managers.AddRange(this.transform.GetComponents<IManagerBase>());
             //获取特殊的UIManager
-            if (uICoreMgr is not null && !managers.Contains(uICoreMgr))
-                managers.Add(uICoreMgr);
+            if (uICoreMgr is not null && !managers.Contains((IManagerBase)uICoreMgr))
+                managers.Add((IManagerBase)uICoreMgr);
 
             foreach (var manager in managers.Where(m => m is not null)
                                                             .OrderBy(GetManagerPriority))
@@ -111,7 +111,7 @@ namespace MieMieFrameWork
             }
         }
 
-        
+
         /// <summary>
         /// 清理框架资源
         /// </summary>
@@ -120,6 +120,24 @@ namespace MieMieFrameWork
             EventCenter.ClearAllListeners();
         }
 
+        #endregion
+
+        #region 管理器特性与接口
+        public interface IManagerBase
+        {
+            public void Init();
+        }
+
+        [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+        public sealed class ManagerAttribute : Attribute
+        {
+            public int Priority { get; }
+
+            public ManagerAttribute(int priority = 0)
+            {
+                Priority = priority;
+            }
+        }
         #endregion
 
     }

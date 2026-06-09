@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using static MieMieFrameWork.ModuleHub;
 namespace MieMieFrameWork
 {
     /// <summary>

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using static MieMieFrameWork.ModuleHub;
 namespace MieMieFrameWork.M_InputSystem
 {   
 /// <summary>

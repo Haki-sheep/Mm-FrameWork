@@ -4,7 +4,7 @@ namespace MieMieFrameWork.Pool
     using System;
     using System.Collections.Generic;
     using UnityEngine;
-
+    using static MieMieFrameWork.ModuleHub;
     /// <summary>
     /// 核心:新创建的实例应该由调用者使用，当调用者不再需要这个实例时，再调用 PushGameObj 方法将其放回对象池
     /// </summary>

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using static MieMieFrameWork.ModuleHub;
 
 namespace MieMieFrameWork.M_InputSystem
 {

@@ -47,6 +47,8 @@ public class GenerateUITool
     /// <param name="className">类名</param>
     /// <param name="uiPrefab">UI预制体</param>
     /// <param name="folderPath">生成路径</param>
+    [Obsolete]
+
     public static void GenerateUITemplates(string className, GameObject uiPrefab, string folderPath)
     {
         if (!ValidateInputs(className, uiPrefab)) return;
@@ -315,6 +317,8 @@ public class GenerateUITool
     }
 
     // 扫描UI预制体组件 - 支持多前缀解析规则
+    [Obsolete]
+
     private static List<UIComponentInfo> ScanUIPrefabComponents(GameObject uiPrefab)
     {
         var components = new List<UIComponentInfo>();

@@ -1,3 +1,4 @@
+using static MieMieFrameWork.ModuleHub;
 namespace MieMieFrameWork
 {
     using System;

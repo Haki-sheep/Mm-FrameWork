@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
-
+using static MieMieFrameWork.ModuleHub;
 namespace MieMieFrameWork.UI
 {
     // [Serializable]
@@ -18,7 +18,7 @@ namespace MieMieFrameWork.UI
 
     /// UI核心管理类
     /// </summary>
-    [Serializable,ManagerAttribute(1)]
+    [Serializable,ManagerAttribute(10)]
     public class UICoreMgr : MonoBehaviour, IManagerBase
     {
         //堆栈系统

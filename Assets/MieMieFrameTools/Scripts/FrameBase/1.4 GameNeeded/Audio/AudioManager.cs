@@ -3,7 +3,7 @@ namespace MieMieFrameWork
     using Sirenix.OdinInspector;
     using System.Collections.Generic;
     using UnityEngine;
-
+    using static MieMieFrameWork.ModuleHub;
     /// <summary>
     /// 音频管理器（分部类主文件：变量、属性、全局控制）
     /// 支持 BGM、环境音（Ambience）、特效音三种通道独立播放与控制
