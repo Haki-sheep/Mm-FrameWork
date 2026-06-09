@@ -1,12 +1,13 @@
 {
   "dependencies": {
     "com.boxqkrtm.ide.cursor": {
-      "version": "file:E:/AAAA学习资料/辅助技术与资源/Cursor/com.unity.ide.cursor-master/com.unity.ide.cursor-master",
+      "version": "https://github.com/boxqkrtm/com.unity.ide.cursor.git",
       "depth": 0,
-      "source": "local",
+      "source": "git",
       "dependencies": {
         "com.unity.test-framework": "1.1.9"
-      }
+      },
+      "hash": "fd8ff1fb700caf062eb5cce364c1d0a85f99ebe6"
     },
     "com.unity.addressables": {
       "version": "2.9.1",
