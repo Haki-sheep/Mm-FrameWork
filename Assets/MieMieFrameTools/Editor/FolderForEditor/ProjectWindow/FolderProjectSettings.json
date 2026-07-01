@@ -1,5 +1,5 @@
 ﻿{
-    "enableProjectTree": true,
+    "enableProjectTree": false,
     "treeLineColor": {
         "r": 1.0,
         "g": 1.0,

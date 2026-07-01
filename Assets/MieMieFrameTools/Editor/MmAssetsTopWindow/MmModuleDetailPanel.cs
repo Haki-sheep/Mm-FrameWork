@@ -53,6 +53,11 @@ namespace MieMieFrameWork.Editor.MmAssets
         [ShowIf(nameof(HasInstallCheckPath))]
         public string InstallCheckPath;
 
+        [LabelText("菜单路径")]
+        [ReadOnly, PropertyOrder(7)]
+        [ShowIf(nameof(HasMenuPath))]
+        public string MenuPath;
+
         [HideInInspector] public bool IsInstalled;
 
         public string TitleText => entry?.displayName ?? "未知模块";
@@ -60,6 +65,7 @@ namespace MieMieFrameWork.Editor.MmAssets
         private bool HasGitUrl => !string.IsNullOrWhiteSpace(GitUrl);
         private bool ShowPackageName => !string.IsNullOrWhiteSpace(PackageName);
         private bool HasInstallCheckPath => !string.IsNullOrWhiteSpace(InstallCheckPath);
+        private bool HasMenuPath => !string.IsNullOrWhiteSpace(MenuPath);
         private bool SupportsUpmInstall =>
             !string.IsNullOrWhiteSpace(entry?.packageName) && !string.IsNullOrWhiteSpace(entry?.gitUrl);
 
@@ -76,6 +82,7 @@ namespace MieMieFrameWork.Editor.MmAssets
             GitUrl = entry.gitUrl;
             PackageName = entry.packageName;
             InstallCheckPath = entry.installCheckPath;
+            MenuPath = entry.menuPath;
             StatusLine = BuildStatusLine();
         }
 
@@ -84,6 +91,15 @@ namespace MieMieFrameWork.Editor.MmAssets
             string install = IsInstalled ? "● 已安装" : "○ 未安装";
             string builtIn = entry.isBuiltIn ? "内置" : "外部";
             return $"{install}   |   {builtIn}";
+        }
+
+        [Button("打开编辑器菜单", ButtonSizes.Large)]
+        [ShowIf(nameof(HasMenuPath))]
+        [PropertyOrder(99)]
+        private void OpenEditorMenu()
+        {
+            if (!EditorApplication.ExecuteMenuItem(entry.menuPath))
+                EditorUtility.DisplayDialog("打开失败", $"未找到菜单\n{entry.menuPath}", "确定");
         }
 
         [PropertySpace(12)]
@@ -150,7 +166,7 @@ namespace MieMieFrameWork.Editor.MmAssets
         [PropertyOrder(104)]
         private void OpenCatalogJson()
         {
-            string assetPath = "Assets/MieMieFrameTools/Editor/MmAssetsTopWindow/MmModuleCatalog.json";
+            string assetPath = MmEditorPaths.EditorRoot + "/MmAssetsTopWindow/MmModuleCatalog.json";
             Object json = AssetDatabase.LoadAssetAtPath<Object>(assetPath);
             if (json != null)
             {

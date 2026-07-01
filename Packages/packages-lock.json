@@ -9,6 +9,13 @@
       },
       "hash": "fd8ff1fb700caf062eb5cce364c1d0a85f99ebe6"
     },
+    "com.hakisheep.mm-eventbus": {
+      "version": "git@github.com:Haki-sheep/MmCSharp-EventBus.git?path=unity",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "1fd27a407421db33b4bde2f7adbc622a2f4c39bb"
+    },
     "com.unity.addressables": {
       "version": "2.9.1",
       "depth": 0,

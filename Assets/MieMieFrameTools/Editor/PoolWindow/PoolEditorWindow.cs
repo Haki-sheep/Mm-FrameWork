@@ -36,7 +36,7 @@ namespace MieMieFrameWork.Editor.PoolEditor
         private bool autoPrewarmOnPlay;
         private double lastRefreshTime;
 
-        [MenuItem("Tools/MieMieFrameWork/对象池")]
+        [MenuItem("Tools/MieMieFrameWork/Object Pool")]
         public static void Open()
         {
             var window = GetWindow<PoolEditorWindow>("对象池");

@@ -20,7 +20,7 @@ namespace Editor.Protobuf
     public static class ProtobufSettingsStore
     {
         public static string SettingsFilePath =>
-            Path.Combine(Application.dataPath, "Editor", "Protobuf", "protobuf_settings.json");
+            System.IO.Path.Combine(UnityEngine.Application.dataPath, "MieMieFrameTools/Editor/Protobuf/protobuf_settings.json");
 
         private static ProtobufSettingsData _data;
         private static bool _loaded;
@@ -88,13 +88,13 @@ namespace Editor.Protobuf
         private static void ApplyEmptyDefaults(ProtobufSettingsData d)
         {
             if (string.IsNullOrEmpty(d.protoDirectory))
-                d.protoDirectory = Path.Combine(Application.dataPath, "Configs");
+                d.protoDirectory = Path.Combine(Application.dataPath, "MieMieFrameTools/ARequired/GameSave");
             if (string.IsNullOrEmpty(d.outputDirectory))
-                d.outputDirectory = Path.Combine(Application.dataPath, "Scripts", "GameSave");
+                d.outputDirectory = Path.Combine(Application.dataPath, "MieMieFrameTools/ARequired/GameSave/Generated");
             if (string.IsNullOrEmpty(d.csharpNamespace))
                 d.csharpNamespace = "Game.Save";
             if (string.IsNullOrEmpty(d.protocPath))
-                d.protocPath = Path.Combine(Application.dataPath, "Editor", "Tools", "protoc.exe");
+                d.protocPath = Path.Combine(Application.dataPath, "MieMieFrameTools/Editor/SaveForEditor/Protoc/protoc.exe");
         }
 
         public static void Save()

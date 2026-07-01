@@ -20,6 +20,7 @@ namespace MieMieFrameWork.Editor.MmAssets
         public string gitUrl = string.Empty;
         public string packageName = string.Empty;
         public string installCheckPath = string.Empty;
+        public string menuPath = string.Empty;
         public List<string> tags = new();
         public bool isBuiltIn;
     }

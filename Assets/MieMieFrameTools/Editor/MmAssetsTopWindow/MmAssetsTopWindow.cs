@@ -1,18 +1,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector.Editor;
-using Sirenix.Utilities.Editor;
 using UnityEditor;
-using UnityEngine;
 
 namespace MieMieFrameWork.Editor.MmAssets
 {
     public class MmAssetsTopWindow : OdinMenuEditorWindow
     {
-        private int _installedCount;
-        private int _totalCount;
+        /// <summary>
+        /// 模块中枢左侧分类页签顺序
+        /// </summary>
+        private static readonly string[] CategoryOrder = { "框架", "工具", "插件", "编辑器拓展", "玩法" };
 
-        [MenuItem("Tools/MieMieFrameWork/模块中枢")]
+        [MenuItem("Tools/MieMieFrameWork/模块中枢", priority = -1000)]
         private static void Open()
         {
             GetWindow<MmAssetsTopWindow>("MieMie 模块中枢").Show();
@@ -40,16 +40,31 @@ namespace MieMieFrameWork.Editor.MmAssets
             MmModuleCatalogStore.EnsureLoaded();
 
             List<MmModuleEntry> modules = MmModuleCatalogStore.Catalog.modules ?? new List<MmModuleEntry>();
-            _totalCount = modules.Count;
-            _installedCount = modules.Count(MmModuleCatalogStore.IsInstalled);
+            Dictionary<string, List<MmModuleEntry>> grouped = modules
+                .GroupBy(m => m.category)
+                .ToDictionary(g => g.Key, g => g.ToList());
 
-            foreach (IGrouping<string, MmModuleEntry> group in modules.GroupBy(m => m.category).OrderBy(g => g.Key))
+            foreach (string category in CategoryOrder)
             {
-                foreach (MmModuleEntry entry in group.OrderBy(m => m.displayName))
-                    AddModuleNode(tree, group.Key, entry);
+                if (!grouped.TryGetValue(category, out List<MmModuleEntry> list))
+                    continue;
+
+                AddCategoryNodes(tree, category, list);
+                grouped.Remove(category);
             }
 
+            foreach (KeyValuePair<string, List<MmModuleEntry>> pair in grouped.OrderBy(p => p.Key))
+                AddCategoryNodes(tree, pair.Key, pair.Value);
+
             return tree;
+        }
+
+        private void AddCategoryNodes(OdinMenuTree tree, string category, List<MmModuleEntry> list)
+        {
+            foreach (MmModuleEntry entry in list
+                         .OrderByDescending(m => MmModuleCatalogStore.IsInstalled(m))
+                         .ThenBy(m => m.displayName))
+                AddModuleNode(tree, category, entry);
         }
 
         private void AddModuleNode(OdinMenuTree tree, string group, MmModuleEntry entry)
@@ -66,37 +81,8 @@ namespace MieMieFrameWork.Editor.MmAssets
             Repaint();
         }
 
-        protected override void OnBeginDrawEditors()
-        {
-            SirenixEditorGUI.BeginHorizontalToolbar(MenuTree.Config.SearchToolbarHeight);
-            {
-                GUILayout.Label("MieMie 模块中枢", SirenixGUIStyles.BoldLabel);
-                GUILayout.FlexibleSpace();
-                GUILayout.Label($"已安装 {_installedCount} / {_totalCount}", SirenixGUIStyles.Label);
-                GUILayout.Space(8);
-
-                if (SirenixEditorGUI.ToolbarButton("刷新"))
-                    ForceMenuTreeRebuild();
-
-                if (SirenixEditorGUI.ToolbarButton("打开清单"))
-                {
-                    Object json = AssetDatabase.LoadAssetAtPath<Object>(
-                        "Assets/MieMieFrameTools/Editor/MmAssetsTopWindow/MmModuleCatalog.json");
-                    if (json != null)
-                        AssetDatabase.OpenAsset(json);
-                }
-            }
-            SirenixEditorGUI.EndHorizontalToolbar();
-        }
-
         protected override void OnImGUI()
         {
-            SirenixEditorGUI.Title(
-                "外部玩法模块 · 浏览 / 导入 / 移除",
-                "左侧选择模块，右侧查看详情。清单编辑：MmModuleCatalog.json",
-                TextAlignment.Left,
-                true);
-            GUILayout.Space(4);
             base.OnImGUI();
         }
     }

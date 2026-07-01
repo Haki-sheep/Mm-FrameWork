@@ -767,7 +767,7 @@ public class GenerateUITool
     }
 
     private const string PendingAttachesSessionKey = "MieMieFrameWork.GenerateUITool.PendingAttaches";
-    private const string LegacyPendingAttachesFile = "Assets/MieMieFrameTools/Editor/UI/PendingAttaches.json";
+    private const string LegacyPendingAttachesFile = "Assets/MieMieFrameTools/Editor/UIForEditor/UIScripts/PendingAttaches.json";
 
     /// <summary>
     /// 生成时记录映射并立即触发挂载流程

@@ -12,7 +12,7 @@ namespace MieMieFrameWork.Editor
         private Vector2 _scroll;
         private readonly Dictionary<string, Texture2D> _iconFieldCache = new();
 
-        [MenuItem("Tools/MieMieFrameWork/文件夹管理/文件夹收藏窗口")]
+        [MenuItem("Tools/MieMieFrameWork/Folder/Folder Bookmarks")]
         public static void Open() 
         {
             GetWindow<FolderBookmarkWindow>("文件夹收藏");

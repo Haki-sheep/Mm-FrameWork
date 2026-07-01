@@ -9,13 +9,13 @@ namespace Editor.Protobuf
     {
         private const string MENU_ROOT = "Tools/MieMieFrameWork/Protobuf/";
 
-        [MenuItem(MENU_ROOT + "Protobuf 生成器", priority = 1000)]
+        [MenuItem(MENU_ROOT + "Protobuf Generator", priority = 1000)]
         public static void OpenGenerator()
         {
             ProtobufGeneratorWindow.ShowWindow();
         }
 
-        [MenuItem(MENU_ROOT + "依赖下载链接", priority = 1001)]
+        [MenuItem(MENU_ROOT + "Download Dependencies", priority = 1001)]
         public static void OpenDownloads()
         {
             ProtobufDownloadWindow.Open();
