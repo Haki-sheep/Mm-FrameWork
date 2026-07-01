@@ -12,6 +12,14 @@ namespace MieMieFrameWork.Editor.MmAssets
         /// </summary>
         private static readonly string[] CategoryOrder = { "框架", "工具", "插件", "编辑器拓展", "玩法" };
 
+        /// <summary>
+        /// 玩法下子页签顺序
+        /// </summary>
+        private static readonly string[] GameplaySubCategoryOrder =
+        {
+            "库存", "3C", "叙事", "经济", "世界", "交互", "进度"
+        };
+
         [MenuItem("Tools/MieMieFrameWork/模块中枢", priority = -1000)]
         private static void Open()
         {
@@ -61,16 +69,71 @@ namespace MieMieFrameWork.Editor.MmAssets
 
         private void AddCategoryNodes(OdinMenuTree tree, string category, List<MmModuleEntry> list)
         {
-            foreach (MmModuleEntry entry in list
-                         .OrderByDescending(m => MmModuleCatalogStore.IsInstalled(m))
-                         .ThenBy(m => m.displayName))
+            List<MmModuleEntry> flatList = list
+                .Where(m => string.IsNullOrWhiteSpace(m.subCategory))
+                .OrderByDescending(m => MmModuleCatalogStore.IsInstalled(m))
+                .ThenBy(m => m.displayName)
+                .ToList();
+
+            foreach (MmModuleEntry entry in flatList)
                 AddModuleNode(tree, category, entry);
+
+            Dictionary<string, List<MmModuleEntry>> subGrouped = list
+                .Where(m => !string.IsNullOrWhiteSpace(m.subCategory))
+                .GroupBy(m => m.subCategory)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            foreach (string subCategory in GetSubCategoryOrder(category, subGrouped.Keys))
+            {
+                if (!subGrouped.TryGetValue(subCategory, out List<MmModuleEntry> subList))
+                    continue;
+
+                string groupPath = $"{category}/{subCategory}";
+                foreach (MmModuleEntry entry in subList
+                             .OrderByDescending(m => MmModuleCatalogStore.IsInstalled(m))
+                             .ThenBy(m => m.displayName))
+                    AddModuleNode(tree, groupPath, entry);
+
+                subGrouped.Remove(subCategory);
+            }
+
+            foreach (KeyValuePair<string, List<MmModuleEntry>> pair in subGrouped.OrderBy(p => p.Key))
+            {
+                string groupPath = $"{category}/{pair.Key}";
+                foreach (MmModuleEntry entry in pair.Value
+                             .OrderByDescending(m => MmModuleCatalogStore.IsInstalled(m))
+                             .ThenBy(m => m.displayName))
+                    AddModuleNode(tree, groupPath, entry);
+            }
         }
 
-        private void AddModuleNode(OdinMenuTree tree, string group, MmModuleEntry entry)
+        private static IEnumerable<string> GetSubCategoryOrder(string category, IEnumerable<string> keys)
+        {
+            if (category != "玩法")
+            {
+                foreach (string sub in keys.OrderBy(k => k))
+                    yield return sub;
+                yield break;
+            }
+
+            HashSet<string> keySet = new HashSet<string>(keys);
+            foreach (string sub in GameplaySubCategoryOrder)
+            {
+                if (keySet.Contains(sub))
+                    yield return sub;
+            }
+
+            foreach (string sub in keys.OrderBy(k => k))
+            {
+                if (!GameplaySubCategoryOrder.Contains(sub))
+                    yield return sub;
+            }
+        }
+
+        private void AddModuleNode(OdinMenuTree tree, string groupPath, MmModuleEntry entry)
         {
             string status = MmModuleCatalogStore.IsInstalled(entry) ? "●" : "○";
-            string path = $"{group}/{status} {entry.displayName}";
+            string path = $"{groupPath}/{status} {entry.displayName}";
             var panel = new MmModuleDetailPanel(entry, OnModulePanelChanged);
             tree.Add(path, panel);
         }

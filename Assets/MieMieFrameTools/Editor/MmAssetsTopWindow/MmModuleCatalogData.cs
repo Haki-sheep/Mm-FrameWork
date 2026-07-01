@@ -15,6 +15,7 @@ namespace MieMieFrameWork.Editor.MmAssets
         public string id = string.Empty;
         public string displayName = string.Empty;
         public string category = "未分类";
+        public string subCategory = string.Empty;
         public string description = string.Empty;
         public string version = "0.1.0";
         public string gitUrl = string.Empty;

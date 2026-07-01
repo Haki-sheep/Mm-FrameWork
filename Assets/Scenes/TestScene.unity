@@ -144,7 +144,7 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7940169}
   m_Enabled: 1
-  serializedVersion: 12
+  serializedVersion: 13
   m_Type: 1
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
@@ -196,7 +196,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
-  m_ShadowRadius: 0
+  m_ShapeRadius: 0
   m_ShadowAngle: 0
   m_LightUnit: 1
   m_LuxAtDistance: 1
@@ -376,6 +376,10 @@ PrefabInstance:
     - target: {fileID: 1875632843843946708, guid: 4fe3165d7f7bd0340b48d165637bdbca, type: 3}
       propertyPath: m_Name
       value: FrameRoot
+      objectReference: {fileID: 0}
+    - target: {fileID: 1875632843843946708, guid: 4fe3165d7f7bd0340b48d165637bdbca, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1998272896780071737, guid: 4fe3165d7f7bd0340b48d165637bdbca, type: 3}
       propertyPath: m_LocalPosition.x

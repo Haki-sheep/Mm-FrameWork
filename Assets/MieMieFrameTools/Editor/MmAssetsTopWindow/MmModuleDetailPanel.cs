@@ -75,7 +75,9 @@ namespace MieMieFrameWork.Editor.MmAssets
                 return;
 
             IsInstalled = MmModuleCatalogStore.IsInstalled(entry);
-            Category = entry.category;
+            Category = string.IsNullOrWhiteSpace(entry.subCategory)
+                ? entry.category
+                : $"{entry.category} / {entry.subCategory}";
             Version = entry.version;
             Tags = entry.tags != null && entry.tags.Count > 0 ? string.Join(" · ", entry.tags) : "无";
             Description = entry.description;
