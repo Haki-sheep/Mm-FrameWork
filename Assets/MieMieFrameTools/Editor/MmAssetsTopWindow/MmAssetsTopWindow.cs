@@ -43,13 +43,6 @@ namespace MieMieFrameWork.Editor.MmAssets
             _totalCount = modules.Count;
             _installedCount = modules.Count(MmModuleCatalogStore.IsInstalled);
 
-            var favorites = modules.Where(m => MmModuleCatalogStore.IsFavorite(m.id)).ToList();
-            if (favorites.Count > 0)
-            {
-                foreach (MmModuleEntry entry in favorites)
-                    AddModuleNode(tree, "收藏", entry);
-            }
-
             foreach (IGrouping<string, MmModuleEntry> group in modules.GroupBy(m => m.category).OrderBy(g => g.Key))
             {
                 foreach (MmModuleEntry entry in group.OrderBy(m => m.displayName))
@@ -62,8 +55,7 @@ namespace MieMieFrameWork.Editor.MmAssets
         private void AddModuleNode(OdinMenuTree tree, string group, MmModuleEntry entry)
         {
             string status = MmModuleCatalogStore.IsInstalled(entry) ? "●" : "○";
-            string favorite = MmModuleCatalogStore.IsFavorite(entry.id) ? "★ " : string.Empty;
-            string path = $"{group}/{favorite}{status} {entry.displayName}";
+            string path = $"{group}/{status} {entry.displayName}";
             var panel = new MmModuleDetailPanel(entry, OnModulePanelChanged);
             tree.Add(path, panel);
         }
@@ -100,7 +92,7 @@ namespace MieMieFrameWork.Editor.MmAssets
         protected override void OnImGUI()
         {
             SirenixEditorGUI.Title(
-                "外部玩法模块 · 浏览 / 安装 / 收藏",
+                "外部玩法模块 · 浏览 / 导入 / 移除",
                 "左侧选择模块，右侧查看详情。清单编辑：MmModuleCatalog.json",
                 TextAlignment.Left,
                 true);

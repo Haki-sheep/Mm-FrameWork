@@ -11,8 +11,6 @@ namespace MieMieFrameWork.Editor.MmAssets
 {
     public static class MmModuleCatalogStore
     {
-        private const string FavoritePrefsKey = "MmModuleCatalog.Favorites";
-
         public static string CatalogFilePath =>
             Path.Combine(Application.dataPath, "MieMieFrameTools/Editor/MmAssetsTopWindow/MmModuleCatalog.json");
 
@@ -20,7 +18,6 @@ namespace MieMieFrameWork.Editor.MmAssets
             Path.GetFullPath(Path.Combine(Application.dataPath, "../Packages/manifest.json"));
 
         private static MmModuleCatalogData _catalog;
-        private static HashSet<string> _favorites;
 
         public static MmModuleCatalogData Catalog
         {
@@ -61,7 +58,16 @@ namespace MieMieFrameWork.Editor.MmAssets
 
         public static bool IsInstalled(MmModuleEntry entry)
         {
-            if (entry == null || string.IsNullOrWhiteSpace(entry.installCheckPath))
+            if (entry == null)
+                return false;
+
+            if (!string.IsNullOrWhiteSpace(entry.packageName) && IsPackageInManifest(entry.packageName))
+            {
+                if (IsUpmPackageResolved(entry.packageName))
+                    return true;
+            }
+
+            if (string.IsNullOrWhiteSpace(entry.installCheckPath))
                 return false;
 
             string normalized = entry.installCheckPath.Replace('\\', '/');
@@ -74,39 +80,50 @@ namespace MieMieFrameWork.Editor.MmAssets
             if (normalized.StartsWith("Assets/", System.StringComparison.OrdinalIgnoreCase))
                 return AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(normalized) != null;
 
+            if (normalized.StartsWith("Packages/", System.StringComparison.OrdinalIgnoreCase))
+                return AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(normalized) != null;
+
             return false;
         }
 
-        public static bool IsFavorite(string moduleId)
+        public static bool IsPackageInManifest(string packageName)
         {
-            EnsureFavoritesLoaded();
-            return _favorites.Contains(moduleId);
-        }
+            if (string.IsNullOrWhiteSpace(packageName) || !File.Exists(ManifestFilePath))
+                return false;
 
-        public static void ToggleFavorite(string moduleId)
-        {
-            EnsureFavoritesLoaded();
-            if (!_favorites.Add(moduleId))
-                _favorites.Remove(moduleId);
-
-            EditorPrefs.SetString(FavoritePrefsKey, string.Join(",", _favorites));
-        }
-
-        private static void EnsureFavoritesLoaded()
-        {
-            if (_favorites != null)
-                return;
-
-            _favorites = new HashSet<string>(StringComparer.Ordinal);
-            string saved = EditorPrefs.GetString(FavoritePrefsKey, string.Empty);
-            if (string.IsNullOrEmpty(saved))
-                return;
-
-            foreach (string id in saved.Split(','))
+            try
             {
-                if (!string.IsNullOrWhiteSpace(id))
-                    _favorites.Add(id);
+                var manifest = JObject.Parse(File.ReadAllText(ManifestFilePath));
+                return manifest["dependencies"]?[packageName] != null;
             }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static bool IsUpmPackageResolved(string packageName)
+        {
+            string virtualPath = $"Packages/{packageName}/package.json";
+            if (AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(virtualPath) != null)
+                return true;
+
+            string projectRoot = Path.GetDirectoryName(Application.dataPath) ?? string.Empty;
+            string localPath = Path.Combine(projectRoot, "Packages", packageName);
+            if (Directory.Exists(localPath))
+                return true;
+
+            string cacheDir = Path.Combine(projectRoot, "Library", "PackageCache");
+            if (!Directory.Exists(cacheDir))
+                return false;
+
+            foreach (string dir in Directory.GetDirectories(cacheDir, packageName + "@*"))
+            {
+                if (File.Exists(Path.Combine(dir, "package.json")))
+                    return true;
+            }
+
+            return false;
         }
 
         public static bool TryInstallPackage(MmModuleEntry entry, out string message)
@@ -156,7 +173,63 @@ namespace MieMieFrameWork.Editor.MmAssets
                 AssetDatabase.Refresh();
                 Client.Resolve();
 
-                message = $"已将 {entry.packageName} 写入 manifest，Unity 正在拉取包…";
+                message = $"已将 {entry.packageName} 写入 manifest Unity 正在拉取包";
+                return true;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                return false;
+            }
+        }
+
+        public static bool TryRemovePackage(MmModuleEntry entry, out string message)
+        {
+            message = string.Empty;
+
+            if (entry == null)
+            {
+                message = "模块数据为空";
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(entry.packageName))
+            {
+                message = "该模块未配置 UPM 包名 无法通过移除按钮卸载";
+                return false;
+            }
+
+            if (!IsPackageInManifest(entry.packageName))
+            {
+                message = $"manifest 中未找到 {entry.packageName}";
+                return false;
+            }
+
+            if (!File.Exists(ManifestFilePath))
+            {
+                message = "未找到 Packages/manifest.json";
+                return false;
+            }
+
+            try
+            {
+                string manifestJson = File.ReadAllText(ManifestFilePath);
+                var manifest = JObject.Parse(manifestJson);
+                var dependencies = manifest["dependencies"] as JObject;
+                if (dependencies == null)
+                {
+                    message = "manifest 无 dependencies 节点";
+                    return false;
+                }
+
+                dependencies.Remove(entry.packageName);
+                manifest["dependencies"] = dependencies;
+
+                File.WriteAllText(ManifestFilePath, manifest.ToString(Formatting.Indented));
+                AssetDatabase.Refresh();
+                Client.Resolve();
+
+                message = $"已从 manifest 移除 {entry.packageName}";
                 return true;
             }
             catch (Exception ex)
@@ -177,6 +250,32 @@ namespace MieMieFrameWork.Editor.MmAssets
             {
                 EditorGUIUtility.PingObject(obj);
                 return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(entry.packageName))
+            {
+                string pkgJson = $"Packages/{entry.packageName}/package.json";
+                obj = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(pkgJson);
+                if (obj != null)
+                {
+                    EditorGUIUtility.PingObject(obj);
+                    return;
+                }
+
+                string projectRoot = Path.GetDirectoryName(Application.dataPath) ?? string.Empty;
+                string cacheDir = Path.Combine(projectRoot, "Library", "PackageCache");
+                if (Directory.Exists(cacheDir))
+                {
+                    foreach (string dir in Directory.GetDirectories(cacheDir, entry.packageName + "@*"))
+                    {
+                        string fullPkgJson = Path.Combine(dir, "package.json");
+                        if (File.Exists(fullPkgJson))
+                        {
+                            EditorUtility.RevealInFinder(fullPkgJson);
+                            return;
+                        }
+                    }
+                }
             }
 
             if (AssetDatabase.IsValidFolder(assetPath))

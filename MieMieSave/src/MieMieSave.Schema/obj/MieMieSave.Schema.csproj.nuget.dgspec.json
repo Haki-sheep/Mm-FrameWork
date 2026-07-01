@@ -1,0 +1,73 @@
+{
+  "format": 1,
+  "restore": {
+    "E:\\AAAA学习资料\\Demo\\哈基咩咩框架专用项目\\HakiSheep-Framework\\MieMieSave\\src\\MieMieSave.Schema\\MieMieSave.Schema.csproj": {}
+  },
+  "projects": {
+    "E:\\AAAA学习资料\\Demo\\哈基咩咩框架专用项目\\HakiSheep-Framework\\MieMieSave\\src\\MieMieSave.Schema\\MieMieSave.Schema.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\AAAA学习资料\\Demo\\哈基咩咩框架专用项目\\HakiSheep-Framework\\MieMieSave\\src\\MieMieSave.Schema\\MieMieSave.Schema.csproj",
+        "projectName": "MieMieSave.Schema",
+        "projectPath": "E:\\AAAA学习资料\\Demo\\哈基咩咩框架专用项目\\HakiSheep-Framework\\MieMieSave\\src\\MieMieSave.Schema\\MieMieSave.Schema.csproj",
+        "packagesPath": "C:\\Users\\fmz\\.nuget\\packages\\",
+        "outputPath": "E:\\AAAA学习资料\\Demo\\哈基咩咩框架专用项目\\HakiSheep-Framework\\MieMieSave\\src\\MieMieSave.Schema\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\fmz\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.200"
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
@@ -53,7 +54,6 @@ namespace MieMieFrameWork.Editor.MmAssets
         public string InstallCheckPath;
 
         [HideInInspector] public bool IsInstalled;
-        [HideInInspector] public bool IsFavorite;
 
         public string TitleText => entry?.displayName ?? "未知模块";
 
@@ -69,7 +69,6 @@ namespace MieMieFrameWork.Editor.MmAssets
                 return;
 
             IsInstalled = MmModuleCatalogStore.IsInstalled(entry);
-            IsFavorite = MmModuleCatalogStore.IsFavorite(entry.id);
             Category = entry.category;
             Version = entry.version;
             Tags = entry.tags != null && entry.tags.Count > 0 ? string.Join(" · ", entry.tags) : "无";
@@ -84,33 +83,56 @@ namespace MieMieFrameWork.Editor.MmAssets
         {
             string install = IsInstalled ? "● 已安装" : "○ 未安装";
             string builtIn = entry.isBuiltIn ? "内置" : "外部";
-            string favorite = IsFavorite ? " ★ 已收藏" : string.Empty;
-            return $"{install}   |   {builtIn}{favorite}";
+            return $"{install}   |   {builtIn}";
         }
 
         [PropertySpace(12)]
-        [Button("安装到项目 (UPM)", ButtonSizes.Large)]
+        [Button("导入", ButtonSizes.Large)]
         [GUIColor(0.45f, 0.85f, 0.55f)]
         [ShowIf(nameof(SupportsUpmInstall))]
         [HideIf(nameof(IsInstalled))]
         [PropertyOrder(100)]
-        private void InstallModule()
+        private void ImportModule()
         {
             if (!MmModuleCatalogStore.TryInstallPackage(entry, out string message))
             {
-                EditorUtility.DisplayDialog("安装模块", message, "确定");
+                EditorUtility.DisplayDialog("导入模块", message, "确定");
                 return;
             }
 
-            EditorUtility.DisplayDialog("安装模块", message, "确定");
+            EditorUtility.DisplayDialog("导入模块", message, "确定");
             Refresh();
             onChanged?.Invoke();
         }
 
         [PropertySpace(12)]
+        [Button("移除", ButtonSizes.Large)]
+        [GUIColor(0.95f, 0.55f, 0.45f)]
+        [ShowIf("@SupportsUpmInstall && IsInstalled")]
+        [PropertyOrder(101)]
+        private void RemoveModule()
+        {
+            if (!EditorUtility.DisplayDialog(
+                    "移除模块",
+                    $"将从 Packages/manifest.json 移除 {entry.packageName}\n确认继续",
+                    "移除",
+                    "取消"))
+                return;
+
+            if (!MmModuleCatalogStore.TryRemovePackage(entry, out string message))
+            {
+                EditorUtility.DisplayDialog("移除模块", message, "确定");
+                return;
+            }
+
+            EditorUtility.DisplayDialog("移除模块", message, "确定");
+            Refresh();
+            onChanged?.Invoke();
+        }
+
         [Button("定位模块路径", ButtonSizes.Large)]
         [ShowIf(nameof(IsInstalled))]
-        [PropertyOrder(101)]
+        [PropertyOrder(102)]
         private void PingModule()
         {
             MmModuleCatalogStore.PingInstallPath(entry);
@@ -118,22 +140,11 @@ namespace MieMieFrameWork.Editor.MmAssets
 
         [Button("打开 Git 仓库", ButtonSizes.Medium)]
         [ShowIf(nameof(HasGitUrl))]
-        [PropertyOrder(102)]
+        [PropertyOrder(103)]
         private void OpenGitUrl()
         {
-            Application.OpenURL(entry.gitUrl);
+            Application.OpenURL(ConvertGitUrlToHttps(entry.gitUrl));
         }
-
-        [Button("@FavoriteButtonText", ButtonSizes.Medium)]
-        [PropertyOrder(103)]
-        private void ToggleFavorite()
-        {
-            MmModuleCatalogStore.ToggleFavorite(entry.id);
-            Refresh();
-            onChanged?.Invoke();
-        }
-
-        private string FavoriteButtonText => IsFavorite ? "取消收藏" : "加入收藏";
 
         [Button("编辑清单 JSON", ButtonSizes.Medium)]
         [PropertyOrder(104)]
@@ -146,6 +157,21 @@ namespace MieMieFrameWork.Editor.MmAssets
                 AssetDatabase.OpenAsset(json);
                 EditorGUIUtility.PingObject(json);
             }
+        }
+
+        private static string ConvertGitUrlToHttps(string gitUrl)
+        {
+            if (string.IsNullOrWhiteSpace(gitUrl))
+                return gitUrl;
+
+            int pathIdx = gitUrl.IndexOf('?');
+            string baseUrl = pathIdx >= 0 ? gitUrl.Substring(0, pathIdx) : gitUrl;
+
+            var match = Regex.Match(baseUrl, @"^git@([^:]+):(.+?)(\.git)?$");
+            if (match.Success)
+                return $"https://{match.Groups[1].Value}/{match.Groups[2].Value}";
+
+            return baseUrl;
         }
     }
 }

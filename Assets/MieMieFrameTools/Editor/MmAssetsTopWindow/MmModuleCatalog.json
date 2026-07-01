@@ -42,11 +42,11 @@
             "category": "框架",
             "description": "ArchiveMgr 存档读写，支持 Protobuf 等序列化扩展。",
             "version": "1.0.0",
-            "gitUrl": "",
-            "packageName": "",
-            "installCheckPath": "Assets/MieMieFrameTools/Scripts/FrameBase/1.4 GameNeeded/Save/Archive/Core/ArchiveMgr.cs",
+            "gitUrl": "git@github.com:Haki-sheep/Mm-Saver.git?path=unity",
+            "packageName": "com.hakisheep.mm-saver",
+            "installCheckPath": "Packages/com.hakisheep.mm-saver/package.json",
             "tags": ["存档"],
-            "isBuiltIn": true
+            "isBuiltIn": false
         },
         {
             "id": "audio-manager",

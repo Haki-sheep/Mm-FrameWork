@@ -306,7 +306,6 @@ GameObject:
   - component: {fileID: 6490852564732318381}
   - component: {fileID: 5455518205507124390}
   - component: {fileID: 5584570498925309000}
-  - component: {fileID: 5294063972887282733}
   m_Layer: 31
   m_Name: FrameRoot
   m_TagString: Untagged
@@ -416,18 +415,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MieMieFrameWork.ModuleHub
   uICoreMgr: {fileID: 0}
---- !u!114 &5294063972887282733
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1875632843843946708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d75e79ef4d0b471459dba4a2b01e408a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MieMieFrameTools.ArchiveMgr
 --- !u!1 &2397423521224059995
 GameObject:
   m_ObjectHideFlags: 0

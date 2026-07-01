@@ -2,6 +2,7 @@ namespace MieMieFrameWork
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using MieMieFrameWork.UI;
     using Sirenix.OdinInspector;
@@ -16,6 +17,14 @@ namespace MieMieFrameWork
 
         [SerializeField, LabelText("UI管理器")]
         private UICoreMgr uICoreMgr;
+
+        [SerializeField, LabelText("存档子目录")]
+        private string archiveSubFolder = "Archives";
+
+        /// <summary>
+        /// 存档管理器实例 未安装 com.hakisheep.mm-saver 时为 null
+        /// </summary>
+        private object archiveMgr;
 
 
         #region Unity 生命周期
@@ -42,6 +51,7 @@ namespace MieMieFrameWork
         {
             try
             {
+                InitArchiveMgr();
                 GetAllManager();
             }
             catch (System.Exception ex)
@@ -49,6 +59,33 @@ namespace MieMieFrameWork
                 Debug.LogError($"[GameRoot] 框架初始化失败: {ex.Message}");
             }
         }
+
+        /// <summary>
+        /// 初始化存档管理器
+        /// </summary>
+        private void InitArchiveMgr()
+        {
+            Type archiveType = Type.GetType("MiMieSaver.ArchiveMgr, MiMieSaver");
+            if (archiveType == null)
+            {
+                Debug.LogWarning("[ModuleHub] 存档模块未安装 跳过 ArchiveMgr 初始化");
+                return;
+            }
+
+            string folder = string.IsNullOrWhiteSpace(archiveSubFolder) ? "Archives" : archiveSubFolder.Trim();
+            string rootPath = Path.Combine(Application.persistentDataPath, folder);
+            archiveMgr = Activator.CreateInstance(archiveType, rootPath);
+        }
+
+        /// <summary>
+        /// 是否已安装并初始化存档模块
+        /// </summary>
+        public bool HasArchive => archiveMgr != null;
+
+        /// <summary>
+        /// 获取存档管理器 需引用 MiMieSaver 后使用 IArchiveMgr 等类型
+        /// </summary>
+        public T GetArchive<T>() where T : class => archiveMgr as T;
 
         private void GetAllManager()
         {
@@ -118,6 +155,7 @@ namespace MieMieFrameWork
         private void CleanupFramework()
         {
             EventCenter.ClearAllListeners();
+            archiveMgr = null;
         }
 
         #endregion

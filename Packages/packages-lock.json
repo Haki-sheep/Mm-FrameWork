@@ -9,6 +9,15 @@
       },
       "hash": "fd8ff1fb700caf062eb5cce364c1d0a85f99ebe6"
     },
+    "com.hakisheep.mm-saver": {
+      "version": "git@github.com:Haki-sheep/Mm-Saver.git?path=unity",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.1"
+      },
+      "hash": "c32f5b8d14095a7ddebb8afb7733a673b2b0ca86"
+    },
     "com.unity.addressables": {
       "version": "2.9.1",
       "depth": 0,
@@ -73,6 +82,13 @@
       "dependencies": {
         "com.unity.modules.uielements": "1.0.0"
       }
+    },
+    "com.unity.nuget.newtonsoft-json": {
+      "version": "3.2.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
     },
     "com.unity.profiling.core": {
       "version": "1.0.3",
