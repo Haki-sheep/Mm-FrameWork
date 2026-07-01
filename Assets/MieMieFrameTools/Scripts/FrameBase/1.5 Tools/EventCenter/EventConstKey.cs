@@ -1,4 +1,4 @@
-namespace MieMieFrameWork
+﻿namespace MieMieFrameWork
 {
     /// <summary>
     /// 事件常量枚举
@@ -7,8 +7,6 @@ namespace MieMieFrameWork
     {
         LoadingSceneProgress,
         ChangeLanguage,
-        PlayerLevelUp,
-        GameStart,
-        ScoreChanged,
+        GameStart
     }
 }

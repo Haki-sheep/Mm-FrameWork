@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using MieMieFrameWork;
 using UnityEngine;
 
 namespace MieMieFrameWork.MMAnimation
@@ -14,114 +13,164 @@ namespace MieMieFrameWork.MMAnimation
         Object
     }
 
-    public class AnimationReceiver : SingletonMono<AnimationReceiver>
+    public class AnimationReceiver : MonoBehaviour
     {
+        /// <summary>
+        /// 动画事件名列表
+        /// </summary>
         private List<string> animationEventList = new();
+
         public List<string> AnimationEventList => animationEventList;
-        private int characterId;
 
-        public int CharacterID
-        {
-            get => characterId;
-            set
-            {
-                if (characterId == value) return;
-                characterId = value;
-            }
-        }
-        private string tempId;
+        /// <summary>
+        /// 内部事件字典
+        /// </summary>
+        private Dictionary<string, Delegate> eventDict = new();
 
-        void OnDestroy()
+        /// <summary>
+        /// 销毁时清空
+        /// </summary>
+        private void OnDestroy()
         {
-            foreach (var item in animationEventList)
-            {
-                EventCenter.RemoveListener(item);
-            }
+            eventDict.Clear();
             animationEventList.Clear();
-            characterId = -1;
-            tempId = null;
         }
 
+        #region 加减事件
 
-        private void RemoveNameEvent(string eventName)
+        /// <summary>
+        /// 添加无参数动画事件
+        /// </summary>
+        public void AddAnimationEvent(string eventName, Action action)
         {
             if (animationEventList.Contains(eventName))
             {
-                EventCenter.RemoveListener(eventName);
-                animationEventList.Remove(eventName);
-            }
-        }
-        #region 加减事件
-        public void AddAnimationEvent(string eventName, Action action)
-        {
-            tempId = characterId + eventName;
-            if (animationEventList.Contains(tempId))
-            {
                 Debug.LogError($"AnimationEvent {eventName} already added");
                 return;
             }
-            animationEventList.Add(tempId);
-            EventCenter.AddEventListener(tempId, action);
+
+            animationEventList.Add(eventName);
+            eventDict[eventName] = action;
         }
 
+        /// <summary>
+        /// 移除无参数动画事件
+        /// </summary>
         public void RemoveAnimationEvent(string eventName, Action action)
         {
-            tempId = characterId + eventName;
-            if (!animationEventList.Contains(tempId))
+            if (!animationEventList.Contains(eventName))
             {
-                Debug.LogError($"AnimationEvent {tempId} not found");
+                Debug.LogError($"AnimationEvent {eventName} not found");
                 return;
             }
-            animationEventList.Remove(tempId);
-            EventCenter.RemoveListener(tempId, action);
+
+            animationEventList.Remove(eventName);
+            if (eventDict.TryGetValue(eventName, out var existing))
+            {
+                var newDelegate = Delegate.Remove(existing, action);
+                if (newDelegate == null)
+                    eventDict.Remove(eventName);
+                else
+                    eventDict[eventName] = newDelegate;
+            }
         }
+
+        /// <summary>
+        /// 添加单参数动画事件
+        /// </summary>
         public void AddAnimationEvent<T>(string eventName, Action<T> action)
         {
-            tempId = characterId + eventName;
-            if (animationEventList.Contains(tempId))
+            if (animationEventList.Contains(eventName))
             {
                 Debug.LogError($"AnimationEvent {eventName} already added");
                 return;
             }
-            animationEventList.Add(tempId);
-            EventCenter.AddEventListener(tempId, action);
+
+            animationEventList.Add(eventName);
+            eventDict[eventName] = action;
         }
 
+        /// <summary>
+        /// 移除单参数动画事件
+        /// </summary>
         public void RemoveAnimationEvent<T>(string eventName, Action<T> action)
         {
-            tempId = characterId + eventName;
-            if (!animationEventList.Contains(tempId))
+            if (!animationEventList.Contains(eventName))
             {
-                Debug.LogError($"AnimationEvent {tempId} not found");
+                Debug.LogError($"AnimationEvent {eventName} not found");
                 return;
             }
-            animationEventList.Remove(tempId);
-            EventCenter.RemoveListener(tempId, action);
+
+            animationEventList.Remove(eventName);
+            if (eventDict.TryGetValue(eventName, out var existing))
+            {
+                var newDelegate = Delegate.Remove(existing, action);
+                if (newDelegate == null)
+                    eventDict.Remove(eventName);
+                else
+                    eventDict[eventName] = newDelegate;
+            }
         }
+
         #endregion
 
-        #region 触发事件 
+        #region 触发事件
+
+        /// <summary>
+        /// 触发无参数动画事件
+        /// </summary>
         public void OnAnimationEventTriggered(string eventName)
         {
-            EventCenter.TriggerEvent(characterId + eventName);
+            if (!eventDict.TryGetValue(eventName, out var eventDelegate))
+                return;
+
+            (eventDelegate as Action)?.Invoke();
         }
+
+        /// <summary>
+        /// 触发 Int 参数动画事件
+        /// </summary>
         public void OnIntAnimationEventTriggered(string eventName, int value)
         {
-            EventCenter.TriggerEvent(characterId + eventName, value);
+            if (!eventDict.TryGetValue(eventName, out var eventDelegate))
+                return;
+
+            (eventDelegate as Action<int>)?.Invoke(value);
         }
+
+        /// <summary>
+        /// 触发 Float 参数动画事件
+        /// </summary>
         public void OnFloatAnimationEventTriggered(string eventName, float value)
         {
-            EventCenter.TriggerEvent(characterId + eventName, value);
+            if (!eventDict.TryGetValue(eventName, out var eventDelegate))
+                return;
+
+            (eventDelegate as Action<float>)?.Invoke(value);
         }
+
+        /// <summary>
+        /// 触发 String 参数动画事件
+        /// </summary>
         public void OnStringAnimationEventTriggered(string eventName, string value)
         {
-            EventCenter.TriggerEvent(characterId + eventName, value);
+            if (!eventDict.TryGetValue(eventName, out var eventDelegate))
+                return;
+
+            (eventDelegate as Action<string>)?.Invoke(value);
         }
+
+        /// <summary>
+        /// 触发 Object 参数动画事件
+        /// </summary>
         public void OnObjectAnimationEventTriggered(string eventName, object value)
         {
-            EventCenter.TriggerEvent(characterId + eventName, value);
-        }
-        #endregion
+            if (!eventDict.TryGetValue(eventName, out var eventDelegate))
+                return;
 
+            (eventDelegate as Action<object>)?.Invoke(value);
+        }
+
+        #endregion
     }
 }
