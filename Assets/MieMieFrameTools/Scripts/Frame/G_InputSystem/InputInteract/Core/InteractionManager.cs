@@ -74,6 +74,7 @@ namespace MieMieFrameWork.Interaction
         /// </summary>
         private void UpdateFocus()
         {
+            // 通过射线检测获取聚焦目标
             if (!detector.TryDetect(out RaycastHit hit, out IInteractable newFocus))
             {
                 if (CurrentFocus != null)
@@ -81,13 +82,16 @@ namespace MieMieFrameWork.Interaction
                 return;
             }
 
+            // 计算交互器与聚焦目标的距离
             Transform interactorTransform = detector.RayOrigin;
             float distance = interactorTransform != null
                 ? Vector3.Distance(interactorTransform.position, hit.point)
                 : 0f;
 
+            // 创建交互上下文
             var newContext = new InteractionContext(interactorTransform, hit.point, distance);
 
+            // 如果当前聚焦目标与新聚焦目标相同，则更新交互上下文
             if (ReferenceEquals(CurrentFocus, newFocus))
             {
                 currentContext = newContext;
@@ -95,6 +99,7 @@ namespace MieMieFrameWork.Interaction
                 return;
             }
 
+            // 如果当前聚焦目标不为空，则退出当前聚焦目标
             if (CurrentFocus != null)
             {
                 CurrentFocus.OnFocusExit(currentContext);
@@ -102,6 +107,7 @@ namespace MieMieFrameWork.Interaction
                 hasCurrentContext = false;
             }
 
+            // 设置新的聚焦目标
             CurrentFocus = newFocus;
             currentContext = newContext;
             hasCurrentContext = true;

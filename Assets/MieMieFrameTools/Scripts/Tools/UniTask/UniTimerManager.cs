@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using static MieMieFrameWork.ModuleHub;
+using Stopwatch = System.Diagnostics.Stopwatch;
 namespace MieMieFrameWork
 {
     /// <summary>
@@ -29,7 +29,7 @@ namespace MieMieFrameWork
     }
 
     [ManagerAttribute(6)]    
-    public class UniTimerManager : MonoBehaviour, IManagerBase
+    public class UniTimerManager : IManagerBase, IDisposable
     {
         public void Init()
         {
@@ -150,7 +150,7 @@ namespace MieMieFrameWork
                 return true;
             }
 
-            print($"计时器 {timerId} 不存在或已停止");
+            Debug.Log($"计时器 {timerId} 不存在或已停止");
             return false;
         }
 
@@ -164,7 +164,7 @@ namespace MieMieFrameWork
                 timerInfo.Cts.Cancel();
             }
 
-            print($"已停止 {activeTimerDict.Count} 个计时器");
+            Debug.Log($"已停止 {activeTimerDict.Count} 个计时器");
         }
 
         /// <summary>
@@ -195,17 +195,17 @@ namespace MieMieFrameWork
                 if (!timerInfo.IsPaused)
                 {
                     timerInfo.IsPaused = true;
-                    print($"计时器 {timerId} 已暂停，剩余时间: {timerInfo.RemainingTime:F2}秒");
+                    Debug.Log($"计时器 {timerId} 已暂停，剩余时间: {timerInfo.RemainingTime:F2}秒");
                     return true;
                 }
                 else
                 {
-                    print($"计时器 {timerId} 已经是暂停状态");
+                    Debug.Log($"计时器 {timerId} 已经是暂停状态");
                     return false;
                 }
             }
 
-            print($"计时器 {timerId} 不存在");
+            Debug.Log($"计时器 {timerId} 不存在");
             return false;
         }
 
@@ -221,17 +221,17 @@ namespace MieMieFrameWork
                 if (timerInfo.IsPaused)
                 {
                     timerInfo.IsPaused = false;
-                    print($"计时器 {timerId} 已恢复，剩余时间: {timerInfo.RemainingTime:F2}秒");
+                    Debug.Log($"计时器 {timerId} 已恢复，剩余时间: {timerInfo.RemainingTime:F2}秒");
                     return true;
                 }
                 else
                 {
-                    print($"计时器 {timerId} 不是暂停状态");
+                    Debug.Log($"计时器 {timerId} 不是暂停状态");
                     return false;
                 }
             }
 
-            print($"计时器 {timerId} 不存在");
+            Debug.Log($"计时器 {timerId} 不存在");
             return false;
         }
 
@@ -258,7 +258,7 @@ namespace MieMieFrameWork
         {
             if (activeTimerDict.TryGetValue(timerId, out var timerInfo))
             {
-                return Mathf.Max(0f, timerInfo.RemainingTime);
+                return Math.Max(0f, timerInfo.RemainingTime);
             }
             return 0f;
         }
@@ -277,7 +277,7 @@ namespace MieMieFrameWork
                     pausedCount++;
                 }
             }
-            print($"已暂停 {pausedCount} 个计时器");
+            Debug.Log($"已暂停 {pausedCount} 个计时器");
         }
 
         /// <summary>
@@ -294,7 +294,7 @@ namespace MieMieFrameWork
                     resumedCount++;
                 }
             }
-            print($"已恢复 {resumedCount} 个计时器");
+            Debug.Log($"已恢复 {resumedCount} 个计时器");
         }
 
         /// <summary>
@@ -314,7 +314,7 @@ namespace MieMieFrameWork
         /// <summary>
         /// 组件销毁时清理所有资源
         /// </summary>
-        void OnDestroy()
+        public void Dispose()
         {
             StopAllTimers();
 

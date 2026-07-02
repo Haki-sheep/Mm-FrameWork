@@ -11,7 +11,7 @@ using static MieMieFrameWork.ModuleHub;
 /// 基于UniTask实现线程切换和任务调度
 /// </summary>
 [ManagerAttribute(5)]
-public class AsyncTaskManager : MonoBehaviour, IManagerBase
+public class AsyncTaskManager : IManagerBase, IDisposable
 {
     //任务统计信息
     private TaskStatistics statistics = new();
@@ -22,7 +22,7 @@ public class AsyncTaskManager : MonoBehaviour, IManagerBase
         
     }
 
-    private void OnDestroy()
+    public void Dispose()
     {
         CancelAllTasks();
     }
@@ -314,6 +314,7 @@ public class AsyncTaskManager : MonoBehaviour, IManagerBase
         foreach (var cts in taskCancellationTokens.Values)
         {
             cts.Cancel();
+            cts.Dispose();
         }
 
         taskCancellationTokens.Clear();

@@ -90,6 +90,8 @@ namespace MieMieFrameWork
         private void GetAllManager()
         {
             var managers = new List<IManagerBase>();
+            managers.Add(new AsyncTaskManager());
+            managers.Add(new UniTimerManager());
             managers.AddRange(this.transform.GetComponents<IManagerBase>());
             //获取特殊的UIManager
             if (uICoreMgr is not null && !managers.Contains((IManagerBase)uICoreMgr))
@@ -154,6 +156,15 @@ namespace MieMieFrameWork
         /// </summary>
         private void CleanupFramework()
         {
+            foreach (var manager in managerDict.Values)
+            {
+                if (manager is IDisposable disposableManager)
+                {
+                    disposableManager.Dispose();
+                }
+            }
+
+            managerDict.Clear();
             EventCenter.ClearAllListeners();
             archiveMgr = null;
         }
