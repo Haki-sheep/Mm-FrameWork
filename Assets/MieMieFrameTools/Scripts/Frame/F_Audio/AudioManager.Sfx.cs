@@ -66,7 +66,7 @@ namespace MieMieFrameWork
         {
             if (EffectClipRoot == null)
             {
-                EffectClipRoot = this.transform.Find("EffectRoot");
+                EffectClipRoot = serviceRoot.Find("EffectRoot");
             }
 
             AudioSource ef = ModuleHub.Instance.GetManager<PoolManager>().GetGameObj<AudioSource>(efPlayerES, EffectClipRoot);
@@ -139,7 +139,7 @@ namespace MieMieFrameWork
             }
             else
             {
-                audioSource.transform.position = this.transform.position;
+                audioSource.transform.position = serviceRoot.position;
             }
 
             audioSource.PlayOneShot(clip, volumeScale);

@@ -301,9 +301,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1998272896780071737}
   - component: {fileID: -5375038227660211965}
-  - component: {fileID: 1391323771438466290}
   - component: {fileID: 8670883959678435798}
-  - component: {fileID: 5455518205507124390}
   - component: {fileID: 5584570498925309000}
   m_Layer: 31
   m_Name: FrameRoot
@@ -341,19 +339,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1272d07047f4bc34b84ccaaa55ae1e24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1391323771438466290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1875632843843946708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c2b97bccbbb64a4ab4c9087cd498872, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AllGameObjectRoot: {fileID: 5836662951699793031}
 --- !u!114 &8670883959678435798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -366,29 +351,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65b96b6eadf220245928611c714169a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5455518205507124390
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1875632843843946708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1afff7e2b952eff43a31d3f5d8c697f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MieMieFrameWork.Mm_AudioManager
-  efPlayerES: {fileID: 4013664638868356035, guid: 492984c0a44d303438f2e28cb6372a8f, type: 3}
-  BgmSource: {fileID: 1563131090535853220}
-  AmbienceSource: {fileID: 8374092957814860009}
-  EffectClipRoot: {fileID: 5836662951699793031}
-  globalVolumeFactor: 1
-  bgVolumeBaseNum: 1
-  ambienceVolumeBaseNum: 0.8
-  effectVolumeBaseNum: 1
-  isMute: 0
-  isLoop: 0
-  isPause: 0
 --- !u!114 &5584570498925309000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -403,6 +365,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MieMieFrameWork.ModuleHub
   uICoreMgr: {fileID: 0}
   archiveSubFolder: Archives
+  poolManagerConfig:
+    allGameObjectRoot: {fileID: 5836662951699793031}
+  audioManagerConfig:
+    efPlayerES: {fileID: 4013664638868356035, guid: 492984c0a44d303438f2e28cb6372a8f, type: 3}
+    bgmSource: {fileID: 1563131090535853220}
+    ambienceSource: {fileID: 8374092957814860009}
+    effectClipRoot: {fileID: 5836662951699793031}
+    globalVolumeFactor: 1
+    bgVolumeBaseNum: 1
+    ambienceVolumeBaseNum: 0.8
+    effectVolumeBaseNum: 1
+    isMute: 0
+    isLoop: 0
+    isPause: 0
 --- !u!1 &2397423521224059995
 GameObject:
   m_ObjectHideFlags: 0

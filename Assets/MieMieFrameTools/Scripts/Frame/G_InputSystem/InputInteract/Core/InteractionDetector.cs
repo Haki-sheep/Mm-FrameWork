@@ -34,9 +34,9 @@ namespace MieMieFrameWork.Interaction
         private readonly RaycastHit[] castHitBuffer = new RaycastHit[1];
 
         /// <summary>
-        /// Collider 实例 ID 到 IInteractable 缓存
+        /// Collider 实体 ID 到 IInteractable 缓存
         /// </summary>
-        private readonly Dictionary<int, IInteractable> interactableCacheDict = new();
+        private readonly Dictionary<EntityId, IInteractable> interactableCacheDict = new();
 
         /// <summary>
         /// 射线起点 Transform
@@ -106,12 +106,12 @@ namespace MieMieFrameWork.Interaction
             if (collider == null)
                 return null;
 
-            int instanceId = collider.GetInstanceID();
-            if (interactableCacheDict.TryGetValue(instanceId, out IInteractable cached))
+            var entityId = collider.GetEntityId();
+            if (interactableCacheDict.TryGetValue(entityId, out IInteractable cached))
                 return cached;
 
             var interactable = collider.GetComponentInParent<IInteractable>();
-            interactableCacheDict[instanceId] = interactable;
+            interactableCacheDict[entityId] = interactable;
             return interactable;
         }
 

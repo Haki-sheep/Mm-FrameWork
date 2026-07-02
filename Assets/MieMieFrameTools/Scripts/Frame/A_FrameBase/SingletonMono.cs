@@ -10,6 +10,8 @@ namespace MieMieFrameWork
         private static readonly object locked = new();
         public static T Instance { get; private set; }
 
+        protected virtual bool DontDestroyOnLoadEnabled => false;
+
         protected virtual void Awake()
         {
             lock (locked)
@@ -20,12 +22,15 @@ namespace MieMieFrameWork
                     return;
                 }
                 Instance = this as T;
+
+                if (DontDestroyOnLoadEnabled)
+                    DontDestroyOnLoad(gameObject);
             }
         }
 
-        private void OnDisable()
+        protected virtual void OnDestroy()
         {
-            if (Instance != null)
+            if (Instance == this)
                 Instance = null;
         }
     }

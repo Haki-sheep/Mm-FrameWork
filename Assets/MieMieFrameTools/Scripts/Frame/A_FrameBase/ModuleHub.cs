@@ -4,6 +4,7 @@ namespace MieMieFrameWork
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using MieMieFrameWork.Pool;
     using MieMieFrameWork.UI;
     using Sirenix.OdinInspector;
     using UnityEngine;
@@ -13,6 +14,8 @@ namespace MieMieFrameWork
     /// </summary> 
     public class ModuleHub : SingletonMono<ModuleHub>
     {
+        protected override bool DontDestroyOnLoadEnabled => true;
+
         private readonly Dictionary<Type, IManagerBase> managerDict = new Dictionary<Type, IManagerBase>();
 
         [SerializeField, LabelText("UI管理器")]
@@ -20,6 +23,16 @@ namespace MieMieFrameWork
 
         [SerializeField, LabelText("存档子目录")]
         private string archiveSubFolder = "Archives";
+
+        /// <summary>
+        /// 对象池管理器配置
+        /// </summary>
+        [SerializeField, LabelText("对象池管理器配置")]
+        private PoolManager.PoolManagerConfig poolManagerConfig = new PoolManager.PoolManagerConfig();
+
+        /// <summary>音频管理器配置</summary>
+        [SerializeField, LabelText("音频管理器配置")]
+        private AudioManager.AudioManagerConfig audioManagerConfig = new AudioManager.AudioManagerConfig();
 
         /// <summary>
         /// 存档管理器实例 未安装 com.hakisheep.mm-saver 时为 null
@@ -35,9 +48,14 @@ namespace MieMieFrameWork
             InitializeFramework();
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
-            CleanupFramework();
+            if (Instance == this)
+            {
+                CleanupFramework();
+            }
+
+            base.OnDestroy();
         }
 
         #endregion
@@ -90,6 +108,8 @@ namespace MieMieFrameWork
         private void GetAllManager()
         {
             var managers = new List<IManagerBase>();
+            managers.Add(new PoolManager(poolManagerConfig, transform));
+            managers.Add(new AudioManager(audioManagerConfig, transform));
             managers.Add(new AsyncTaskManager());
             managers.Add(new UniTimerManager());
             managers.AddRange(this.transform.GetComponents<IManagerBase>());

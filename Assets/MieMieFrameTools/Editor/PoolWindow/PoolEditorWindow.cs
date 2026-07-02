@@ -128,7 +128,7 @@ namespace MieMieFrameWork.Editor.PoolEditor
             PoolManager poolMgr = TryGetPoolManager();
             if (poolMgr == null)
             {
-                EditorGUILayout.HelpBox("场景中未找到 PoolManager", MessageType.Warning);
+                EditorGUILayout.HelpBox("运行时未找到 PoolManager 服务", MessageType.Warning);
                 return;
             }
 
@@ -411,15 +411,21 @@ namespace MieMieFrameWork.Editor.PoolEditor
 
         private static void PingPoolRoot()
         {
-            PoolManager poolMgr = UnityEngine.Object.FindAnyObjectByType<PoolManager>();
+            PoolManager poolMgr = TryGetPoolManager();
             if (poolMgr == null)
             {
-                EditorUtility.DisplayDialog("对象池", "场景中未找到 PoolManager", "确定");
+                EditorUtility.DisplayDialog("对象池", "运行时未找到 PoolManager 服务", "确定");
                 return;
             }
 
-            Selection.activeGameObject = poolMgr.gameObject;
-            EditorGUIUtility.PingObject(poolMgr.gameObject);
+            if (poolMgr.PoolRoot == null)
+            {
+                EditorUtility.DisplayDialog("对象池", "PoolRoot 未配置", "确定");
+                return;
+            }
+
+            Selection.activeGameObject = poolMgr.PoolRoot.gameObject;
+            EditorGUIUtility.PingObject(poolMgr.PoolRoot.gameObject);
         }
 
         private static GameObject LoadPrefab(string guid)

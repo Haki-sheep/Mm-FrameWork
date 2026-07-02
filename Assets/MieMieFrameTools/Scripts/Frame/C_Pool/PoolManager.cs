@@ -11,16 +11,37 @@ namespace MieMieFrameWork.Pool
     /// 当调用者不再需要这个实例时 再调用 PushGameObj 方法将其放回对象池
     /// </summary>
     [ManagerAttribute(2)]
-    public class PoolManager : MonoBehaviour, IManagerBase
+    public class PoolManager : IManagerBase, IDisposable
     {
+        [Serializable]
+        public sealed class PoolManagerConfig
+        {
+            /// <summary>
+            /// 对象池根节点
+            /// </summary>
+            [SerializeField]
+            [LabelText("对象池根节点")]
+            private Transform allGameObjectRoot;
+
+            public Transform AllGameObjectRoot => allGameObjectRoot;
+        }
+
         /// <summary>
         /// 默认池上限
         /// </summary>
         private const int DefaultMaxSize = 50;
 
-        [SerializeField]
-        [LabelText("对象池根节点")]
+        /// <summary>
+        /// 服务根节点
+        /// </summary>
+        private readonly Transform serviceRoot;
+
+        /// <summary>
+        /// 对象池根节点
+        /// </summary>
         private Transform AllGameObjectRoot;
+
+        public Transform PoolRoot => AllGameObjectRoot;
 
         /// <summary>
         /// GameObject 池字典
@@ -37,11 +58,21 @@ namespace MieMieFrameWork.Pool
         /// </summary>
         private readonly Dictionary<string, ObjectPool> objectPoolDic = new();
 
+        public PoolManager(PoolManagerConfig poolManagerConfig, Transform serviceRoot)
+        {
+            this.serviceRoot = serviceRoot;
+            AllGameObjectRoot = poolManagerConfig.AllGameObjectRoot;
+        }
 
         public void Init()
         {
             if (AllGameObjectRoot is null)
-                AllGameObjectRoot = transform.Find("PoolRoot");
+                AllGameObjectRoot = serviceRoot.Find("PoolRoot");
+        }
+
+        public void Dispose()
+        {
+            SelectClearPool();
         }
 
 
