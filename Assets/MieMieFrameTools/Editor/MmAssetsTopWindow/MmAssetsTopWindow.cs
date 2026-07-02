@@ -17,7 +17,7 @@ namespace MieMieFrameWork.Editor.MmAssets
         /// </summary>
         private static readonly string[] GameplaySubCategoryOrder =
         {
-            "库存", "3C", "叙事", "经济", "世界", "交互", "进度"
+            "库存", "3C", "叙事", "经济", "世界", "交互"
         };
 
         [MenuItem("Tools/MieMieFrameWork/模块中枢", priority = -1000)]

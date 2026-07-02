@@ -20,7 +20,7 @@
             "version": "1.0.0",
             "gitUrl": "",
             "packageName": "",
-            "installCheckPath": "Assets/MieMieFrameTools/Scripts/Frame/G_InputSystem/InputManager.cs",
+            "installCheckPath": "Assets/MieMieFrameTools/Scripts/Frame/G_InputSystem/InputManager/InputManager.cs",
             "tags": ["输入"],
             "isBuiltIn": true
         },
@@ -358,12 +358,12 @@
             "displayName": "对话与任务",
             "category": "玩法",
             "subCategory": "叙事",
-            "description": "节点对话 分支选项 任务接取追踪与事件联动",
+            "description": "节点对话 分支选项 任务接取追踪 成就条件与事件联动",
             "version": "0.1.0",
             "gitUrl": "https://github.com/yourname/MmDialogueTaskSystem.git",
             "packageName": "",
             "installCheckPath": "Assets/Modules/MmDialogueTaskSystem",
-            "tags": ["剧情", "任务"],
+            "tags": ["剧情", "任务", "成就"],
             "isBuiltIn": false
         },
         {
@@ -410,13 +410,13 @@
             "displayName": "通用交互",
             "category": "玩法",
             "subCategory": "交互",
-            "description": "可交互物检测 提示 UI 按键交互与事件回调",
-            "version": "0.0.1",
-            "gitUrl": "https://github.com/yourname/MmInteractionSystem.git",
+            "description": "IInteractable 契约 InteractionDetector SphereCastNonAlloc InteractionManager 聚焦与 Hold 交互",
+            "version": "0.1.0",
+            "gitUrl": "",
             "packageName": "",
-            "installCheckPath": "Assets/Modules/MmInteractionSystem",
-            "tags": ["交互", "规划中"],
-            "isBuiltIn": false
+            "installCheckPath": "Assets/MieMieFrameTools/Scripts/Frame/G_InputSystem/InputInteract/Core/InteractionManager.cs",
+            "tags": ["交互", "3C"],
+            "isBuiltIn": true
         },
         {
             "id": "mm-minimap-system",
@@ -429,19 +429,6 @@
             "packageName": "",
             "installCheckPath": "Assets/Modules/MmMinimapSystem",
             "tags": ["UI", "规划中"],
-            "isBuiltIn": false
-        },
-        {
-            "id": "mm-achievement-system",
-            "displayName": "成就",
-            "category": "玩法",
-            "subCategory": "进度",
-            "description": "条件监听 进度统计 解锁通知与持久化记录",
-            "version": "0.0.1",
-            "gitUrl": "https://github.com/yourname/MmAchievementSystem.git",
-            "packageName": "",
-            "installCheckPath": "Assets/Modules/MmAchievementSystem",
-            "tags": ["成就", "规划中"],
             "isBuiltIn": false
         },
         {
