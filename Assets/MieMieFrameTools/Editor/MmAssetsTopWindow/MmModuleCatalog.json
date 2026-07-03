@@ -268,13 +268,13 @@
             "id": "plugin-newtonsoft-json",
             "displayName": "Newtonsoft.Json",
             "category": "插件",
-            "description": "Json.NET for Unity 13.0.102 本地 Plugins 副本 注意与 manifest com.unity.nuget.newtonsoft-json 勿重复引用",
-            "version": "13.0.102",
-            "gitUrl": "https://www.newtonsoft.com/json",
-            "packageName": "",
-            "installCheckPath": "Assets/MieMieFrameTools/Plugins/NetJson/Newtonsoft.Json-for-Unity-13.0.102/Plugins/Newtonsoft.Json Editor/Newtonsoft.Json.dll",
+            "description": "Unity 官方 Newtonsoft.Json UPM 包 作为框架与存档系统唯一 Json.NET 依赖源",
+            "version": "3.2.1",
+            "gitUrl": "3.2.1",
+            "packageName": "com.unity.nuget.newtonsoft-json",
+            "installCheckPath": "Packages/com.unity.nuget.newtonsoft-json/package.json",
             "tags": ["第三方", "序列化"],
-            "isBuiltIn": true
+            "isBuiltIn": false
         },
         {
             "id": "plugin-google-protobuf",
