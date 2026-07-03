@@ -1,6 +1,5 @@
 namespace MieMieFrameWork
 {
-    using MiMieEventBus;
     using UnityEngine;
 
     /// <summary>
@@ -11,7 +10,7 @@ namespace MieMieFrameWork
         /// <summary>
         /// 局部总线实例
         /// </summary>
-        public EventBus<E_EventConstKey> Bus { get; } = new EventBus<E_EventConstKey>();
+        public TypedEventBus Bus { get; } = new TypedEventBus();
 
         /// <summary>
         /// 销毁时清空总线

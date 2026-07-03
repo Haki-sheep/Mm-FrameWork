@@ -9,22 +9,6 @@
       },
       "hash": "fd8ff1fb700caf062eb5cce364c1d0a85f99ebe6"
     },
-    "com.hakisheep.mm-eventbus": {
-      "version": "git@github.com:Haki-sheep/MmCSharp-EventBus.git?path=unity",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "1fd27a407421db33b4bde2f7adbc622a2f4c39bb"
-    },
-    "com.hakisheep.mm-saver": {
-      "version": "git@github.com:Haki-sheep/Mm-Saver.git?path=unity",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "3.2.1"
-      },
-      "hash": "67398cdedb9003746ac535987cff7a28db23d3f0"
-    },
     "com.unity.addressables": {
       "version": "2.9.1",
       "depth": 0,
@@ -91,7 +75,7 @@
       }
     },
     "com.unity.nuget.newtonsoft-json": {
-      "version": "3.2.1",
+      "version": "3.2.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {},

@@ -21,9 +21,9 @@ namespace MieMieFrameWork.Editor.MmAssets
         public const string FrameRoot = MieMieRoot + "/Scripts/Frame";
 
         /// <summary>
-        /// 事件 Key 枚举输出路径
+        /// 框架事件 Token 定义
         /// </summary>
-        public const string EventConstKeyAsset = FrameRoot + "/D_EventCenter/EventConstKey.cs";
+        public const string MmGameEventsAsset = FrameRoot + "/D_EventCenter/MmGameEvents.cs";
 
         /// <summary>
         /// Protobuf 设置 JSON

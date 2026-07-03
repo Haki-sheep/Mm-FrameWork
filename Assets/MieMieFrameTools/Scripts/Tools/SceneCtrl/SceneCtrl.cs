@@ -16,7 +16,7 @@ namespace MieMieFrameWork
         /// <param name="progressCallback">进度回调 (0-1)</param>
         public static void AddSceneManagerListener(Action<float> progressCallback)
         {
-            EventCenter.AddEventListener<float>(E_EventConstKey.LoadingSceneProgress, progressCallback);
+            MmGlobalEventBus.Bus.Subscribe(MmGameEvents.LoadingSceneProgress, progressCallback);
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace MieMieFrameWork
         /// <param name="progressCallback">进度回调</param>
         public static void RemoveSceneManagerListener(Action<float> progressCallback)
         {
-            EventCenter.RemoveListener<float>(E_EventConstKey.LoadingSceneProgress, progressCallback);
+            MmGlobalEventBus.Bus.Unsubscribe(MmGameEvents.LoadingSceneProgress, progressCallback);
         }
 
         /// <summary>
@@ -112,13 +112,13 @@ namespace MieMieFrameWork
                     // 只在进度变化时触发事件
                     if (normalizedProgress != lastProgress)
                     {
-                        EventCenter.TriggerEvent<float>(E_EventConstKey.LoadingSceneProgress, normalizedProgress);
+                        MmGlobalEventBus.Bus.Publish(MmGameEvents.LoadingSceneProgress, normalizedProgress);
                         lastProgress = normalizedProgress;
                     }
                 }), cancellationToken: cancellationToken);
 
                 // 确保最终进度为100%
-                EventCenter.TriggerEvent<float>(E_EventConstKey.LoadingSceneProgress, 1.0f);
+                MmGlobalEventBus.Bus.Publish(MmGameEvents.LoadingSceneProgress, 1.0f);
 
                 // 场景加载完成后进行内存优化
                 OptimizeMemoryAfterLoad();

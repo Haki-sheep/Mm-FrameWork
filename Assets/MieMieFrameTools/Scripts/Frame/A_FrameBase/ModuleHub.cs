@@ -83,16 +83,41 @@ namespace MieMieFrameWork
         /// </summary>
         private void InitArchiveMgr()
         {
-            Type archiveType = Type.GetType("MiMieSaver.ArchiveMgr, MiMieSaver");
+            Type archiveType = ResolveArchiveMgrType();
             if (archiveType == null)
             {
-                Debug.LogWarning("[ModuleHub] 存档模块未安装 跳过 ArchiveMgr 初始化");
+                Debug.LogWarning("[ModuleHub] 存档模块未安装或 MiMieSaver 程序集未编译 跳过 ArchiveMgr 初始化");
                 return;
             }
 
             string folder = string.IsNullOrWhiteSpace(archiveSubFolder) ? "Archives" : archiveSubFolder.Trim();
             string rootPath = Path.Combine(Application.persistentDataPath, folder);
             archiveMgr = Activator.CreateInstance(archiveType, rootPath);
+        }
+
+        /// <summary>
+        /// 解析 MiMieSaver.ArchiveMgr 类型
+        /// </summary>
+        private static Type ResolveArchiveMgrType()
+        {
+            const string archiveTypeName = "MiMieSaver.ArchiveMgr";
+            const string assemblyName = "MiMieSaver";
+
+            Type archiveType = Type.GetType($"{archiveTypeName}, {assemblyName}");
+            if (archiveType != null)
+                return archiveType;
+
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (assembly.GetName().Name != assemblyName)
+                    continue;
+
+                archiveType = assembly.GetType(archiveTypeName);
+                if (archiveType != null)
+                    return archiveType;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -185,7 +210,7 @@ namespace MieMieFrameWork
             }
 
             managerDict.Clear();
-            EventCenter.ClearAllListeners();
+            MmGlobalEventBus.Bus.Clear();
             archiveMgr = null;
         }
 

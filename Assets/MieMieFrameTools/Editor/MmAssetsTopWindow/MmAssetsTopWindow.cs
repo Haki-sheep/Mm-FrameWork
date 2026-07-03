@@ -20,6 +20,14 @@ namespace MieMieFrameWork.Editor.MmAssets
             "库存", "3C", "叙事", "经济", "世界", "交互"
         };
 
+        /// <summary>
+        /// 框架下子页签顺序
+        /// </summary>
+        private static readonly string[] FrameworkSubCategoryOrder =
+        {
+            "可选模块"
+        };
+
         [MenuItem("Tools/MieMieFrameWork/模块中枢", priority = -1000)]
         private static void Open()
         {
@@ -109,7 +117,13 @@ namespace MieMieFrameWork.Editor.MmAssets
 
         private static IEnumerable<string> GetSubCategoryOrder(string category, IEnumerable<string> keys)
         {
-            if (category != "玩法")
+            string[] order = null;
+            if (category == "玩法")
+                order = GameplaySubCategoryOrder;
+            else if (category == "框架")
+                order = FrameworkSubCategoryOrder;
+
+            if (order == null)
             {
                 foreach (string sub in keys.OrderBy(k => k))
                     yield return sub;
@@ -117,15 +131,16 @@ namespace MieMieFrameWork.Editor.MmAssets
             }
 
             HashSet<string> keySet = new HashSet<string>(keys);
-            foreach (string sub in GameplaySubCategoryOrder)
+            for (int i = 0; i < order.Length; i++)
             {
+                string sub = order[i];
                 if (keySet.Contains(sub))
                     yield return sub;
             }
 
             foreach (string sub in keys.OrderBy(k => k))
             {
-                if (!GameplaySubCategoryOrder.Contains(sub))
+                if (!order.Contains(sub))
                     yield return sub;
             }
         }
