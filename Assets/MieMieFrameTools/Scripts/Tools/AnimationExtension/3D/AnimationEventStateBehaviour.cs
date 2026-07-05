@@ -18,15 +18,20 @@ namespace MieMieFrameWork.MMAnimation
         public string stringValue;
         public UnityEngine.Object objectValue;
         public bool isTrigger = false;
+
+        /// <summary>
+        /// 是否等待 Animator 过渡结束后再触发 适合音效特效
+        /// </summary>
+        public bool waitTransitionEnd = true;
     }
 
     public class AnimationEventStateBehaviour : StateMachineBehaviour
     {
         [SerializeField] private List<AnimationEventInfo> animationEventInfoList = new();
         private AnimationReceiver reciver;
-        private float animationStartTime; // 新增：记录动画开始时间
+        private float animationStartTime; 
         private float previewFrameTime;
-        private bool isFirstFrame = true; // 新增：标记是否第一帧
+        private bool isFirstFrame = true; 
 
         public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
@@ -46,6 +51,13 @@ namespace MieMieFrameWork.MMAnimation
         {
             float currentTime = stateInfo.normalizedTime;
 
+            // 首帧将预览时间锚定在进入点 避免单帧跨度过大时漏掉早期触发点
+            if (isFirstFrame)
+            {
+                isFirstFrame = false;
+                previewFrameTime = animationStartTime;
+            }
+
             // 计算相对于动画开始时间的归一化时间
             float normalizedCurrentTime = (currentTime - animationStartTime) % 1f;
             if (normalizedCurrentTime < 0) normalizedCurrentTime += 1f;
@@ -53,18 +65,10 @@ namespace MieMieFrameWork.MMAnimation
             float normalizedPreviewTime = (previewFrameTime - animationStartTime) % 1f;
             if (normalizedPreviewTime < 0) normalizedPreviewTime += 1f;
 
-            // 第一帧跳过，避免立即触发
-            if (isFirstFrame)
-            {
-                isFirstFrame = false;
-                previewFrameTime = currentTime;
-                return;
-            }
+            bool inTransition = animator.IsInTransition(layerIndex);
 
             foreach (var item in animationEventInfoList)
             {
-                //触发点检测 - 使用相对时间
-                bool onTriggerPoint = normalizedPreviewTime <= item.triggerTime && normalizedCurrentTime >= item.triggerTime;
                 //是否已经循环 - 使用相对时间
                 bool looped = normalizedCurrentTime < normalizedPreviewTime;
 
@@ -74,23 +78,41 @@ namespace MieMieFrameWork.MMAnimation
                     item.isTrigger = false;
                 }
 
+                if (item.isTrigger)
+                    continue;
+
+                // 等待过渡结束模式 融合期间不触发 过渡结束后补发
+                if (item.waitTransitionEnd)
+                {
+                    if (inTransition)
+                        continue;
+
+                    if (normalizedCurrentTime >= item.triggerTime)
+                    {
+                        item.isTrigger = true;
+                        TriggerEvent(item, normalizedCurrentTime, normalizedPreviewTime);
+                    }
+
+                    continue;
+                }
+
+                //触发点检测 - 使用相对时间
+                bool onTriggerPoint = normalizedPreviewTime <= item.triggerTime && normalizedCurrentTime >= item.triggerTime;
+
                 // 检测触发点
-                if (onTriggerPoint && !item.isTrigger)
+                if (onTriggerPoint)
                 {
                     item.isTrigger = true;
-                    TriggerEvent(item);
-
-                    Debug.Log($"AnimationEvent:{item.eventName} + " +
-                         $"TriggerNomalizaTime:{item.triggerTime} + " +
-                         $"CurrentRelativeTime:{normalizedCurrentTime} + " +
-                         $"Offset:{normalizedCurrentTime - normalizedPreviewTime}");
+                    TriggerEvent(item, normalizedCurrentTime, normalizedPreviewTime);
                 }
             }
             previewFrameTime = currentTime;
         }
 
-        // TriggerEvent 方法保持不变
-        private void TriggerEvent(AnimationEventInfo item)
+        /// <summary>
+        /// 触发事件并输出调试信息
+        /// </summary>
+        private void TriggerEvent(AnimationEventInfo item, float normalizedCurrentTime, float normalizedPreviewTime)
         {
             switch (item.paramType)
             {
@@ -110,6 +132,12 @@ namespace MieMieFrameWork.MMAnimation
                     reciver.OnObjectAnimationEventTriggered(item.eventName, item.objectValue);
                     break;
             }
+
+            Debug.Log($"AnimationEvent:{item.eventName} + " +
+                 $"TriggerNomalizaTime:{item.triggerTime} + " +
+                 $"CurrentRelativeTime:{normalizedCurrentTime} + " +
+                 $"Offset:{normalizedCurrentTime - normalizedPreviewTime} + " +
+                 $"WaitTransitionEnd:{item.waitTransitionEnd}");
         }
     }
 }
