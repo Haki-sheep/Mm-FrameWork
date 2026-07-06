@@ -9,6 +9,7 @@ using System.Linq;
 using System;
 using UnityEditor.Callbacks;
 using MieMieUITools.Editor;
+using MieMieFrameWork.UI;
 
 /// <summary>
 /// UI模版生成核心工具类 - 分部类方案
@@ -65,8 +66,13 @@ public class GenerateUITool
             string genExtScriptPath = Path.Combine(folderPath, $"{className}GenPartial.cs");
             string mainScriptPath = Path.Combine(folderPath, $"{className}.cs");
 
-            // 扫描预制体组件（使用 PrefixToTypeMap 中所有前缀）
+            // 扫描预制体绑定配置
             var uiComponents = ScanUIPrefabComponents(uiPrefab);
+            if (uiComponents.Count == 0)
+            {
+                EditorUtility.DisplayDialog("错误", "没有找到任何勾选绑定项，请先在Hierarchy中勾选UIContent下的组件", "确定");
+                return;
+            }
 
             // 检查文件是否已存在
             bool genExists = File.Exists(genScriptPath);
@@ -137,10 +143,13 @@ public class GenerateUITool
         sb.AppendLine($"public partial class {className}Gen : MonoBehaviour");
         sb.AppendLine("{");
 
-        // 组件属性 - 使用解析后的字段名
+        // 组件字段
         foreach (var comp in uiComponents)
         {
-            sb.AppendLine($"    public {comp.type} {comp.fieldName} {{ get; private set; }}");
+            sb.AppendLine("    /// <summary>");
+            sb.AppendLine($"    /// {comp.fieldName}");
+            sb.AppendLine("    /// </summary>");
+            sb.AppendLine($"    public {comp.type} {comp.fieldName};");
         }
 
         sb.AppendLine();
@@ -154,7 +163,7 @@ public class GenerateUITool
             string findPath = GetComponentPath(comp);
             
             // 检查是否是直接子级还是更深层级
-            if (string.IsNullOrEmpty(findPath) || findPath == comp.name)
+            if (string.IsNullOrEmpty(findPath))
             {
                 // 组件在当前GameObject上
                 sb.AppendLine($"        {comp.fieldName} = GetComponent<{comp.type}>();");
@@ -323,7 +332,6 @@ public class GenerateUITool
     {
         var components = new List<UIComponentInfo>();
 
-        // 查找UIContent
         Transform uiContent = uiPrefab.transform.Find("UIContent");
         if (uiContent == null)
         {
@@ -331,125 +339,116 @@ public class GenerateUITool
             return components;
         }
 
-        // 直接使用 PrefixToTypeMap 的所有 Key 作为前缀列表
-        List<string> effectivePrefixes = new List<string>(PrefixToTypeMap.Keys);
-
-        // 获取所有UIBehaviour组件
-        var allComponents = uiContent.GetComponentsInChildren<UnityEngine.EventSystems.UIBehaviour>(true);
-
-        foreach (var comp in allComponents)
+        var bindConfig = uiPrefab.GetComponent<UIBindConfig>();
+        if (bindConfig == null)
         {
-            // 排除子预制体
-            var prefabRoot = PrefabUtility.GetOutermostPrefabInstanceRoot(comp.gameObject);
-            if (prefabRoot != null && prefabRoot != uiPrefab)
-                continue;
-
-            string compName = comp.gameObject.name;
-            string actualComponentType = comp.GetType().Name;
-
-            // [RT]xxx 物体由 RectTransform 扫描单独处理，避免重复
-            if (compName.StartsWith("[RT]", StringComparison.OrdinalIgnoreCase))
-                continue;
-
-            // 使用多前缀解析规则处理组件名
-            var parsedComponents = ParseMultiPrefix(compName, actualComponentType, effectivePrefixes);
-
-            if (parsedComponents.Count == 0)
-                continue;
-
-            // 获取物体上所有组件的类型（用于多前缀解析时的类型过滤）
-            var componentsOnObject = comp.gameObject.GetComponents<UnityEngine.EventSystems.UIBehaviour>();
-            var componentTypesOnObject = new HashSet<string>();
-            foreach (var c in componentsOnObject)
-            {
-                componentTypesOnObject.Add(c.GetType().Name);
-            }
-
-            // 计算相对路径（只需计算一次）
-            string path = GetRelativePath(uiContent, comp.transform);
-
-            // 检查是否已处理过此 GameObject - 使用 instanceId 进行精确去重
-            // 必须在 parsedComponents 循环外部检查，确保每个 GameObject 只被检查一次，
-            // 但允许其所有 parsed 组件都能被添加（多前缀场景：同一物体有多个组件）
-            if (components.Any(c => c.instanceId == comp.gameObject.GetInstanceID()))
-            {
-                continue;
-            }
-
-            foreach (var parsed in parsedComponents)
-            {
-                // 多前缀模式下，需要检查物体上是否有对应类型的组件（否则会生成无法 GetComponent 的字段）
-                if (compName.Contains(MULTI_PREFIX_SEPARATOR))
-                {
-                    if (!componentTypesOnObject.Contains(parsed.type))
-                    {
-                        Debug.LogWarning(
-                            $"[GenerateUITool] 多前缀节点「{compName}」声明了前缀→{parsed.type}（字段 {parsed.fieldName}），" +
-                            $"但该物体上未挂载此组件，已跳过。请在同一 GameObject 上同时挂载多前缀所需的全部组件，或拆成多个子节点分别命名。",
-                            comp.gameObject);
-                        continue;
-                    }
-                }
-
-                components.Add(new UIComponentInfo
-                {
-                    name = parsed.originalName,
-                    type = parsed.type,
-                    path = path,
-                    fieldName = parsed.fieldName,
-                    instanceId = comp.gameObject.GetInstanceID()
-                });
-            }
+            Debug.LogWarning("[GenerateUITool] 预制体未找到UIBindConfig，请先在Hierarchy中勾选绑定组件");
+            return components;
         }
 
-        // RectTransform 扫描：收集 [RT]xxx 等带 RT 前缀的物体，走字典匹配
-        foreach (RectTransform rt in uiContent.GetComponentsInChildren<RectTransform>(true))
+        foreach (var bindItem in bindConfig.BindItemList)
         {
-            // 排除子预制体
-            var prefabRoot = PrefabUtility.GetOutermostPrefabInstanceRoot(rt.gameObject);
-            if (prefabRoot != null && prefabRoot != uiPrefab)
+            if (bindItem == null)
                 continue;
 
-            string compName = rt.gameObject.name;
-
-            // 只处理以 [ 开头的物体（[] 单前缀格式，如 [RT]SettingMain）
-            if (!compName.StartsWith("["))
-                continue;
-
-            // 非 [RT] 前缀：若已挂 Image/Button/TMP 等 UIBehaviour，由上面的 UIBehaviour 循环处理，避免重复
-            // [RT] 前缀：面板节点常同时挂 Image、LayoutGroup 等，仍需生成 RectTransform 引用（UIBehaviour 循环已整体跳过 [RT] 名）
-            bool isRtBracketName = compName.StartsWith("[RT]", StringComparison.OrdinalIgnoreCase);
-            if (!isRtBracketName && rt.GetComponent<UnityEngine.EventSystems.UIBehaviour>() != null)
-                continue;
-
-            // 检查是否已处理过此 GameObject - 使用 instanceId 进行精确去重
-            // 必须在 ParseMultiPrefix 之前检查，避免无效解析
-            if (components.Any(c => c.instanceId == rt.gameObject.GetInstanceID()))
-                continue;
-
-            // 走通用解析：剥去方括号后查字典
-            var parsedComponents = ParseMultiPrefix(compName, "RectTransform", effectivePrefixes);
-            if (parsedComponents.Count == 0)
-                continue;
-
-            // 计算相对路径（只需计算一次）
-            string path = GetRelativePath(uiContent, rt);
-
-            foreach (var parsed in parsedComponents)
+            Transform target = string.IsNullOrEmpty(bindItem.nodePath)
+                ? uiContent
+                : uiContent.Find(bindItem.nodePath);
+            if (target == null)
             {
-                components.Add(new UIComponentInfo
-                {
-                    name = compName,
-                    type = parsed.type,
-                    path = path,
-                    fieldName = parsed.fieldName,
-                    instanceId = rt.gameObject.GetInstanceID()
-                });
+                Debug.LogWarning($"[GenerateUITool] 绑定节点已丢失: {bindItem.nodePath}", uiPrefab);
+                continue;
             }
+
+            Type componentType = ResolveBindType(bindItem);
+            if (componentType == null)
+            {
+                Debug.LogWarning($"[GenerateUITool] 绑定组件类型已丢失: {bindItem.componentFullTypeName}", uiPrefab);
+                continue;
+            }
+
+            if (target.GetComponent(componentType) == null)
+            {
+                Debug.LogWarning($"[GenerateUITool] 节点缺少绑定组件: {bindItem.nodePath} -> {componentType.Name}", target);
+                continue;
+            }
+
+            components.Add(new UIComponentInfo
+            {
+                name = target.name,
+                type = GetCodeTypeName(componentType),
+                path = bindItem.nodePath,
+                fieldName = EnsureValidFieldName(bindItem.fieldName),
+                instanceId = target.gameObject.GetInstanceID()
+            });
         }
 
+        EnsureUniqueFieldNames(components);
         Debug.Log($"[GenerateUITool] 共扫描到 {components.Count} 个有效UI组件");
         return components;
+    }
+
+    private static Type ResolveBindType(UIBindItem bindItem)
+    {
+        if (bindItem.componentFullTypeName == typeof(Transform).FullName)
+            return typeof(Transform);
+
+        if (!string.IsNullOrEmpty(bindItem.componentFullTypeName) &&
+            !string.IsNullOrEmpty(bindItem.componentAssemblyName))
+        {
+            var type = Type.GetType($"{bindItem.componentFullTypeName}, {bindItem.componentAssemblyName}");
+            if (type != null) return type;
+        }
+
+        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            var type = assembly.GetType(bindItem.componentFullTypeName);
+            if (type != null) return type;
+        }
+
+        return null;
+    }
+
+    private static string GetCodeTypeName(Type componentType)
+    {
+        if (componentType == typeof(Transform)) return nameof(Transform);
+        if (componentType == typeof(RectTransform)) return nameof(RectTransform);
+        if (componentType.Namespace == "UnityEngine.UI") return componentType.Name;
+        if (componentType.Namespace == "TMPro") return componentType.Name;
+        if (componentType.Namespace == "UnityEngine") return componentType.Name;
+        return componentType.FullName.Replace("+", ".");
+    }
+
+    private static string EnsureValidFieldName(string fieldName)
+    {
+        if (string.IsNullOrEmpty(fieldName)) return "Node";
+
+        var builder = new StringBuilder();
+        foreach (char c in fieldName)
+        {
+            if (char.IsLetterOrDigit(c) || c == '_')
+                builder.Append(c);
+        }
+
+        if (builder.Length == 0) return "Node";
+        if (char.IsDigit(builder[0])) builder.Insert(0, "N");
+        return char.ToUpper(builder[0]) + builder.ToString(1, builder.Length - 1);
+    }
+
+    private static void EnsureUniqueFieldNames(List<UIComponentInfo> components)
+    {
+        var fieldNameCountDict = new Dictionary<string, int>();
+        foreach (var component in components)
+        {
+            if (!fieldNameCountDict.ContainsKey(component.fieldName))
+            {
+                fieldNameCountDict.Add(component.fieldName, 0);
+                continue;
+            }
+
+            fieldNameCountDict[component.fieldName]++;
+            component.fieldName = $"{component.fieldName}{fieldNameCountDict[component.fieldName] + 1}";
+        }
     }
 
     // 解析后的单个组件信息

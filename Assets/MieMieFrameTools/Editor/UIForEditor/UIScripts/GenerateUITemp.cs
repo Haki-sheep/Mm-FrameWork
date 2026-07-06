@@ -62,7 +62,7 @@ public class GenerateUITemp : EditorWindow
 
         InitBaseInfoElement();
         InitPathSettingsSection();
-        InitMappingSection();
+        InitCreateButton();
     }
 
     #region 基础信息栏
@@ -183,6 +183,12 @@ public class GenerateUITemp : EditorWindow
     #endregion
 
     #region 映射表区域
+
+    private void InitCreateButton()
+    {
+        creatButton = root.Q<Button>("CreatButton");
+        creatButton.RegisterCallback<ClickEvent>(OnCreatButtonClicked);
+    }
 
     [System.Obsolete]
 
@@ -340,8 +346,6 @@ public class GenerateUITemp : EditorWindow
             EditorUtility.DisplayDialog("错误", "请选择生成路径", "确定");
             return;
         }
-
-        SaveMappingFromUI();
 
         string outputFolder = UIGenPathSettings.NormalizeFolderPath(checkPathField.value);
         if (string.IsNullOrEmpty(outputFolder))
