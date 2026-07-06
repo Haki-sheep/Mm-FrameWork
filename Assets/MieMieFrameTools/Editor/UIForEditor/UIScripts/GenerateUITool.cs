@@ -367,10 +367,21 @@ public class GenerateUITool
                 continue;
             }
 
+            if (componentType == typeof(Transform) && target is RectTransform)
+                componentType = typeof(RectTransform);
+
             if (target.GetComponent(componentType) == null)
             {
                 Debug.LogWarning($"[GenerateUITool] 节点缺少绑定组件: {bindItem.nodePath} -> {componentType.Name}", target);
                 continue;
+            }
+
+            string fieldName = bindItem.fieldName;
+            if (componentType == typeof(RectTransform) &&
+                !string.IsNullOrEmpty(fieldName) &&
+                fieldName.EndsWith(nameof(Transform), StringComparison.Ordinal))
+            {
+                fieldName = fieldName.Substring(0, fieldName.Length - nameof(Transform).Length) + nameof(RectTransform);
             }
 
             components.Add(new UIComponentInfo
@@ -378,7 +389,7 @@ public class GenerateUITool
                 name = target.name,
                 type = GetCodeTypeName(componentType),
                 path = bindItem.nodePath,
-                fieldName = EnsureValidFieldName(bindItem.fieldName),
+                fieldName = EnsureValidFieldName(fieldName),
                 instanceId = target.gameObject.GetInstanceID()
             });
         }

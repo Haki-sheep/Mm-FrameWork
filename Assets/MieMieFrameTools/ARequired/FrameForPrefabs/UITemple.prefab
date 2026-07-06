@@ -342,25 +342,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cadae3fccb5bcd4b9e2334b0afe0ea0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MieMieFrameWork.UI.UIBindConfig
-  bindItemList:
-  - nodePath: M_Image
-    nodeName: M_Image
-    componentTypeName: TextMeshProUGUI
-    componentFullTypeName: TMPro.TextMeshProUGUI
-    componentAssemblyName: Unity.TextMeshPro
-    fieldName: M_ImageTextMeshProUGUI
-  - nodePath: M_Image
-    nodeName: M_Image
-    componentTypeName: Transform
-    componentFullTypeName: UnityEngine.Transform
-    componentAssemblyName: UnityEngine.CoreModule
-    fieldName: M_ImageTransform
-  - nodePath: 
-    nodeName: UIContent
-    componentTypeName: Transform
-    componentFullTypeName: UnityEngine.Transform
-    componentAssemblyName: UnityEngine.CoreModule
-    fieldName: UIContentTransform
+  bindItemList: []
 --- !u!1 &8274285150965118983
 GameObject:
   m_ObjectHideFlags: 0
@@ -370,7 +352,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3319717227919513429}
-  - component: {fileID: -6426849941549670534}
   m_Layer: 0
   m_Name: UIContent
   m_TagString: Untagged
@@ -378,14 +359,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3319717227919513429
-Transform:
+--- !u!224 &3319717227919513429
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8274285150965118983}
-  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -394,18 +374,8 @@ Transform:
   - {fileID: 2881015645721397131}
   m_Father: {fileID: 9104032322759042985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-6426849941549670534
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8274285150965118983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1f51802f591bb94e8bb6c915b5abacd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UITempleGen
-  M_ImageTextMeshProUGUI: {fileID: 0}
-  M_ImageTransform: {fileID: 0}
-  UIContentTransform: {fileID: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}

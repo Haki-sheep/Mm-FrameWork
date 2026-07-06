@@ -26,7 +26,7 @@ namespace MieMieUITools.Editor
         /// <summary>
         /// 右侧预留宽度
         /// </summary>
-        private const float RightPadding = 64f;
+        private const float RightPadding = 2f;
 
         /// <summary>
         /// 最大绘制数量
@@ -39,7 +39,7 @@ namespace MieMieUITools.Editor
         private static readonly Dictionary<string, string> ComponentAliasDict = new Dictionary<string, string>
         {
             { typeof(Transform).FullName, "Trans" },
-            { typeof(RectTransform).FullName, "Trans" },
+            { typeof(RectTransform).FullName, "RT" },
             { typeof(Image).FullName, "Img" },
             { typeof(RawImage).FullName, "Raw" },
             { typeof(Button).FullName, "Btn" },
@@ -70,7 +70,7 @@ namespace MieMieUITools.Editor
             var bindableComponentList = GetBindableComponents(gameObject);
             if (bindableComponentList.Count == 0) return;
 
-            float startX = selectionRect.xMax - RightPadding - ButtonWidth;
+            float rightX = selectionRect.xMax - RightPadding;
             int drawCount = Mathf.Min(bindableComponentList.Count, MaxDrawCount);
 
             for (int i = 0; i < drawCount; i++)
@@ -78,7 +78,8 @@ namespace MieMieUITools.Editor
                 var component = bindableComponentList[i];
                 Type componentType = GetBindType(component);
                 bool isBound = IsBound(uiRoot.gameObject, uiContent, gameObject.transform, componentType);
-                var buttonRect = new Rect(startX - i * (ButtonWidth + ButtonSpace), selectionRect.y + 1f, ButtonWidth, selectionRect.height - 2f);
+                float buttonX = rightX - (i + 1) * ButtonWidth - i * ButtonSpace;
+                var buttonRect = new Rect(buttonX, selectionRect.y + 1f, ButtonWidth, selectionRect.height - 2f);
 
                 Color cacheColor = GUI.backgroundColor;
                 GUI.backgroundColor = isBound ? new Color(0.35f, 0.85f, 0.45f, 1f) : cacheColor;
@@ -145,6 +146,7 @@ namespace MieMieUITools.Editor
 
         private static Type GetBindType(Component component)
         {
+            if (component is RectTransform) return typeof(RectTransform);
             if (component is Transform) return typeof(Transform);
             return component.GetType();
         }
@@ -158,7 +160,7 @@ namespace MieMieUITools.Editor
             string componentFullTypeName = GetComponentFullTypeName(componentType);
 
             return config.EditorBindItemList.Exists(item =>
-                item.nodePath == nodePath && item.componentFullTypeName == componentFullTypeName);
+                item.nodePath == nodePath && IsSameComponentType(item.componentFullTypeName, componentFullTypeName));
         }
 
         private static void ToggleBind(GameObject uiRoot, Transform uiContent, Transform target, Type componentType)
@@ -173,7 +175,7 @@ namespace MieMieUITools.Editor
             string nodePath = GetNodePath(uiContent, target);
             string componentFullTypeName = GetComponentFullTypeName(componentType);
             int index = config.EditorBindItemList.FindIndex(item =>
-                item.nodePath == nodePath && item.componentFullTypeName == componentFullTypeName);
+                item.nodePath == nodePath && IsSameComponentType(item.componentFullTypeName, componentFullTypeName));
 
             Undo.RecordObject(config, "Toggle UI Bind");
 
@@ -217,8 +219,14 @@ namespace MieMieUITools.Editor
 
         private static string GetComponentFullTypeName(Type componentType)
         {
-            if (componentType == typeof(RectTransform)) return typeof(Transform).FullName;
             return componentType.FullName;
+        }
+
+        private static bool IsSameComponentType(string recordTypeName, string targetTypeName)
+        {
+            if (recordTypeName == targetTypeName) return true;
+            if (targetTypeName == typeof(RectTransform).FullName && recordTypeName == typeof(Transform).FullName) return true;
+            return false;
         }
 
         private static string GetComponentAlias(Type componentType)
@@ -238,7 +246,7 @@ namespace MieMieUITools.Editor
 
         private static string GetFieldSuffix(Type componentType)
         {
-            if (componentType == typeof(RectTransform)) return nameof(Transform);
+            if (componentType == typeof(RectTransform)) return nameof(RectTransform);
             if (componentType == typeof(Transform)) return nameof(Transform);
             return componentType.Name;
         }
