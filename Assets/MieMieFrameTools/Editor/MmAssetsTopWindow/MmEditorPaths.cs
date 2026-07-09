@@ -23,7 +23,7 @@ namespace MieMieFrameWork.Editor.MmAssets
         /// <summary>
         /// 框架事件 Token 定义
         /// </summary>
-        public const string MmGameEventsAsset = FrameRoot + "/D_EventCenter/MmGameEvents.cs";
+        public const string MmGameEventsAsset = FrameRoot + "/D_EventCenter/Mono/MmGameEvents.cs";
 
         /// <summary>
         /// Protobuf 设置 JSON

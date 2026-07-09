@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using MieMieFrameWork;
+using MiMieEventBus;
 using UnityEditor;
 using UnityEngine;
 
@@ -128,9 +129,9 @@ namespace MieMieFrameWork.Editor.EventBusForEditor
                 return;
             }
 
-            EditorGUILayout.LabelField($"已注册事件槽: {MmGlobalEventBus.Bus.GetEventCount()}");
+            EditorGUILayout.LabelField($"已注册事件槽: {MmGlobalEventBus.GlobalBus.GetEventCount()}");
             EditorGUILayout.LabelField(
-                $"最近触发: {TypedEventBusTrace.LastKeyName}  时间: {TypedEventBusTrace.LastTime:F2}s");
+                $"最近触发: {EventBusTrace.LastKeyName}  时间: {EventBusTrace.LastTime:F2}s");
             EditorGUILayout.Space(4);
 
             monitorScroll = EditorGUILayout.BeginScrollView(monitorScroll);
@@ -138,7 +139,7 @@ namespace MieMieFrameWork.Editor.EventBusForEditor
             for (int i = 0; i < keyInfoList.Count; i++)
             {
                 EventKeyInfo keyInfo = keyInfoList[i];
-                int count = MmGlobalEventBus.Bus.GetListenerCountByName(keyInfo.KeyName);
+                int count = MmGlobalEventBus.GlobalBus.GetListenerCountByName(keyInfo.KeyName);
                 var style = count > 0 ? EditorStyles.boldLabel : EditorStyles.label;
                 Color prevColor = GUI.color;
                 if (count == 0)
@@ -225,10 +226,7 @@ namespace MieMieFrameWork.Editor.EventBusForEditor
             var groupDict = new Dictionary<string, EventScanGroup>();
 
             var callPattern = new Regex(
-                @"(?:MmGlobalEventBus\.Bus|(?:TypedEventBus|EventBus)\s+\w+|\.Bus)\.(Subscribe|Publish|Unsubscribe)(?:<[^>]*>)?\s*\(\s*([A-Za-z_][\w]*(?:\.[A-Za-z_][\w]*)*)",
-                RegexOptions.Compiled);
-            var listenPattern = new Regex(
-                @"\bListen(?:Local)?(?:<[^>]*>)?\s*\(\s*(?:TypedEventBus\s+\w+\s*,\s*)?([A-Za-z_][\w]*(?:\.[A-Za-z_][\w]*)*)",
+                @"(?:MmGlobalEventBus\.GlobalBus|(?:EventBusCore|EventBus)\s+\w+|\.Bus)\.(Subscribe|Publish|Unsubscribe)(?:<[^>]*>)?\s*\(\s*([A-Za-z_][\w]*(?:\.[A-Za-z_][\w]*)*)",
                 RegexOptions.Compiled);
 
             string[] scriptGuids = AssetDatabase.FindAssets("t:MonoScript", new[] { "Assets" });
@@ -254,14 +252,7 @@ namespace MieMieFrameWork.Editor.EventBusForEditor
                     string line = lines[lineIndex];
                     Match callMatch = callPattern.Match(line);
                     if (callMatch.Success)
-                    {
                         AddScanRecord(groupDict, keyLookupDict, callMatch.Groups[2].Value, callMatch.Groups[1].Value, path, lineIndex + 1, memberHint);
-                        continue;
-                    }
-
-                    Match listenMatch = listenPattern.Match(line);
-                    if (listenMatch.Success)
-                        AddScanRecord(groupDict, keyLookupDict, listenMatch.Groups[1].Value, "Listen", path, lineIndex + 1, memberHint);
                 }
             }
 

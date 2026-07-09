@@ -1,5 +1,7 @@
 namespace MieMieFrameWork
 {
+    using MiMieEventBus;
+
     /// <summary>
     /// 框架内置事件 Key 各模块可自建静态类扩展
     /// </summary>

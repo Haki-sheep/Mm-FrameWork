@@ -2,6 +2,7 @@
   "dependencies": {
     "com.boxqkrtm.ide.cursor": "https://github.com/boxqkrtm/com.unity.ide.cursor.git",
     "com.coplaydev.unity-mcp": "https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main",
+    "com.hakisheep.mm-eventbus": "git@github.com:Haki-sheep/MmCSharp-EventBus.git?path=unity",
     "com.unity.addressables": "2.9.1",
     "com.unity.cinemachine": "3.1.5",
     "com.unity.ide.visualstudio": "2.0.27",

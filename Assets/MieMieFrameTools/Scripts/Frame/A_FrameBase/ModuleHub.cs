@@ -210,7 +210,7 @@ namespace MieMieFrameWork
             }
 
             managerDict.Clear();
-            MmGlobalEventBus.Bus.Clear();
+            MmGlobalEventBus.GlobalBus.Clear();
             archiveMgr = null;
         }
 

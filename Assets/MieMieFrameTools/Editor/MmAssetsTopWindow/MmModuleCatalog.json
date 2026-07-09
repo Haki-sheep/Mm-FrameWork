@@ -89,13 +89,14 @@
             "id": "event-bus",
             "displayName": "EventBus 事件总线",
             "category": "框架",
-            "description": "EventKey 结构体 TypedEventBus 全局总线 EventListenerBehaviour EventBusHolder",
+            "subCategory": "可选模块",
+            "description": "EventKey 结构体 EventBusCore 运行时 MiMieEventBus。框架壳在 D_EventCenter/Mono",
             "version": "1.0.0",
-            "gitUrl": "",
-            "packageName": "",
-            "installCheckPath": "Assets/MieMieFrameTools/Scripts/Frame/D_EventCenter/Core/TypedEventBus.cs",
-            "tags": ["事件", "内置"],
-            "isBuiltIn": true
+            "gitUrl": "git@github.com:Haki-sheep/MmCSharp-EventBus.git?path=unity",
+            "packageName": "com.hakisheep.mm-eventbus",
+            "installCheckPath": "Packages/com.hakisheep.mm-eventbus/package.json",
+            "tags": ["事件"],
+            "isBuiltIn": false
         },
         {
             "id": "fsm-library",
@@ -121,6 +122,19 @@
             "packageName": "com.hakisheep.mm-dmvc",
             "installCheckPath": "Packages/com.hakisheep.mm-dmvc/package.json",
             "tags": ["架构"],
+            "isBuiltIn": false
+        },
+        {
+            "id": "mvvm-library",
+            "displayName": "MVVM 库",
+            "category": "框架",
+            "subCategory": "可选模块",
+            "description": "ViewModel 绑定与属性通知 MiMieMVVM 运行时 UPM 可选安装",
+            "version": "1.0.0",
+            "gitUrl": "git@github.com:Haki-sheep/MmCSharp-MMVM.git?path=unity",
+            "packageName": "com.hakisheep.mm-mvvm",
+            "installCheckPath": "Packages/com.hakisheep.mm-mvvm/package.json",
+            "tags": ["MVVM", "UI"],
             "isBuiltIn": false
         },
         {
