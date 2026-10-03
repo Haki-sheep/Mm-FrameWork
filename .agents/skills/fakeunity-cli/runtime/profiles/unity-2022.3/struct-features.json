@@ -1,0 +1,18 @@
+{
+  "scene_roots": {
+    "class_id": 1660057539,
+    "file_id": 9223372036854775807,
+    "expected": "present-or-absent",
+    "comment": "2022.2+ 重存的场景含 SceneRoots 文档（根序 = SceneRoots.m_Roots，非 m_RootOrder）；老场景未重存可缺——信息项，不作硬校验"
+  },
+  "m_modification_serialized_version": {
+    "expected": 3,
+    "comment": "PrefabInstance m_Modification serializedVersion（r1 §5.3/7.2）；2021 代为 2，是版本代际双重判定的硬特征"
+  },
+  "references_version": {
+    "expected": 2,
+    "comment": "SerializeReference 宿主 references: version（2021.2+ 稳定格式，r1 §4.4）"
+  },
+  "m_component_syntax": "- component:",
+  "root_order": "SceneRoots.m_Roots"
+}

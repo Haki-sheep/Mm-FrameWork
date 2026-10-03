@@ -1,0 +1,52 @@
+[
+  {
+    "Locale": "zh-CN",
+    "Key": "common.start",
+    "Text": "开始游戏"
+  },
+  {
+    "Locale": "en",
+    "Key": "common.start",
+    "Text": "Start Game"
+  },
+  {
+    "Locale": "zh-CN",
+    "Key": "common.settings",
+    "Text": "设置"
+  },
+  {
+    "Locale": "en",
+    "Key": "common.settings",
+    "Text": "Settings"
+  },
+  {
+    "Locale": "zh-CN",
+    "Key": "common.language",
+    "Text": "语言"
+  },
+  {
+    "Locale": "en",
+    "Key": "common.language",
+    "Text": "Language"
+  },
+  {
+    "Locale": "zh-CN",
+    "Key": "common.back",
+    "Text": "返回"
+  },
+  {
+    "Locale": "en",
+    "Key": "common.back",
+    "Text": "Back"
+  },
+  {
+    "Locale": "zh-CN",
+    "Key": "common.coins",
+    "Text": "金币 {0:N0}"
+  },
+  {
+    "Locale": "en",
+    "Key": "common.coins",
+    "Text": "Coins {0:N0}"
+  }
+]

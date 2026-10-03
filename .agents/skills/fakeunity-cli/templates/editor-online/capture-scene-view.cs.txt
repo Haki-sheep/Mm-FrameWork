@@ -1,0 +1,40 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
+using UnityEngine;
+
+public static class __FakeUnityCLICaptureSceneView
+{
+    public static object Execute()
+    {
+        const string outputPath = @"__OUTPUT_PATH__";
+        const int width = 1920;
+        const int height = 1080;
+        var sceneView = SceneView.lastActiveSceneView;
+        if (sceneView == null || sceneView.camera == null) throw new InvalidOperationException("No active SceneView camera.");
+
+        var renderTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.ARGB32);
+        var texture = new Texture2D(width, height, TextureFormat.RGB24, false);
+        var previousTarget = sceneView.camera.targetTexture;
+        var previousActive = RenderTexture.active;
+        try
+        {
+            sceneView.camera.targetTexture = renderTexture;
+            sceneView.camera.Render();
+            RenderTexture.active = renderTexture;
+            texture.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            texture.Apply(false);
+            Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
+            File.WriteAllBytes(outputPath, texture.EncodeToPNG());
+            return new Dictionary<string, object> { ["path"] = outputPath, ["width"] = width, ["height"] = height, ["includesGizmos"] = false };
+        }
+        finally
+        {
+            sceneView.camera.targetTexture = previousTarget;
+            RenderTexture.active = previousActive;
+            UnityEngine.Object.DestroyImmediate(texture);
+            RenderTexture.ReleaseTemporary(renderTexture);
+        }
+    }
+}

@@ -3,7 +3,8 @@
     "rootNamespace": "MieMieFrameWork.Data.Luban",
     "references": [
         "MieMieFrameWork.Runtime",
-        "Luban.Runtime"
+        "Luban.Runtime",
+        "UniTask"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

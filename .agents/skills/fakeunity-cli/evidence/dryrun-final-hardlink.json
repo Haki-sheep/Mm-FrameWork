@@ -1,0 +1,158 @@
+{
+  "schema_version": "1.0",
+  "command": "selfcheck dryrun",
+  "ok": true,
+  "dry_run": false,
+  "data": {
+    "all_passed": true,
+    "total": 14,
+    "passed": 14,
+    "failed": 0,
+    "by_category": {
+      "e2e": 2,
+      "line_diff": 5,
+      "normalize": 5,
+      "planned_op": 2
+    },
+    "duration_ms": 563,
+    "acceptance_scope": "行级 diff hunks 结构正确 + m_Modifications 归一化消顺序噪声（真差异保留定位） + PlannedOperation JSON 形态稳定 + set-property dry-run 零落盘；写动词统一接入由集成收口",
+    "scenarios": [
+      {
+        "category": "line_diff",
+        "name": "single_change",
+        "passed": true,
+        "detail": {
+          "hunks": 1,
+          "unified": "@@ -2,7 +2,7 @@\n line2\n line3\n line4\n-line5\n+LINE5\n line6\n line7\n line8\n"
+        }
+      },
+      {
+        "category": "line_diff",
+        "name": "pure_insert_anchor",
+        "passed": true,
+        "detail": {
+          "unified": "@@ -2,0 +3,1 @@\n+lX\n"
+        }
+      },
+      {
+        "category": "line_diff",
+        "name": "pure_delete_anchor",
+        "passed": true,
+        "detail": {
+          "unified": "@@ -2,1 +1,0 @@\n-lX\n"
+        }
+      },
+      {
+        "category": "line_diff",
+        "name": "multi_hunk",
+        "passed": true,
+        "detail": {
+          "hunks": 2,
+          "unified": "@@ -1,5 +1,5 @@\n l1\n-l2\n+L2\n l3\n l4\n l5\n@@ -16,5 +16,5 @@\n l16\n l17\n l18\n-l19\n+L19\n l20\n"
+        }
+      },
+      {
+        "category": "line_diff",
+        "name": "crlf_no_phantom",
+        "passed": true,
+        "detail": {
+          "unified": "@@ -1,4 +1,4 @@\n a\r\n-b\r\n+B\r\n c\r\n d\n"
+        }
+      },
+      {
+        "category": "normalize",
+        "name": "order_noise_eliminated",
+        "passed": true,
+        "detail": {
+          "raw_hunks": 1,
+          "blocks_scanned": 2,
+          "blocks_normalized": 2,
+          "items_reordered": 5
+        }
+      },
+      {
+        "category": "normalize",
+        "name": "real_diff_located",
+        "passed": true,
+        "detail": {
+          "unified": "@@ -17,7 +17,7 @@\n       objectReference: {fileID: 0}\n     - target: {fileID: 200, guid: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb02, type: 3}\n       propertyPath: m_IsActive\n-      value: 1\n+      value: 0\n       objectReference: {fileID: 0}\n     m_RemovedComponents: []\n   m_SourcePrefab: {fileID: 100100000, guid: cccccccccccccccccccccccccccccc03, type: 3}\n"
+        }
+      },
+      {
+        "category": "normalize",
+        "name": "plain_list_not_normalized",
+        "passed": true,
+        "detail": {
+          "unified": "@@ -1,5 +1,5 @@\n GameObject:\n   m_Children:\n-  - {fileID: 1}\n   - {fileID: 2}\n+  - {fileID: 1}\n \n"
+        }
+      },
+      {
+        "category": "normalize",
+        "name": "corpus_idempotent",
+        "passed": true,
+        "detail": {
+          "files": 95,
+          "blocks_scanned": 1960,
+          "non_idempotent": []
+        }
+      },
+      {
+        "category": "normalize",
+        "name": "corpus_reversed_empty",
+        "passed": true,
+        "detail": {
+          "raw_hunks": 2,
+          "normalized_changed": false
+        }
+      },
+      {
+        "category": "planned_op",
+        "name": "json_shape_stable",
+        "passed": true,
+        "detail": {
+          "json": "{\"operation_type\":\"set-property\",\"file\":\"/tmp/a.prefab\",\"file_id\":3159168103707326438,\"property_path\":\"m_Name\",\"old_value\":\"BGComponent\",\"new_value\":\"HeroBg\"}"
+        }
+      },
+      {
+        "category": "planned_op",
+        "name": "null_fields_kept",
+        "passed": true,
+        "detail": {
+          "json": "{\"operation_type\":\"node add\",\"file\":\"/tmp/a.prefab\",\"file_id\":100,\"property_path\":\"m_Children\",\"old_value\":null,\"new_value\":\"{fileID: 1}\"}"
+        }
+      },
+      {
+        "category": "e2e",
+        "name": "dry_run_zero_write",
+        "passed": true,
+        "detail": {
+          "ok": true,
+          "unchanged": true,
+          "unified": "@@ -13,7 +13,7 @@\n   - component: {fileID: 4388376724360244287}\r\n   - component: {fileID: 1503988198947295759}\r\n   m_Layer: 5\r\n-  m_Name: BGComponent\r\n+  m_Name: DryRunHero\r\n   m_TagString: Untagged\r\n   m_Icon: {fileID: 0}\r\n   m_NavMeshLayer: 0\r\n"
+        }
+      },
+      {
+        "category": "e2e",
+        "name": "engine_matches_pipeline",
+        "passed": true,
+        "detail": {
+          "ok": true,
+          "unified": "@@ -13,7 +13,7 @@\n   - component: {fileID: 4388376724360244287}\r\n   - component: {fileID: 1503988198947295759}\r\n   m_Layer: 5\r\n-  m_Name: BGComponent\r\n+  m_Name: DryRunHero\r\n   m_TagString: Untagged\r\n   m_Icon: {fileID: 0}\r\n   m_NavMeshLayer: 0\r\n",
+          "pipe_unified": "@@ -13,7 +13,7 @@\n   - component: {fileID: 4388376724360244287}\r\n   - component: {fileID: 1503988198947295759}\r\n   m_Layer: 5\r\n-  m_Name: BGComponent\r\n+  m_Name: DryRunHero\r\n   m_TagString: Untagged\r\n   m_Icon: {fileID: 0}\r\n   m_NavMeshLayer: 0\r\n"
+        }
+      }
+    ]
+  },
+  "error": null,
+  "meta": {
+    "warnings": [],
+    "truncation": {
+      "truncated": false,
+      "total_count": 0,
+      "cursor": null,
+      "full_output_path": null
+    },
+    "artifacts": null,
+    "project": null
+  }
+}

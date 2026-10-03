@@ -27,18 +27,23 @@ namespace MieMieFrameWork.Pool
         public int ActiveCount;
 
         /// <summary>
-        /// 累计创建数量
+        /// 当前存活数量 包含闲置与借出
         /// </summary>
         public int TotalCreated;
 
         /// <summary>
-        /// 池上限
+        /// 闲置缓存上限 保留原字段名称
         /// </summary>
         public int MaxSize;
 
+        /// <summary> 总量上限 零表示不限制 </summary>
+        public int MaxTotal;
+
+        public int MaxInactive => MaxSize;
+
         /// <summary>
-        /// 容量占用率
+        /// 闲置缓存占用率
         /// </summary>
-        public float UsageRate => MaxSize > 0 ? (float)TotalCreated / MaxSize : 0f;
+        public float UsageRate => MaxInactive > 0 ? (float)PooledCount / MaxInactive : 0f;
     }
 }

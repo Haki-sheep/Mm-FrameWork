@@ -1,0 +1,26 @@
+[
+  {
+    "version": "2022.3.62f3",
+    "bridge_payload_matches_final": true,
+    "package_files": 30,
+    "final_build_id": "9261a004c8fd4de39f84c3eca5a867fb"
+  },
+  {
+    "version": "6000.4.10f1",
+    "bridge_payload_matches_final": true,
+    "package_files": 30,
+    "final_build_id": "9261a004c8fd4de39f84c3eca5a867fb"
+  },
+  {
+    "version": "6000.5.1f1",
+    "bridge_payload_matches_final": true,
+    "package_files": 30,
+    "final_build_id": "9261a004c8fd4de39f84c3eca5a867fb"
+  },
+  {
+    "version": "6000.6.4f1",
+    "bridge_payload_matches_final": true,
+    "package_files": 30,
+    "final_build_id": "9261a004c8fd4de39f84c3eca5a867fb"
+  }
+]

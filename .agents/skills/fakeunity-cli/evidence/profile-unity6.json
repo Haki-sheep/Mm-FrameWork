@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.0",
+  "command": "selfcheck profile-unity6",
+  "ok": true,
+  "dry_run": false,
+  "data": {
+    "all_passed": true,
+    "passed": 7,
+    "total": 7,
+    "checks": [
+      {
+        "name": "research_profiles_are_readonly",
+        "passed": true,
+        "detail": {
+          "id": "unity-6000-draft",
+          "support_level": "research-only",
+          "covered_versions": [
+            "6000.3",
+            "6000.6"
+          ]
+        }
+      },
+      {
+        "name": "unreviewed_unity6_series_not_borrowed",
+        "passed": true,
+        "detail": {
+          "version": "6000.4.12f1"
+        }
+      },
+      {
+        "name": "risk_axes_captured",
+        "passed": true,
+        "detail": {
+          "snapshot_status": "draft-not-for-write"
+        }
+      },
+      {
+        "name": "classid_draft_supplemented",
+        "passed": true,
+        "detail": {
+          "entries": 48
+        }
+      },
+      {
+        "name": "cost_report_is_quantified",
+        "passed": true,
+        "detail": {
+          "report": "docs/research/unity-6-profile-assessment.md"
+        }
+      },
+      {
+        "name": "single_and_dryrun_fail_closed",
+        "passed": true,
+        "detail": {
+          "single_error": "FUC_VERSION_UNSUPPORTED",
+          "dry_run_error": "FUC_VERSION_UNSUPPORTED",
+          "apply_called": false
+        }
+      },
+      {
+        "name": "batch_fail_closed",
+        "passed": true,
+        "detail": {
+          "error_code": "FUC_VERSION_UNSUPPORTED"
+        }
+      }
+    ],
+    "acceptance": {
+      "support_level": "research-only",
+      "write_supported": false,
+      "unity_editor_required": false,
+      "estimated_readonly_person_days": "18-30",
+      "estimated_write_person_days": "46-87"
+    }
+  },
+  "error": null,
+  "meta": {
+    "warnings": [],
+    "truncation": {
+      "truncated": false,
+      "total_count": 0,
+      "cursor": null,
+      "full_output_path": null
+    },
+    "artifacts": null,
+    "project": null
+  }
+}

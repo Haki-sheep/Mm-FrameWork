@@ -1,0 +1,11 @@
+{
+  "type_id": 1,
+  "full_name": "UnityEngine.GameObject",
+  "fields": [
+    { "name": "m_Component", "type": "vector", "kind": "array", "default_yaml": "[]" },
+    { "name": "m_Layer", "type": "unsigned int", "kind": "primitive", "default_yaml": "0" },
+    { "name": "m_Name", "type": "string", "kind": "primitive", "default_yaml": "" },
+    { "name": "m_TagString", "type": "string", "kind": "primitive", "default_yaml": "Untagged" },
+    { "name": "m_IsActive", "type": "bool", "kind": "primitive", "default_yaml": "1" }
+  ]
+}

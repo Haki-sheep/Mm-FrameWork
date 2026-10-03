@@ -11,22 +11,25 @@ using Newtonsoft.Json.Linq;
 
 namespace cfg
 {
-    public partial class Tables
+public partial class Tables
+{
+    public localization.TbText TbText {get; }
+    public demo.Tbitem Tbitem {get; }
+
+
+      public Tables(System.Func<string, JArray> loader)
     {
-        public demo.Tbitem Tbitem { get; }
-
-
-        public Tables(System.Func<string, JArray> loader)
-        {
-            Tbitem = new demo.Tbitem(loader("demo_tbitem"));
-            ResolveRef();
-        }
-
-        private void ResolveRef()
-        {
-            Tbitem.ResolveRef(this);
-        }
+        TbText = new localization.TbText(loader("localization_tbtext"));
+        Tbitem = new demo.Tbitem(loader("demo_tbitem"));
+        ResolveRef();
     }
+    
+     private void ResolveRef()
+    {
+        TbText.ResolveRef(this);
+        Tbitem.ResolveRef(this);
+    }
+}
 
 }
 

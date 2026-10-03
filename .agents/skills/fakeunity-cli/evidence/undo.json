@@ -1,0 +1,127 @@
+{
+  "schema_version": "1.0",
+  "command": "selfcheck undo",
+  "ok": true,
+  "dry_run": false,
+  "data": {
+    "all_passed": true,
+    "total": 7,
+    "passed": 7,
+    "failed": 0,
+    "elapsed_ms": 434,
+    "scenarios": [
+      {
+        "name": "dryrun_and_noop_not_logged",
+        "passed": true,
+        "detail": {
+          "dry_run_error": null,
+          "noop_error": null,
+          "log_exists": false
+        }
+      },
+      {
+        "name": "write_snapshot_and_manifest",
+        "passed": true,
+        "detail": {
+          "write_error": null,
+          "log_entries": 1,
+          "snapshot_exists": true,
+          "op_id": "20261002-160446-340-ead79df4",
+          "manifest": {
+            "op_id": "20261002-160446-340-ead79df4",
+            "kind": "write",
+            "time_utc": "2026-10-02T16:04:46.3472040Z",
+            "command_line": "fuc prefab set-property C:\\Users\\fmz\\AppData\\Local\\Temp\\fuc-selfcheck-undo-ed13c5b2220e4cb583c745afb95b38c8\\s1\\sample-ed686fe5.prefab --file-id 3159168103707326438 --property m_Name --value HeroBg",
+            "files": [
+              {
+                "path": "C:\\Users\\fmz\\AppData\\Local\\Temp\\fuc-selfcheck-undo-ed13c5b2220e4cb583c745afb95b38c8\\s1\\sample-ed686fe5.prefab",
+                "snapshot": "snapshots/15bbe9aacdaa6b2e",
+                "sha256": "15bbe9aacdaa6b2e723d30c4a34446aff5b1513cbd27b94f53ffd8bd6068d5f3",
+                "size_bytes": 2854,
+                "post_sha256": "4a9e836d9b8622ffefb5daad54e45cdeb92d8a60f910679b981282c4459a0cfb",
+                "pre_existed": null,
+                "post_existed": null
+              }
+            ],
+            "lines_added": 1,
+            "lines_removed": 1,
+            "unified_diff": "@@ -13,7 +13,7 @@\n   - component: {fileID: 4388376724360244287}\r\n   - component: {fileID: 1503988198947295759}\r\n   m_Layer: 5\r\n-  m_Name: BGComponent\r\n+  m_Name: HeroBg\r\n   m_TagString: Untagged\r\n   m_Icon: {fileID: 0}\r\n   m_NavMeshLayer: 0\r\n",
+            "undone_op_id": null
+          }
+        }
+      },
+      {
+        "name": "undo_byte_level_restore",
+        "passed": true,
+        "detail": {
+          "undo_error": null,
+          "byte_equal": true,
+          "log_entries": 2,
+          "second_kind": "undo",
+          "undone_op_id": "20261002-160446-340-ead79df4"
+        }
+      },
+      {
+        "name": "two_writes_undo_latest_then_redo",
+        "passed": true,
+        "detail": {
+          "write_errors": [
+            null,
+            null
+          ],
+          "undo_errors": [
+            null,
+            null
+          ],
+          "undo1_restored_latest": true,
+          "undo2_is_redo": true
+        }
+      },
+      {
+        "name": "tamper_refuse_then_force",
+        "passed": true,
+        "detail": {
+          "write_error": null,
+          "undo1_error": null,
+          "tamper_refused_code": "FUC_WRITE_DENIED",
+          "file_untouched_after_refuse": true,
+          "force_error": null,
+          "force_restored": true
+        }
+      },
+      {
+        "name": "same_content_snapshot_dedup",
+        "passed": true,
+        "detail": {
+          "write_errors": [
+            null,
+            null
+          ],
+          "snapshot_files": 1,
+          "log_entries": 2
+        }
+      },
+      {
+        "name": "logs_list_structure_and_pagination",
+        "passed": true,
+        "detail": {
+          "error": null,
+          "fail_reason": null,
+          "total": 2
+        }
+      }
+    ]
+  },
+  "error": null,
+  "meta": {
+    "warnings": [],
+    "truncation": {
+      "truncated": false,
+      "total_count": 0,
+      "cursor": null,
+      "full_output_path": null
+    },
+    "artifacts": null,
+    "project": null
+  }
+}

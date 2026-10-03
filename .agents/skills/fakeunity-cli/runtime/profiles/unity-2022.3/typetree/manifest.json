@@ -1,0 +1,73 @@
+{
+ "status": "supported-limited（发布版有限覆盖：10 个常用原生组件；未收录类型显式返回无 schema，不猜测字段）",
+ "source": "AssetRipper/TypeTreeDumps InfoJson（https://github.com/AssetRipper/TypeTreeDumps）",
+ "source_file": "info62.json",
+ "source_version": "2022.3.62f1",
+ "source_sha256": "10b1b97c55ea1ffd8058256b56e0973e3fbd123edf9ef323cfe24b253ebfbac5",
+ "license_note": "TypeTreeDumps 为社区公开 dump，分发合规性待法务确认（06 文档 §6.2/6.3 待验证 #7）",
+ "generated_at": "2026-07-22",
+ "generator": "eng/typetree_extract.py",
+ "defaults_note": "default 字段仅高置信录入（真实 YAML 样本佐证，default_source=curated_sample_inferred）；typetree 本身不含默认值",
+ "components": [
+  {
+   "file": "components/gameobject.json",
+   "full_name": "UnityEngine.GameObject",
+   "type_id": 1,
+   "field_count": 5
+  },
+  {
+   "file": "components/transform.json",
+   "full_name": "UnityEngine.Transform",
+   "type_id": 4,
+   "field_count": 6
+  },
+  {
+   "file": "components/recttransform.json",
+   "full_name": "UnityEngine.RectTransform",
+   "type_id": 224,
+   "field_count": 11
+  },
+  {
+   "file": "components/camera.json",
+   "full_name": "UnityEngine.Camera",
+   "type_id": 20,
+   "field_count": 36
+  },
+  {
+   "file": "components/audiosource.json",
+   "full_name": "UnityEngine.AudioSource",
+   "type_id": 82,
+   "field_count": 24
+  },
+  {
+   "file": "components/light.json",
+   "full_name": "UnityEngine.Light",
+   "type_id": 108,
+   "field_count": 27
+  },
+  {
+   "file": "components/meshrenderer.json",
+   "full_name": "UnityEngine.MeshRenderer",
+   "type_id": 23,
+   "field_count": 27
+  },
+  {
+   "file": "components/meshfilter.json",
+   "full_name": "UnityEngine.MeshFilter",
+   "type_id": 33,
+   "field_count": 2
+  },
+  {
+   "file": "components/boxcollider.json",
+   "full_name": "UnityEngine.BoxCollider",
+   "type_id": 65,
+   "field_count": 10
+  },
+  {
+   "file": "components/animator.json",
+   "full_name": "UnityEngine.Animator",
+   "type_id": 95,
+   "field_count": 13
+  }
+ ]
+}

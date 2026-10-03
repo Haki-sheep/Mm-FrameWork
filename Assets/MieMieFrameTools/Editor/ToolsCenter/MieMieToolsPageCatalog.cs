@@ -7,6 +7,8 @@ namespace MieMieFrameWork.Editor.ToolsCenter
     /// </summary>
     public static class MieMieToolsPageCatalog
     {
+        #region 页面目录
+
         /// <summary>
         /// 创建内置页面列表
         /// </summary>
@@ -15,6 +17,37 @@ namespace MieMieFrameWork.Editor.ToolsCenter
             return new List<IMieMieToolsPage>
             {
                 new MieMieToolsHomePage(),
+
+                new MieMieLogToolsPage(),
+                CreateEmbedded<MieMieFrameWork.Effects.Editor.EffectMonitorWindow>(
+                    "运行监控/视觉特效",
+                    "视觉特效运行监控",
+                    "查看特效预算与资源持有并控制当前播放"),
+                CreateAction(
+                    "多语言与字体/字体管理器",
+                    "字体管理器",
+                    "打开字体收集 烘焙 预览与覆盖诊断工作台",
+                    MieMieFrameWork.Localization.FontManagement.FontManagerWindow.Open),
+                CreateAction(
+                    "多语言与字体/创建默认字体映射",
+                    "创建默认字体映射",
+                    "创建简中与英文的默认字体映射 不覆盖现有配置",
+                    MieMieFrameWork.Localization.FontManagement.LocalizationProjectSetup.CreateDefaultCatalog),
+                CreateAction(
+                    "多语言与字体/接入选中的框架根节点",
+                    "接入选中的框架根节点",
+                    "为选中的场景 ModuleHub 根节点接入多语言宿主",
+                    MieMieFrameWork.Localization.FontManagement.LocalizationProjectSetup.AttachToSelectedRoot),
+                CreateAction(
+                    "多语言与字体/绑定选中的 TMP 文本",
+                    "绑定选中的 TMP 文本",
+                    "绑定选中的场景 TextMeshProUGUI 文本 Key 与字体样式",
+                    MieMieFrameWork.Localization.FontManagement.LocalizationProjectSetup.BindSelectedText),
+                CreateAction(
+                    "多语言与字体/验证字体工具迁移",
+                    "验证字体工具迁移",
+                    "显式运行字体收集 缺字诊断 生成与渲染验证",
+                    MieMieFrameWork.Localization.FontManagement.FontManagerVerification.Run),
 
                 CreateEmbedded<MieMieFrameWork.Editor.Animation.FbxAnimationClipRenameExtractWindow>(
                     "Animation/FBX 动画改名提取",
@@ -134,20 +167,21 @@ namespace MieMieFrameWork.Editor.ToolsCenter
                     "Luban 工作台",
                     "打开配置表并执行 Luban 校验与代码生成"),
 
-                CreateEmbedded<MieMieFrameWork.Asset.BuildWindow>(
-                    "MmAsset/资源管线",
-                    "MmAsset 资源管线",
-                    "整包资源与热更资源构建配置"),
                 CreateAction(
-                    "MmAsset/生成模块枚举",
-                    "生成模块枚举",
-                    "根据资源模块配置生成模块枚举",
-                    MieMieFrameWork.Asset.BundleEnumCreator.GenerateBundleModuleEnum),
+                    "YooAsset/资源采集",
+                    "YooAsset 资源采集",
+                    "配置资源包 采集地址与资源标签",
+                    YooAsset.Editor.BundleCollectorWindow.OpenWindow),
                 CreateAction(
-                    "MmAsset/运行自检",
-                    "MmAsset 运行自检",
-                    "检查资源管线配置与模块引用",
-                    MieMieFrameWork.Asset.MmAssetDiagnostics.ValidateProjectMenu),
+                    "YooAsset/资源构建",
+                    "YooAsset 资源构建",
+                    "使用 YooAsset 原生构建器生成资源包",
+                    YooAsset.Editor.BundleBuilderWindow.OpenWindow),
+                CreateAction(
+                    "YooAsset/资源调试",
+                    "YooAsset 资源调试",
+                    "查看原生资源句柄和 Bundle 运行状态",
+                    YooAsset.Editor.BundleDebuggerWindow.OpenWindow),
 
                 CreateEmbedded<MieMieFrameWork.Editor.EventBusForEditor.EventBusEditorWindow>(
                     "Event Bus/事件总线",
@@ -169,6 +203,10 @@ namespace MieMieFrameWork.Editor.ToolsCenter
                     "批量分析脚本依赖并生成程序集定义")
             };
         }
+
+        #endregion
+
+        #region 页面工厂
 
         /// <summary>
         /// 创建嵌入式工具页面
@@ -193,5 +231,7 @@ namespace MieMieFrameWork.Editor.ToolsCenter
         {
             return new MieMieToolsActionPage(menuPath, title, description, action);
         }
+
+        #endregion
     }
 }

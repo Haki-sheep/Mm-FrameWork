@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "evidence_id": "scene-lifecycle-import-2022.3.62f3",
+  "unity_version": "2022.3.62f3",
+  "commands": [
+    "scene create --type empty|3d|ugui",
+    "scene manager-set",
+    "scene merge",
+    "scene object-migrate"
+  ],
+  "operation_ids": [
+    "20260724-150554-853-59bcff7c",
+    "20260724-150556-913-e392fdc8",
+    "20260724-150557-906-2e3f6b31",
+    "20260724-150601-138-d1ded95e",
+    "20260724-150603-698-933a9f5d",
+    "20260724-150604-532-7f19a12e"
+  ],
+  "cli_read_verified_after_each_write": true,
+  "unity_import": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "editor_observed": {
+    "merged_empty_scene_roots": ["Main Camera", "Directional Light"],
+    "migration_source_roots": ["Directional Light"],
+    "migration_destination_roots": ["Canvas", "Main Camera"],
+    "camera_components": ["Transform", "Camera", "AudioListener"],
+    "light_components": ["Transform", "Light"],
+    "canvas_components": ["RectTransform", "Canvas"]
+  },
+  "assertions": {
+    "empty_basic3d_basicugui_templates_import": true,
+    "scene_manager_mutation_imports": true,
+    "merge_preserves_object_graph": true,
+    "migration_is_two_file_atomic": true,
+    "unity_hierarchy_matches_cli_intent": true
+  }
+}

@@ -1,0 +1,8 @@
+<module name="localization">
+    <bean name="TextEntry">
+        <var name="Locale" type="string"/>
+        <var name="Key" type="string"/>
+        <var name="Text" type="string"/>
+    </bean>
+    <table name="TbText" value="TextEntry" mode="list" input="*@localization_texts.json"/>
+</module>

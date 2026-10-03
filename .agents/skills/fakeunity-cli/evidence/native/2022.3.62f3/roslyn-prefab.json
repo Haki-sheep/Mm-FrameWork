@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "command": "editor exec",
+  "ok": true,
+  "dry_run": false,
+  "data": {
+    "request_id": "63cb2112ddd9445fbf2bbf427da10d52",
+    "state": "success",
+    "completed": true,
+    "replayed": false,
+    "result": {
+      "asset": "Assets/Unity6BridgeProbe.prefab",
+      "identity": -9478,
+      "identity_roundtrip": true,
+      "position": 1,
+      "trigger": true,
+      "version": "2022.3.62f3"
+    },
+    "response": {
+      "protocol_version": "1.1",
+      "request_id": "63cb2112ddd9445fbf2bbf427da10d52",
+      "state": "success",
+      "success": true,
+      "submitted_at": "2026-10-02T15:26:32.4778405Z",
+      "started_at": "2026-10-02T15:26:32.5240947Z",
+      "completed_at": "2026-10-02T15:26:34.2660638Z",
+      "editor_pid": 27796,
+      "editor_instance_id": "27796-639265515525006012",
+      "editor_session_id": "20261002T152631.0200825-27796-57cc7acc",
+      "unity_version": "2022.3.62f3",
+      "operation": "roslyn-exec",
+      "code_sha256": "253aa502a82703ede7f8090931c10adc253a8547b69060f47c35fc7ab5037e6f",
+      "payload_sha256": "1829b61cbbfcf78ada6204c573e7feddd78929952ebe2d50658a6558c6b1810d",
+      "result_json": "{\"asset\":\"Assets/Unity6BridgeProbe.prefab\",\"identity\":-9478,\"identity_roundtrip\":true,\"position\":1,\"trigger\":true,\"version\":\"2022.3.62f3\"}",
+      "result_text": "{ version = 2022.3.62f3, trigger = True, position = 1, asset = Assets/Unity6BridgeProbe.prefab, identity = -9478, identity_roundtrip = True }",
+      "result_type": "<>f__AnonymousType0`6[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+      "error_type": "",
+      "error_message": "",
+      "error_stack_trace": "",
+      "diagnostics": [],
+      "artifacts": [],
+      "compile_ms": 1331,
+      "execute_ms": 122
+    }
+  },
+  "error": null,
+  "meta": {
+    "warnings": [],
+    "truncation": {
+      "truncated": false,
+      "total_count": 0,
+      "cursor": null,
+      "full_output_path": null
+    },
+    "artifacts": {
+      "development_policy": {
+        "effective_mode": "free",
+        "source": "command-line",
+        "selected_mode": "free",
+        "selected_source": "command-line",
+        "settings_path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\2022.3.62f3-11462a36dd1f494aabcc3f98c16fc7c5\\UnityProject\\.fuc\\development-settings.json",
+        "settings_error": null,
+        "shared_protection": false
+      },
+      "editor_transitions": [],
+      "operation_artifacts": {
+        "response_path": "E:/AAAA学习资料/Demo/UnityFakeCLI/out/unity6-evidence/delivery-editors/2022.3.62f3-11462a36dd1f494aabcc3f98c16fc7c5/UnityProject/Library/FakeUnityCLI/responses/63cb2112ddd9445fbf2bbf427da10d52.json"
+      }
+    },
+    "project": {
+      "root": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\2022.3.62f3-11462a36dd1f494aabcc3f98c16fc7c5\\UnityProject",
+      "unity_version": "2022.3.62f3",
+      "index_age_s": null
+    }
+  }
+}

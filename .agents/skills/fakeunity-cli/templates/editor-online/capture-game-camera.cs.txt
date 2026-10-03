@@ -1,0 +1,47 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
+
+public static class __FakeUnityCLICaptureGameCamera
+{
+    public static object Execute()
+    {
+        const string outputPath = @"__OUTPUT_PATH__";
+        const int width = 1920;
+        const int height = 1080;
+        var camera = Camera.main;
+        if (camera == null) throw new InvalidOperationException("Camera.main was not found.");
+
+        var renderTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.ARGB32);
+        var texture = new Texture2D(width, height, TextureFormat.RGB24, false);
+        var previousTarget = camera.targetTexture;
+        var previousActive = RenderTexture.active;
+        try
+        {
+            camera.targetTexture = renderTexture;
+            camera.Render();
+            RenderTexture.active = renderTexture;
+            texture.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            texture.Apply(false);
+            Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
+            File.WriteAllBytes(outputPath, texture.EncodeToPNG());
+            return new Dictionary<string, object>
+            {
+                ["path"] = outputPath,
+                ["width"] = width,
+                ["height"] = height,
+                ["camera"] = camera.name,
+                ["capture_scope"] = "camera_render",
+                ["screen_space_overlay_included"] = false
+            };
+        }
+        finally
+        {
+            camera.targetTexture = previousTarget;
+            RenderTexture.active = previousActive;
+            UnityEngine.Object.DestroyImmediate(texture);
+            RenderTexture.ReleaseTemporary(renderTexture);
+        }
+    }
+}

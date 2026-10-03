@@ -1,0 +1,16 @@
+{
+  "id": "unity-6000-draft",
+  "covered_versions": ["6000.3", "6000.6"],
+  "support_level": "research-only",
+  "lts": false,
+  "notes": "Unity 6 离线预研快照草案；仅用于差异审计与只读探针，未通过黄金矩阵，禁止写入。",
+  "write_policy": {
+    "hard_gate": "FUC_VERSION_UNSUPPORTED",
+    "exit_code": 73,
+    "comment": "research-only Profile 永不开放写入；必须另建并签封正式 Profile 才能改变此策略"
+  },
+  "evidence_status": "partial-public-evidence",
+  "struct_features": "struct-features.json",
+  "classid_map": "classid-map.json",
+  "research_report": "../../docs/research/unity-6-profile-assessment.md"
+}

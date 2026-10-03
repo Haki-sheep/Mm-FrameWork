@@ -1,0 +1,18 @@
+{
+  "id": "unity-2021.3",
+  "covered_versions": ["2021.3"],
+  "support_level": "readonly",
+  "lts": true,
+  "notes": "2021.3 LTS 只读降级 Profile；允许解析、索引、引用与结构查询，全部写入硬拒绝。",
+  "write_policy": {
+    "hard_gate": "FUC_VERSION_UNSUPPORTED",
+    "exit_code": 73,
+    "comment": "readonly Profile 永不开放写入"
+  },
+  "struct_features": "struct-features.json",
+  "classid_map": "classid-map.json",
+  "typetree": "typetree",
+  "golden": "golden",
+  "console_tests": "tests/console-tests.json",
+  "release_manifest": "release-manifest.json"
+}

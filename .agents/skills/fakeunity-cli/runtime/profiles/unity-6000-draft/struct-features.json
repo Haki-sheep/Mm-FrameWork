@@ -1,0 +1,49 @@
+{
+  "snapshot_status": "draft-not-for-write",
+  "covered_observations": ["6000.3", "6000.6"],
+  "scene_roots": {
+    "class_id": 1660057539,
+    "expected": "present-or-absent",
+    "confidence": "documented-continuity",
+    "comment": "保留 Unity 2022.2+ SceneRoots 结构假设，但必须以 Unity 6 黄金样本重新验证"
+  },
+  "m_modification_serialized_version": {
+    "expected": 3,
+    "confidence": "unverified-for-unity-6",
+    "write_gate": "blocked-until-corpus-verified"
+  },
+  "references_version": {
+    "expected": 2,
+    "confidence": "unverified-for-unity-6",
+    "write_gate": "blocked-until-corpus-verified"
+  },
+  "mono_behaviour_6000_3": {
+    "change_confirmed": true,
+    "known_symptom": "legacy external tooling exposes base fields only",
+    "exact_yaml_delta": "not-established-by-public-evidence",
+    "required_fixture_axes": [
+      "primitive-and-unity-object-fields",
+      "nested-serializable-types",
+      "managed-references",
+      "generic-and-polymorphic-fields",
+      "field-renames-and-default-values"
+    ]
+  },
+  "dictionary_6000_6": {
+    "native_support_change_confirmed": true,
+    "exact_text_layout": "requires-editor-authored-fixtures",
+    "required_fixture_axes": [
+      "primitive-keys-and-values",
+      "enum-and-object-reference-values",
+      "nested-containers",
+      "duplicate-and-null-policy",
+      "ordering-and-roundtrip-stability"
+    ]
+  },
+  "importer_serialized_versions": {
+    "status": "not-audited",
+    "write_gate": "blocked"
+  },
+  "m_component_syntax": "- component:",
+  "root_order": "SceneRoots.m_Roots"
+}

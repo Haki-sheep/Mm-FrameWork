@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0",
+  "command": "editor context",
+  "ok": true,
+  "dry_run": false,
+  "data": {
+    "request_id": "29f1f47102c34f75bf0f4d23fe874e95",
+    "state": "success",
+    "completed": true,
+    "replayed": false,
+    "result": {
+      "active_scene": {
+        "name": "",
+        "path": "",
+        "handle": 3298534883806,
+        "is_loaded": true,
+        "is_dirty": false
+      },
+      "selection": [],
+      "focused_window": null,
+      "is_playing": false,
+      "is_paused": false,
+      "execution_mode": "edit"
+    },
+    "response": {
+      "protocol_version": "1.1",
+      "request_id": "29f1f47102c34f75bf0f4d23fe874e95",
+      "state": "success",
+      "success": true,
+      "submitted_at": "2026-10-02T15:17:40.4750375Z",
+      "started_at": "2026-10-02T15:17:46.9750297Z",
+      "completed_at": "2026-10-02T15:17:46.9958415Z",
+      "editor_pid": 22472,
+      "editor_instance_id": "22472-639265509306673112",
+      "editor_session_id": "20261002T151739.7455301-22472-fb208214",
+      "unity_version": "6000.6.4f1",
+      "operation": "editor-context",
+      "code_sha256": "",
+      "payload_sha256": "7bc8f6fb987ef9b2108ca1354e28108d4975704609de2416a1dd681aca6ef3ee",
+      "result_json": "{\"active_scene\":{\"name\":\"\",\"path\":\"\",\"handle\":3298534883806,\"is_loaded\":true,\"is_dirty\":false},\"selection\":[],\"focused_window\":null,\"is_playing\":false,\"is_paused\":false,\"execution_mode\":\"edit\"}",
+      "result_text": "Editor context read",
+      "result_type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+      "error_type": "",
+      "error_message": "",
+      "error_stack_trace": "",
+      "diagnostics": [],
+      "artifacts": [],
+      "compile_ms": 0,
+      "execute_ms": 4
+    }
+  },
+  "error": null,
+  "meta": {
+    "warnings": [],
+    "truncation": {
+      "truncated": false,
+      "total_count": 0,
+      "cursor": null,
+      "full_output_path": null
+    },
+    "artifacts": {
+      "development_policy": {
+        "effective_mode": "auto",
+        "source": "builtin",
+        "selected_mode": "auto",
+        "selected_source": "builtin",
+        "settings_path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.6.4f1-4899c3716c9c47f4991d1c1b72a132f7\\UnityProject\\.fuc\\development-settings.json",
+        "settings_error": null,
+        "shared_protection": false
+      },
+      "editor_transitions": [],
+      "operation_artifacts": {
+        "response_path": "E:/AAAA学习资料/Demo/UnityFakeCLI/out/unity6-evidence/delivery-editors/6000.6.4f1-4899c3716c9c47f4991d1c1b72a132f7/UnityProject/Library/FakeUnityCLI/responses/29f1f47102c34f75bf0f4d23fe874e95.json"
+      }
+    },
+    "project": {
+      "root": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.6.4f1-4899c3716c9c47f4991d1c1b72a132f7\\UnityProject",
+      "unity_version": "6000.6.4f1",
+      "index_age_s": null
+    }
+  }
+}

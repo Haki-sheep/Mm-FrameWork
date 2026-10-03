@@ -18,6 +18,11 @@ namespace MiMieFSM.ChainedFsm
         public Action OnExitAction;
 
         /// <summary>
+        /// 所属链式状态机 由 ChainedFsm 创建状态时注入
+        /// </summary>
+        public ChainedFsm Owner { get; internal set; }
+
+        /// <summary>
         /// 进入状态
         /// </summary>
         public virtual void OnEnter()

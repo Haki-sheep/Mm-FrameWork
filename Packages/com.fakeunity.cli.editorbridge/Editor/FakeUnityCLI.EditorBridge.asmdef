@@ -1,0 +1,16 @@
+{
+  "name": "FakeUnityCLI.EditorBridge",
+  "rootNamespace": "FakeUnityCLI.EditorBridge",
+  "references": [
+    "UnityEditor.TestRunner",
+    "UnityEngine.TestRunner",
+    "Unity.Newtonsoft.Json",
+    "UnityEngine.UI"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "autoReferenced": true,
+  "overrideReferences": false,
+  "noEngineReferences": false
+}

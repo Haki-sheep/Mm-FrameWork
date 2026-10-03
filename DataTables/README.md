@@ -2,7 +2,7 @@
 
 当前工具版本为 `Luban 4.11.0`
 
-- `Data` 保存 Excel Schema 与业务数据
+- `Data` 保存 Excel Schema 与 Excel 或 JSON 业务数据
 - `Defines` 保存 XML Schema
 - `check.bat` 只加载并校验全部配置
 - `gen.bat` 生成 Newtonsoft JSON C# 代码与 JSON 数据
@@ -30,3 +30,10 @@ Tools\setup_luban.bat
 `3ddebdc75a67f76cab830608bfaf3b8806e05175`
 
 需要主动跟进新版时先在独立分支更新并重新验证生成结果 不要让团队成员各自拉取不同版本
+
+## 多语言文本
+
+`Data/localization_texts.json` 保存 Locale Key Text 三列形式的 JSON 数组
+`Defines/localization.xml` 通过 `*@localization_texts.json` 逐条读取数组记录
+生成数据为 `localization_tbtext.json` 生成子表为 `cfg.localization.TbText`
+运行时接口 字体工具与接入操作见 [多语言与字体说明](../Assets/MieMieFrameTools/Scripts/Frame/C_Data/Localization/README.md)

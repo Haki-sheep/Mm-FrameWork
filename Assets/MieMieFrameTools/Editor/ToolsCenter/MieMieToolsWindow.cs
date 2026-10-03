@@ -164,6 +164,14 @@ namespace MieMieFrameWork.Editor.ToolsCenter
         }
 
         /// <summary>
+        /// 使用 Editor 定期回调刷新宿主 保持嵌入监控与会话按钮状态更新
+        /// </summary>
+        private void OnInspectorUpdate()
+        {
+            Repaint();
+        }
+
+        /// <summary>
         /// 窗口销毁时释放当前页面
         /// </summary>
         protected override void OnDestroy()

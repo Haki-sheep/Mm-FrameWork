@@ -1,0 +1,21 @@
+{
+    "name": "MieMieFrameWork.FontManager.Editor",
+    "rootNamespace": "MieMieFrameWork.Localization.FontManagement",
+    "references": [
+        "MieMieFrameWork.Runtime",
+        "MieMieFrameWork.Data.Luban",
+        "MieMieUIFrameWork.UI",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI",
+        "UniTask"
+    ],
+    "includePlatforms": ["Editor"],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

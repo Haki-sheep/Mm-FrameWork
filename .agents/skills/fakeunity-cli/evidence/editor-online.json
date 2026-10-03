@@ -1,0 +1,178 @@
+{
+  "schema_version": "1.0",
+  "command": "selfcheck editor-online",
+  "ok": true,
+  "dry_run": false,
+  "data": {
+    "all_passed": true,
+    "total": 38,
+    "passed": 38,
+    "failed": 0,
+    "checks": [
+      {
+        "name": "options.online_flags",
+        "pass": true
+      },
+      {
+        "name": "options.compile_wait_flags",
+        "pass": true
+      },
+      {
+        "name": "compile.request_baseline_current",
+        "pass": true
+      },
+      {
+        "name": "capability.optional_requirement",
+        "pass": true
+      },
+      {
+        "name": "compile.warning_only_gate",
+        "pass": true
+      },
+      {
+        "name": "compile.warning_display_status_gate",
+        "pass": true
+      },
+      {
+        "name": "compile.errors_still_rejected",
+        "pass": true
+      },
+      {
+        "name": "compile.incomplete_watermark_rejected",
+        "pass": true
+      },
+      {
+        "name": "compile.history_gap_rejected",
+        "pass": true
+      },
+      {
+        "name": "compile.uncorrelated_rejected",
+        "pass": true
+      },
+      {
+        "name": "compile.incomplete_coverage_rejected",
+        "pass": true
+      },
+      {
+        "name": "compile.not_observed_rejected",
+        "pass": true
+      },
+      {
+        "name": "code_entry.full_unit",
+        "pass": true
+      },
+      {
+        "name": "code_entry.method_only_rejected",
+        "pass": true
+      },
+      {
+        "name": "code_entry.multiple_rejected",
+        "pass": true
+      },
+      {
+        "name": "code_entry.stdin",
+        "pass": true
+      },
+      {
+        "name": "status.offline_explicit",
+        "pass": true
+      },
+      {
+        "name": "result.completed",
+        "pass": true
+      },
+      {
+        "name": "result.failure_truthful",
+        "pass": true
+      },
+      {
+        "name": "result.pending",
+        "pass": true
+      },
+      {
+        "name": "request_id.path_traversal_rejected",
+        "pass": true
+      },
+      {
+        "name": "request_id.code_hash_bound",
+        "pass": true
+      },
+      {
+        "name": "request_id.missing_hash_rejected",
+        "pass": true
+      },
+      {
+        "name": "result.expired_terminal",
+        "pass": true
+      },
+      {
+        "name": "result.processing_timeout_terminal_unknown",
+        "pass": true
+      },
+      {
+        "name": "structured.paths_normalized",
+        "pass": true
+      },
+      {
+        "name": "structured.outside_path_rejected",
+        "pass": true
+      },
+      {
+        "name": "structured.dry_run_rejected",
+        "pass": true
+      },
+      {
+        "name": "status.identity_tuple_matches",
+        "pass": true
+      },
+      {
+        "name": "status.identity_conflict_rejected",
+        "pass": true
+      },
+      {
+        "name": "compile.replay.no_stop_or_new_validation",
+        "pass": true
+      },
+      {
+        "name": "compile.import_replay.no_stop",
+        "pass": true
+      },
+      {
+        "name": "compile.template_replay.skips_prepare_and_baseline",
+        "pass": true
+      },
+      {
+        "name": "compile.replay.no_requests_queued",
+        "pass": true
+      },
+      {
+        "name": "compile.invalid_wait_flags.before_stop.False",
+        "pass": true
+      },
+      {
+        "name": "compile.invalid_wait_flags.before_stop.True",
+        "pass": true
+      },
+      {
+        "name": "compile.import.invalid_path_before_stop",
+        "pass": true
+      },
+      {
+        "name": "compile.new_request.captures_pre_submission_identity",
+        "pass": true
+      }
+    ]
+  },
+  "error": null,
+  "meta": {
+    "warnings": [],
+    "truncation": {
+      "truncated": false,
+      "total_count": 0,
+      "cursor": null,
+      "full_output_path": null
+    },
+    "artifacts": null,
+    "project": null
+  }
+}

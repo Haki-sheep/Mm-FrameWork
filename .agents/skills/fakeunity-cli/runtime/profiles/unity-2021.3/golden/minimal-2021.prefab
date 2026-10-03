@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1
+GameObject:
+  m_Component:
+  - component: {fileID: 4}
+  m_Layer: 0
+  m_Name: Readonly2021
+  m_TagString: Untagged
+  m_IsActive: 1
+--- !u!4 &4
+Transform:
+  m_GameObject: {fileID: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0

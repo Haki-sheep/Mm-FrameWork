@@ -1,0 +1,158 @@
+{
+ "full_name": "UnityEngine.BoxCollider",
+ "dump_full_name": "BoxCollider",
+ "type_id": 65,
+ "base": "Collider",
+ "fields": [
+  {
+   "name": "m_GameObject",
+   "type": "PPtr<GameObject>",
+   "kind": "UnityObjectRef",
+   "byte_size": 12,
+   "children": [
+    {
+     "name": "m_FileID",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_PathID",
+     "type": "SInt64",
+     "kind": "Primitive",
+     "byte_size": 8
+    }
+   ]
+  },
+  {
+   "name": "m_Material",
+   "type": "PPtr<PhysicMaterial>",
+   "kind": "UnityObjectRef",
+   "byte_size": 12,
+   "children": [
+    {
+     "name": "m_FileID",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_PathID",
+     "type": "SInt64",
+     "kind": "Primitive",
+     "byte_size": 8
+    }
+   ]
+  },
+  {
+   "name": "m_IncludeLayers",
+   "type": "BitField",
+   "kind": "Struct",
+   "byte_size": 4,
+   "children": [
+    {
+     "name": "m_Bits",
+     "type": "unsigned int",
+     "kind": "Primitive",
+     "byte_size": 4
+    }
+   ]
+  },
+  {
+   "name": "m_ExcludeLayers",
+   "type": "BitField",
+   "kind": "Struct",
+   "byte_size": 4,
+   "children": [
+    {
+     "name": "m_Bits",
+     "type": "unsigned int",
+     "kind": "Primitive",
+     "byte_size": 4
+    }
+   ]
+  },
+  {
+   "name": "m_LayerOverridePriority",
+   "type": "int",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "m_IsTrigger",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1,
+   "default": "0",
+   "default_source": "curated_sample_inferred"
+  },
+  {
+   "name": "m_ProvidesContacts",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1
+  },
+  {
+   "name": "m_Enabled",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1
+  },
+  {
+   "name": "m_Size",
+   "type": "Vector3f",
+   "kind": "Struct",
+   "byte_size": 12,
+   "children": [
+    {
+     "name": "x",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "y",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "z",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    }
+   ],
+   "default": "{x: 1, y: 1, z: 1}",
+   "default_source": "curated_sample_inferred"
+  },
+  {
+   "name": "m_Center",
+   "type": "Vector3f",
+   "kind": "Struct",
+   "byte_size": 12,
+   "children": [
+    {
+     "name": "x",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "y",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "z",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    }
+   ],
+   "default": "{x: 0, y: 0, z: 0}",
+   "default_source": "curated_sample_inferred"
+  }
+ ]
+}

@@ -1,0 +1,16 @@
+{
+  "catalog_version": "1.0",
+  "samples": [
+    {
+      "id": "minimal-2021",
+      "path": "golden/minimal-2021.prefab",
+      "category": "2021-readonly-prefab",
+      "origin": "FakeUnityCLI project-authored synthetic fixture",
+      "license_id": "project-internal",
+      "redistribution": "approved-with-profile-package",
+      "approved_by": "profile-maintainers",
+      "size": 292,
+      "sha256": "2ee7fb96af690214c35e8dc3b5bcfb0735c28ee4dde193bb143fd840d1ed7c47"
+    }
+  ]
+}

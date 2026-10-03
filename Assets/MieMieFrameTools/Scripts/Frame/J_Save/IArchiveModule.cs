@@ -19,12 +19,12 @@ namespace MiMieSaver
         #region 存档读写
 
         /// <summary>
-        /// 创建新存档时的初始化
+        /// 向新档快照写入默认数据 不创建槽位或保存文件
         /// </summary>
         void CreateArchive(SaveData saveData);
 
         /// <summary>
-        /// 从存档读取数据
+        /// 从存档快照读取并建立模块运行时数据
         /// </summary>
         void FromArchive(SaveData saveData);
 

@@ -3,14 +3,13 @@
  "rootNamespace": "MieMieUIFrameWork.Runtime",
  "references": [
   "MieMieFrameWork.Runtime",
+  "MieMieFrameWork.Diagnostics",
   "PrimeTween.Runtime",
-  "Unity.Addressables",
-  "Unity.ResourceManager",
+  "YooAsset",
+  "YooAsset.RuntimeAdapter",
   "Unity.TextMeshPro",
   "UniTask",
   "Unity.InputSystem",
-  "Unity.RenderPipelines.Core.Runtime",
-  "Unity.RenderPipelines.Universal.Runtime",
   "UnityEngine.UI"
  ],
  "includePlatforms": [],

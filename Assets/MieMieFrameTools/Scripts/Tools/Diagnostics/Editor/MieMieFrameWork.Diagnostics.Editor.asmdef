@@ -1,0 +1,7 @@
+{
+    "name": "MieMieFrameWork.Diagnostics.Editor",
+    "rootNamespace": "MieMieFrameWork.Diagnostics.Editor",
+    "references": ["MieMieFrameWork.Diagnostics"],
+    "includePlatforms": ["Editor"],
+    "autoReferenced": true
+}

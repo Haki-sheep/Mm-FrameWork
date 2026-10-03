@@ -1,44 +1,50 @@
 using Cysharp.Threading.Tasks;
+using System;
 using MieMieFrameWork.Asset;
 using UnityEngine;
+using YooAsset;
 
 namespace MmUIFrameWork.Core
 {
     /// <summary>
-    /// UI 加载工具类 直接走框架 MmAssetMgr
+    /// UI 加载工具类 使用 YooAsset 原生句柄并由实例生命周期释放
     /// </summary>
     public static class UILoad
     {
         /// <summary>
-        /// 同步加载 UI 预制体 窗口名须在 assetAliasList 注册短名
+        /// 同步加载 UI 预制体 窗口名须对应 YooAsset 采集地址
         /// </summary>
-        public static GameObject AddressableLoad(string uiName)
+        public static GameObject Load(string uiName)
         {
-            GameObject uiPrefab = MmAssetMgr.LoadGameObject(uiName);
-            if (uiPrefab == null)
+            var Handle = YooAssetMgr.LoadAsset<GameObject>(uiName);
+            try
             {
-                Debug.LogError($"[UILoad.Load] 加载失败: {uiName}");
-                return null;
+                return CreateInstance(Handle, uiName, null);
             }
-
-            NormalizeRect(uiPrefab);
-            return uiPrefab;
+            catch
+            {
+                YooAssetMgr.Release(Handle);
+                throw;
+            }
         }
 
         /// <summary>
-        /// 异步加载 UI 预制体 窗口名须在 assetAliasList 注册短名
+        /// 异步加载 UI 预制体 根节点销毁时取消等待并释放本次句柄
         /// </summary>
-        public static async UniTask<GameObject> AddressableLoadAsync(string uiName, Transform parent = null)
+        public static async UniTask<GameObject> LoadAsync(string uiName, Transform parent = null)
         {
-            GameObject uiPrefab = await MmAssetMgr.LoadGameObjectAsync(uiName, parent);
-            if (uiPrefab == null)
+            var Handle = YooAssetMgr.LoadAssetAsync<GameObject>(uiName);
+            try
             {
-                Debug.LogError($"[UILoad.LoadAsync] 加载失败: {uiName}");
-                return null;
+                await UniTask.WaitUntil(() => Handle.IsDone,
+                    cancellationToken: MieMieFrameWork.ModuleHub.Instance.GetCancellationTokenOnDestroy());
+                return CreateInstance(Handle, uiName, parent);
             }
-
-            NormalizeRect(uiPrefab);
-            return uiPrefab;
+            catch
+            {
+                YooAssetMgr.Release(Handle);
+                throw;
+            }
         }
 
         /// <summary>
@@ -46,7 +52,24 @@ namespace MmUIFrameWork.Core
         /// </summary>
         public static void Release(GameObject uiInstance)
         {
-            MmAssetMgr.DestroyObject(uiInstance);
+            uiInstance.GetComponent<YooAssetInstanceOwner>().DestroyInstance();
+        }
+
+        /// <summary>
+        /// 验证加载结果 创建 UI 实例并移交句柄所有权
+        /// </summary>
+        private static GameObject CreateInstance(AssetHandle handle, string uiName, Transform parent)
+        {
+            if (handle.Status != EOperationStatus.Succeeded)
+                throw new InvalidOperationException($"UI 加载失败 地址 {uiName} 错误 {handle.Error}");
+
+            GameObject Instance = handle.InstantiateSync(new InstantiateOptions(true, parent, false));
+            if (Instance == null)
+                throw new InvalidOperationException($"UI 实例化失败 地址 {uiName}");
+
+            Instance.AddComponent<YooAssetInstanceOwner>().InitComponents(handle);
+            NormalizeRect(Instance);
+            return Instance;
         }
 
         /// <summary>

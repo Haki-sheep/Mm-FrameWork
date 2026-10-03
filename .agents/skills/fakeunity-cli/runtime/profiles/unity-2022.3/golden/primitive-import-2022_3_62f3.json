@@ -1,0 +1,18 @@
+{
+  "unity_version": "2022.3.62f3",
+  "generator": "UnityEngine.GameObject.CreatePrimitive",
+  "mesh_guid": "0000000000000000e000000000000000",
+  "material": {
+    "file_id": 10303,
+    "guid": "0000000000000000f000000000000000",
+    "type": 0
+  },
+  "primitives": {
+    "Cube": { "mesh_file_id": 10202, "collider": "BoxCollider", "collider_class_id": 65 },
+    "Sphere": { "mesh_file_id": 10207, "collider": "SphereCollider", "collider_class_id": 135 },
+    "Capsule": { "mesh_file_id": 10208, "collider": "CapsuleCollider", "collider_class_id": 136 },
+    "Cylinder": { "mesh_file_id": 10206, "collider": "CapsuleCollider", "collider_class_id": 136 },
+    "Plane": { "mesh_file_id": 10209, "collider": "MeshCollider", "collider_class_id": 64 },
+    "Quad": { "mesh_file_id": 10210, "collider": "MeshCollider", "collider_class_id": 64 }
+  }
+}

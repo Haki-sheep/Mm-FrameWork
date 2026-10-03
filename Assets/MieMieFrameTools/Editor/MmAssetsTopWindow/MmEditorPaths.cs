@@ -25,16 +25,5 @@ namespace MieMieFrameWork.Editor.MmAssets
         /// </summary>
         public const string MmGameEventsAsset = FrameRoot + "/D_EventCenter/Mono/MmGameEvents.cs";
 
-        /// <summary>
-        /// MmAsset 编辑器根
-        /// </summary>
-        public const string MmAssetEditorRoot = EditorRoot + "/MmAssetForEditor";
-
-        /// <summary>
-        /// MmAsset 运行时模块根
-        /// </summary>
-        public const string MmAssetModuleRoot =
-            FrameRoot + "/B_Assets/MmAsset";
-
     }
 }

@@ -1,0 +1,524 @@
+{
+  "schema_version": "1.0",
+  "command": "selfcheck editor-unity6-policy",
+  "ok": true,
+  "dry_run": false,
+  "data": {
+    "all_passed": true,
+    "total": 125,
+    "checks": [
+      {
+        "name": "6000.0.1f1.series",
+        "passed": true
+      },
+      {
+        "name": "6000.0.1f1.trusted_package",
+        "passed": true
+      },
+      {
+        "name": "6000.0.1f1.install_dryrun",
+        "passed": true
+      },
+      {
+        "name": "6000.0.1f1.asset_write_blocked",
+        "passed": true
+      },
+      {
+        "name": "6000.0.1f1.wrong_bytes",
+        "passed": true
+      },
+      {
+        "name": "6000.0.1f1.outside_package",
+        "passed": true
+      },
+      {
+        "name": "6000.0.1f1.missing_file",
+        "passed": true
+      },
+      {
+        "name": "6000.0.1f1.deletion",
+        "passed": true
+      },
+      {
+        "name": "6000.0.1f1.duplicate",
+        "passed": true
+      },
+      {
+        "name": "6000.0.1f1.outside_directory",
+        "passed": true
+      },
+      {
+        "name": "6000.0.1f1.write_preflight_denied",
+        "passed": true
+      },
+      {
+        "name": "6000.0.1f1.read_preflight_allowed",
+        "passed": true
+      },
+      {
+        "name": "6000.0.1f1.offline_bridge_not_online",
+        "passed": true
+      },
+      {
+        "name": "6000.3.9f1.series",
+        "passed": true
+      },
+      {
+        "name": "6000.3.9f1.trusted_package",
+        "passed": true
+      },
+      {
+        "name": "6000.3.9f1.install_dryrun",
+        "passed": true
+      },
+      {
+        "name": "6000.3.9f1.asset_write_blocked",
+        "passed": true
+      },
+      {
+        "name": "6000.3.9f1.wrong_bytes",
+        "passed": true
+      },
+      {
+        "name": "6000.3.9f1.outside_package",
+        "passed": true
+      },
+      {
+        "name": "6000.3.9f1.missing_file",
+        "passed": true
+      },
+      {
+        "name": "6000.3.9f1.deletion",
+        "passed": true
+      },
+      {
+        "name": "6000.3.9f1.duplicate",
+        "passed": true
+      },
+      {
+        "name": "6000.3.9f1.outside_directory",
+        "passed": true
+      },
+      {
+        "name": "6000.3.9f1.write_preflight_denied",
+        "passed": true
+      },
+      {
+        "name": "6000.3.9f1.read_preflight_allowed",
+        "passed": true
+      },
+      {
+        "name": "6000.3.9f1.offline_bridge_not_online",
+        "passed": true
+      },
+      {
+        "name": "6000.4.10f1.series",
+        "passed": true
+      },
+      {
+        "name": "6000.4.10f1.trusted_package",
+        "passed": true
+      },
+      {
+        "name": "6000.4.10f1.install_dryrun",
+        "passed": true
+      },
+      {
+        "name": "6000.4.10f1.asset_write_blocked",
+        "passed": true
+      },
+      {
+        "name": "6000.4.10f1.wrong_bytes",
+        "passed": true
+      },
+      {
+        "name": "6000.4.10f1.outside_package",
+        "passed": true
+      },
+      {
+        "name": "6000.4.10f1.missing_file",
+        "passed": true
+      },
+      {
+        "name": "6000.4.10f1.deletion",
+        "passed": true
+      },
+      {
+        "name": "6000.4.10f1.duplicate",
+        "passed": true
+      },
+      {
+        "name": "6000.4.10f1.outside_directory",
+        "passed": true
+      },
+      {
+        "name": "6000.4.10f1.write_preflight_denied",
+        "passed": true
+      },
+      {
+        "name": "6000.4.10f1.read_preflight_allowed",
+        "passed": true
+      },
+      {
+        "name": "6000.4.10f1.offline_bridge_not_online",
+        "passed": true
+      },
+      {
+        "name": "6000.5.1f1.series",
+        "passed": true
+      },
+      {
+        "name": "6000.5.1f1.trusted_package",
+        "passed": true
+      },
+      {
+        "name": "6000.5.1f1.install_dryrun",
+        "passed": true
+      },
+      {
+        "name": "6000.5.1f1.asset_write_blocked",
+        "passed": true
+      },
+      {
+        "name": "6000.5.1f1.wrong_bytes",
+        "passed": true
+      },
+      {
+        "name": "6000.5.1f1.outside_package",
+        "passed": true
+      },
+      {
+        "name": "6000.5.1f1.missing_file",
+        "passed": true
+      },
+      {
+        "name": "6000.5.1f1.deletion",
+        "passed": true
+      },
+      {
+        "name": "6000.5.1f1.duplicate",
+        "passed": true
+      },
+      {
+        "name": "6000.5.1f1.outside_directory",
+        "passed": true
+      },
+      {
+        "name": "6000.5.1f1.write_preflight_denied",
+        "passed": true
+      },
+      {
+        "name": "6000.5.1f1.read_preflight_allowed",
+        "passed": true
+      },
+      {
+        "name": "6000.5.1f1.offline_bridge_not_online",
+        "passed": true
+      },
+      {
+        "name": "6000.6.4f1.series",
+        "passed": true
+      },
+      {
+        "name": "6000.6.4f1.trusted_package",
+        "passed": true
+      },
+      {
+        "name": "6000.6.4f1.install_dryrun",
+        "passed": true
+      },
+      {
+        "name": "6000.6.4f1.asset_write_blocked",
+        "passed": true
+      },
+      {
+        "name": "6000.6.4f1.wrong_bytes",
+        "passed": true
+      },
+      {
+        "name": "6000.6.4f1.outside_package",
+        "passed": true
+      },
+      {
+        "name": "6000.6.4f1.missing_file",
+        "passed": true
+      },
+      {
+        "name": "6000.6.4f1.deletion",
+        "passed": true
+      },
+      {
+        "name": "6000.6.4f1.duplicate",
+        "passed": true
+      },
+      {
+        "name": "6000.6.4f1.outside_directory",
+        "passed": true
+      },
+      {
+        "name": "6000.6.4f1.write_preflight_denied",
+        "passed": true
+      },
+      {
+        "name": "6000.6.4f1.read_preflight_allowed",
+        "passed": true
+      },
+      {
+        "name": "6000.6.4f1.offline_bridge_not_online",
+        "passed": true
+      },
+      {
+        "name": "6000.12.1f1.series",
+        "passed": true
+      },
+      {
+        "name": "6000.12.1f1.trusted_package",
+        "passed": true
+      },
+      {
+        "name": "6000.12.1f1.install_dryrun",
+        "passed": true
+      },
+      {
+        "name": "6000.12.1f1.asset_write_blocked",
+        "passed": true
+      },
+      {
+        "name": "6000.12.1f1.wrong_bytes",
+        "passed": true
+      },
+      {
+        "name": "6000.12.1f1.outside_package",
+        "passed": true
+      },
+      {
+        "name": "6000.12.1f1.missing_file",
+        "passed": true
+      },
+      {
+        "name": "6000.12.1f1.deletion",
+        "passed": true
+      },
+      {
+        "name": "6000.12.1f1.duplicate",
+        "passed": true
+      },
+      {
+        "name": "6000.12.1f1.outside_directory",
+        "passed": true
+      },
+      {
+        "name": "6000.12.1f1.write_preflight_denied",
+        "passed": true
+      },
+      {
+        "name": "6000.12.1f1.read_preflight_allowed",
+        "passed": true
+      },
+      {
+        "name": "6000.12.1f1.offline_bridge_not_online",
+        "passed": true
+      },
+      {
+        "name": "2021.3.1f1.unsupported",
+        "passed": true
+      },
+      {
+        "name": "60000.4.1f1.unsupported",
+        "passed": true
+      },
+      {
+        "name": "6000.x.1f1.unsupported",
+        "passed": true
+      },
+      {
+        "name": "6000.4.unsupported",
+        "passed": true
+      },
+      {
+        "name": "6000.4.1garbage.unsupported",
+        "passed": true
+      },
+      {
+        "name": "2022.3.garbage.unsupported",
+        "passed": true
+      },
+      {
+        "name": "unknown.unsupported",
+        "passed": true
+      },
+      {
+        "name": "package.guid_not_ui",
+        "passed": true
+      },
+      {
+        "name": "package.build_not_ui",
+        "passed": true
+      },
+      {
+        "name": "2022.3.regression",
+        "passed": true
+      },
+      {
+        "name": "preflight.offline_template_list",
+        "passed": true
+      },
+      {
+        "name": "preflight.template_mode_offline",
+        "passed": true
+      },
+      {
+        "name": "preflight.test-run.missing_capability",
+        "passed": true
+      },
+      {
+        "name": "preflight.test-run.present_capability",
+        "passed": true
+      },
+      {
+        "name": "preflight.test-status.missing_capability",
+        "passed": true
+      },
+      {
+        "name": "preflight.test-status.present_capability",
+        "passed": true
+      },
+      {
+        "name": "preflight.test-result.missing_capability",
+        "passed": true
+      },
+      {
+        "name": "preflight.test-result.present_capability",
+        "passed": true
+      },
+      {
+        "name": "preflight.test-recover.missing_capability",
+        "passed": true
+      },
+      {
+        "name": "preflight.test-recover.present_capability",
+        "passed": true
+      },
+      {
+        "name": "preflight.gameview-resolution-list.missing_capability",
+        "passed": true
+      },
+      {
+        "name": "preflight.gameview-resolution-list.present_capability",
+        "passed": true
+      },
+      {
+        "name": "preflight.gameview-resolution-get.missing_capability",
+        "passed": true
+      },
+      {
+        "name": "preflight.gameview-resolution-get.present_capability",
+        "passed": true
+      },
+      {
+        "name": "preflight.gameview-resolution-set.missing_capability",
+        "passed": true
+      },
+      {
+        "name": "preflight.gameview-resolution-set.present_capability",
+        "passed": true
+      },
+      {
+        "name": "log-file.force_does_not_bypass",
+        "passed": true
+      },
+      {
+        "name": "log-file.denied",
+        "passed": true
+      },
+      {
+        "name": "log-file.asset_unchanged",
+        "passed": true
+      },
+      {
+        "name": "log-file.package_not_created",
+        "passed": true
+      },
+      {
+        "name": "log-directory.force_does_not_bypass",
+        "passed": true
+      },
+      {
+        "name": "log-directory.denied",
+        "passed": true
+      },
+      {
+        "name": "log-directory.asset_unchanged",
+        "passed": true
+      },
+      {
+        "name": "log-directory.package_not_created",
+        "passed": true
+      },
+      {
+        "name": "snapshot-directory.force_does_not_bypass",
+        "passed": true
+      },
+      {
+        "name": "snapshot-directory.denied",
+        "passed": true
+      },
+      {
+        "name": "snapshot-directory.asset_unchanged",
+        "passed": true
+      },
+      {
+        "name": "snapshot-directory.package_not_created",
+        "passed": true
+      },
+      {
+        "name": "snapshot-file.denied",
+        "passed": true
+      },
+      {
+        "name": "snapshot-file.asset_unchanged",
+        "passed": true
+      },
+      {
+        "name": "snapshot-file.package_not_created",
+        "passed": true
+      },
+      {
+        "name": "log-hardlink.force_does_not_bypass",
+        "passed": true
+      },
+      {
+        "name": "log-hardlink.denied",
+        "passed": true
+      },
+      {
+        "name": "log-hardlink.asset_unchanged",
+        "passed": true
+      },
+      {
+        "name": "log-hardlink.package_not_created",
+        "passed": true
+      },
+      {
+        "name": "install.complete",
+        "passed": true
+      },
+      {
+        "name": "undo.package_files_restored",
+        "passed": true
+      }
+    ]
+  },
+  "error": null,
+  "meta": {
+    "warnings": [],
+    "truncation": {
+      "truncated": false,
+      "total_count": 0,
+      "cursor": null,
+      "full_output_path": null
+    },
+    "artifacts": null,
+    "project": null
+  }
+}

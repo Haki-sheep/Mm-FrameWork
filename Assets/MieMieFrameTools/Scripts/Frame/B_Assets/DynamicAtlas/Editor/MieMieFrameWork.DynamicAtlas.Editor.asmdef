@@ -1,0 +1,7 @@
+{
+    "name": "MieMieFrameWork.DynamicAtlas.Editor",
+    "rootNamespace": "MieMieFrameWork.Asset.DynamicAtlas.Editor",
+    "references": ["MieMieFrameWork.DynamicAtlas"],
+    "includePlatforms": ["Editor"],
+    "autoReferenced": true
+}

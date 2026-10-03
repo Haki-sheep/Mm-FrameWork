@@ -1,0 +1,570 @@
+{
+ "full_name": "UnityEngine.AudioSource",
+ "dump_full_name": "AudioSource",
+ "type_id": 82,
+ "base": "AudioBehaviour",
+ "fields": [
+  {
+   "name": "m_GameObject",
+   "type": "PPtr<GameObject>",
+   "kind": "UnityObjectRef",
+   "byte_size": 12,
+   "children": [
+    {
+     "name": "m_FileID",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_PathID",
+     "type": "SInt64",
+     "kind": "Primitive",
+     "byte_size": 8
+    }
+   ]
+  },
+  {
+   "name": "m_Enabled",
+   "type": "UInt8",
+   "kind": "Primitive",
+   "byte_size": 1
+  },
+  {
+   "name": "OutputAudioMixerGroup",
+   "type": "PPtr<AudioMixerGroup>",
+   "kind": "UnityObjectRef",
+   "byte_size": 12,
+   "children": [
+    {
+     "name": "m_FileID",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_PathID",
+     "type": "SInt64",
+     "kind": "Primitive",
+     "byte_size": 8
+    }
+   ]
+  },
+  {
+   "name": "m_audioClip",
+   "type": "PPtr<AudioClip>",
+   "kind": "UnityObjectRef",
+   "byte_size": 12,
+   "children": [
+    {
+     "name": "m_FileID",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_PathID",
+     "type": "SInt64",
+     "kind": "Primitive",
+     "byte_size": 8
+    }
+   ]
+  },
+  {
+   "name": "m_PlayOnAwake",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1,
+   "default": "1",
+   "default_source": "curated_sample_inferred"
+  },
+  {
+   "name": "m_Volume",
+   "type": "float",
+   "kind": "Primitive",
+   "byte_size": 4,
+   "default": "1",
+   "default_source": "curated_sample_inferred"
+  },
+  {
+   "name": "m_Pitch",
+   "type": "float",
+   "kind": "Primitive",
+   "byte_size": 4,
+   "default": "1",
+   "default_source": "curated_sample_inferred"
+  },
+  {
+   "name": "Loop",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1,
+   "default": "0",
+   "default_source": "curated_sample_inferred"
+  },
+  {
+   "name": "Mute",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1
+  },
+  {
+   "name": "Spatialize",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1
+  },
+  {
+   "name": "SpatializePostEffects",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1
+  },
+  {
+   "name": "Priority",
+   "type": "int",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "DopplerLevel",
+   "type": "float",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "MinDistance",
+   "type": "float",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "MaxDistance",
+   "type": "float",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "Pan2D",
+   "type": "float",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "rolloffMode",
+   "type": "int",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "BypassEffects",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1
+  },
+  {
+   "name": "BypassListenerEffects",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1
+  },
+  {
+   "name": "BypassReverbZones",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1
+  },
+  {
+   "name": "rolloffCustomCurve",
+   "type": "AnimationCurve",
+   "kind": "Struct",
+   "byte_size": -1,
+   "children": [
+    {
+     "name": "m_Curve",
+     "type": "vector",
+     "kind": "Array",
+     "byte_size": -1,
+     "children": [
+      {
+       "name": "Array",
+       "type": "Array",
+       "kind": "Struct",
+       "byte_size": -1,
+       "children": [
+        {
+         "name": "size",
+         "type": "int",
+         "kind": "Primitive",
+         "byte_size": 4
+        },
+        {
+         "name": "data",
+         "type": "Keyframe",
+         "kind": "Struct",
+         "byte_size": 28,
+         "children": [
+          {
+           "name": "time",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "value",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "inSlope",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "outSlope",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "weightedMode",
+           "type": "int",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "inWeight",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "outWeight",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "m_PreInfinity",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_PostInfinity",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_RotationOrder",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    }
+   ]
+  },
+  {
+   "name": "panLevelCustomCurve",
+   "type": "AnimationCurve",
+   "kind": "Struct",
+   "byte_size": -1,
+   "children": [
+    {
+     "name": "m_Curve",
+     "type": "vector",
+     "kind": "Array",
+     "byte_size": -1,
+     "children": [
+      {
+       "name": "Array",
+       "type": "Array",
+       "kind": "Struct",
+       "byte_size": -1,
+       "children": [
+        {
+         "name": "size",
+         "type": "int",
+         "kind": "Primitive",
+         "byte_size": 4
+        },
+        {
+         "name": "data",
+         "type": "Keyframe",
+         "kind": "Struct",
+         "byte_size": 28,
+         "children": [
+          {
+           "name": "time",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "value",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "inSlope",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "outSlope",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "weightedMode",
+           "type": "int",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "inWeight",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "outWeight",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "m_PreInfinity",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_PostInfinity",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_RotationOrder",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    }
+   ]
+  },
+  {
+   "name": "spreadCustomCurve",
+   "type": "AnimationCurve",
+   "kind": "Struct",
+   "byte_size": -1,
+   "children": [
+    {
+     "name": "m_Curve",
+     "type": "vector",
+     "kind": "Array",
+     "byte_size": -1,
+     "children": [
+      {
+       "name": "Array",
+       "type": "Array",
+       "kind": "Struct",
+       "byte_size": -1,
+       "children": [
+        {
+         "name": "size",
+         "type": "int",
+         "kind": "Primitive",
+         "byte_size": 4
+        },
+        {
+         "name": "data",
+         "type": "Keyframe",
+         "kind": "Struct",
+         "byte_size": 28,
+         "children": [
+          {
+           "name": "time",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "value",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "inSlope",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "outSlope",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "weightedMode",
+           "type": "int",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "inWeight",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "outWeight",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "m_PreInfinity",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_PostInfinity",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_RotationOrder",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    }
+   ]
+  },
+  {
+   "name": "reverbZoneMixCustomCurve",
+   "type": "AnimationCurve",
+   "kind": "Struct",
+   "byte_size": -1,
+   "children": [
+    {
+     "name": "m_Curve",
+     "type": "vector",
+     "kind": "Array",
+     "byte_size": -1,
+     "children": [
+      {
+       "name": "Array",
+       "type": "Array",
+       "kind": "Struct",
+       "byte_size": -1,
+       "children": [
+        {
+         "name": "size",
+         "type": "int",
+         "kind": "Primitive",
+         "byte_size": 4
+        },
+        {
+         "name": "data",
+         "type": "Keyframe",
+         "kind": "Struct",
+         "byte_size": 28,
+         "children": [
+          {
+           "name": "time",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "value",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "inSlope",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "outSlope",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "weightedMode",
+           "type": "int",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "inWeight",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "outWeight",
+           "type": "float",
+           "kind": "Primitive",
+           "byte_size": 4
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "m_PreInfinity",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_PostInfinity",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_RotationOrder",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    }
+   ]
+  }
+ ]
+}

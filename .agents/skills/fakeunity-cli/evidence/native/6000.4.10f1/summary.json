@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "evidence": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b",
+  "compile_evidence": "compile.json",
+  "checks": [
+    "bridge_install",
+    "ready",
+    "context",
+    "roslyn",
+    "serialized_object",
+    "prefab_save_import",
+    "shutdown"
+  ],
+  "offline_asset_write": "blocked",
+  "version": "6000.4.10f1"
+}

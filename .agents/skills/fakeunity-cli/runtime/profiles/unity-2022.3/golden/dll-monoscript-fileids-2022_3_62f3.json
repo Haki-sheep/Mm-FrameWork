@@ -1,0 +1,9 @@
+{
+  "unity_version": "2022.3.62f3",
+  "types": [
+    {"type": "Fuc.TypeResolutionProbe.DuplicateA.SameName", "assembly": "Fuc.TypeResolutionProbe", "guid": "006a1103bb683f94cbed25e175fae9bd", "file_id": -959068039},
+    {"type": "Fuc.TypeResolutionProbe.DuplicateB.SameName", "assembly": "Fuc.TypeResolutionProbe", "guid": "006a1103bb683f94cbed25e175fae9bd", "file_id": 1502531009},
+    {"type": "Fuc.TypeResolutionProbe.GenericProbe`1", "assembly": "Fuc.TypeResolutionProbe", "guid": "006a1103bb683f94cbed25e175fae9bd", "file_id": 1370599775},
+    {"type": "Fuc.TypeResolutionProbe.PluginProbe", "assembly": "Fuc.TypeResolutionProbe", "guid": "006a1103bb683f94cbed25e175fae9bd", "file_id": 1844754890}
+  ]
+}

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using MieMieFrameWork;
 using UnityEngine;
+using static MieMieFrameWork.ModuleHub;
+using MieMieFrameWork.Diagnostics;
 
 namespace MmUIFrameWork.Core
 {
@@ -10,8 +12,12 @@ namespace MmUIFrameWork.Core
     /// UI 核心管理类
     /// </summary>
     [Serializable]
-    public class UIHub : SingletonMono<UIHub>
+    [ManagerAttribute(Priority)]
+    public class UIHub : SingletonMono<UIHub>, IManagerBase
     {
+        /// <summary> UI 管理器顺序 位于输入管理器之后与交互管理器之前 </summary>
+        public const int Priority = 10;
+
         /// <summary>
         /// 堆栈系统
         /// </summary>
@@ -39,9 +45,17 @@ namespace MmUIFrameWork.Core
         #region 初始化与查询
 
         /// <summary>
-        /// 初始化
+        /// 统一管理器初始化入口 仅由框架管理器阶段调用一次
         /// </summary>
         public void Init()
+        {
+            InitComponents();
+        }
+
+        /// <summary>
+        /// 初始化 UI 组件引用与窗口堆栈
+        /// </summary>
+        private void InitComponents()
         {
             if (UIRoot == null)
                 UIRoot = transform;
@@ -131,7 +145,7 @@ namespace MmUIFrameWork.Core
                 return existingWindow as T;
 
             Transform warmUpParent = GetWarmUpRoot();
-            GameObject uiPrefab = await UILoad.AddressableLoadAsync(uiName, warmUpParent);
+            GameObject uiPrefab = await UILoad.LoadAsync(uiName, warmUpParent);
             if (uiPrefab == null)
                 return null;
 
@@ -178,10 +192,10 @@ namespace MmUIFrameWork.Core
         private T CreateWindowInstance<T>(string uiName) where T : UIDataBase, new()
         {
             T uiWindow = new T();
-            GameObject uiPrefab = UILoad.AddressableLoad(uiName);
+            GameObject uiPrefab = UILoad.Load(uiName);
             if (uiPrefab == null)
             {
-                Debug.LogError($"[UIHub] [{uiName}] 加载失败");
+                FrameLog.Error($"[{uiName}] 加载失败", "UI", this);
                 return null;
             }
 
@@ -239,7 +253,7 @@ namespace MmUIFrameWork.Core
                 return existingWindow;
             }
 
-            GameObject uiPrefab = await UILoad.AddressableLoadAsync(uiName);
+            GameObject uiPrefab = await UILoad.LoadAsync(uiName);
             if (uiPrefab == null)
                 return null;
 

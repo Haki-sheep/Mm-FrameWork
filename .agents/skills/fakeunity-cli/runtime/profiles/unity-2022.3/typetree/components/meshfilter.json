@@ -1,0 +1,48 @@
+{
+ "full_name": "UnityEngine.MeshFilter",
+ "dump_full_name": "MeshFilter",
+ "type_id": 33,
+ "base": "Component",
+ "fields": [
+  {
+   "name": "m_GameObject",
+   "type": "PPtr<GameObject>",
+   "kind": "UnityObjectRef",
+   "byte_size": 12,
+   "children": [
+    {
+     "name": "m_FileID",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_PathID",
+     "type": "SInt64",
+     "kind": "Primitive",
+     "byte_size": 8
+    }
+   ]
+  },
+  {
+   "name": "m_Mesh",
+   "type": "PPtr<Mesh>",
+   "kind": "UnityObjectRef",
+   "byte_size": 12,
+   "children": [
+    {
+     "name": "m_FileID",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_PathID",
+     "type": "SInt64",
+     "kind": "Primitive",
+     "byte_size": 8
+    }
+   ]
+  }
+ ]
+}

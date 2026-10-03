@@ -1,0 +1,6 @@
+{
+    "name": "MieMieFrameWork.DynamicAtlas",
+    "rootNamespace": "MieMieFrameWork.Asset.DynamicAtlas",
+    "references": ["UniTask"],
+    "autoReferenced": true
+}

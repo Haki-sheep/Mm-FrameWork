@@ -18,6 +18,5 @@ EditorBuildSettings:
     path: Assets/MieMieFrameTools/Sample/SceneMgr/SceneC.unity
     guid: d8c73b4c5f8d10744a5224d519af74ad
   m_configObjects:
-    com.unity.addressableassets: {fileID: 11400000, guid: 4520f0ed01e46dc439a82b09cc0ab75f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

@@ -1,0 +1,132 @@
+{
+ "full_name": "UnityEngine.Animator",
+ "dump_full_name": "Animator",
+ "type_id": 95,
+ "base": "Behaviour",
+ "fields": [
+  {
+   "name": "m_GameObject",
+   "type": "PPtr<GameObject>",
+   "kind": "UnityObjectRef",
+   "byte_size": 12,
+   "children": [
+    {
+     "name": "m_FileID",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_PathID",
+     "type": "SInt64",
+     "kind": "Primitive",
+     "byte_size": 8
+    }
+   ]
+  },
+  {
+   "name": "m_Enabled",
+   "type": "UInt8",
+   "kind": "Primitive",
+   "byte_size": 1
+  },
+  {
+   "name": "m_Avatar",
+   "type": "PPtr<Avatar>",
+   "kind": "UnityObjectRef",
+   "byte_size": 12,
+   "children": [
+    {
+     "name": "m_FileID",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_PathID",
+     "type": "SInt64",
+     "kind": "Primitive",
+     "byte_size": 8
+    }
+   ]
+  },
+  {
+   "name": "m_Controller",
+   "type": "PPtr<RuntimeAnimatorController>",
+   "kind": "UnityObjectRef",
+   "byte_size": 12,
+   "children": [
+    {
+     "name": "m_FileID",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_PathID",
+     "type": "SInt64",
+     "kind": "Primitive",
+     "byte_size": 8
+    }
+   ]
+  },
+  {
+   "name": "m_CullingMode",
+   "type": "int",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "m_UpdateMode",
+   "type": "int",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "m_ApplyRootMotion",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1,
+   "default": "1",
+   "default_source": "curated_sample_inferred"
+  },
+  {
+   "name": "m_LinearVelocityBlending",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1
+  },
+  {
+   "name": "m_StabilizeFeet",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1
+  },
+  {
+   "name": "m_HasTransformHierarchy",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1,
+   "default": "1",
+   "default_source": "curated_sample_inferred"
+  },
+  {
+   "name": "m_AllowConstantClipSamplingOptimization",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1
+  },
+  {
+   "name": "m_KeepAnimatorStateOnDisable",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1
+  },
+  {
+   "name": "m_WriteDefaultValuesOnDisable",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1
+  }
+ ]
+}

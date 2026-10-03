@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0",
+  "command": "project preflight",
+  "ok": true,
+  "dry_run": false,
+  "data": {
+    "command": "editor template-list",
+    "supported": true,
+    "mode": "offline",
+    "unity_version": "6000.4.10f1",
+    "mutates_project": false,
+    "validation_scope": "command-registration,dependency-presence,version-policy,bridge-prerequisites",
+    "requires_target_validation": true,
+    "limitation": "预检不执行目标 不证明包 API 字段兼容 资产导入 编译或运行行为通过",
+    "failure_code": null,
+    "failure_reason": null,
+    "required_package": null,
+    "missing_dependency": null,
+    "parameter_template": [
+      {
+        "name": "--development-mode",
+        "type": "enum",
+        "required": false,
+        "description": "auto/preserve/free；优先显式参数、FUC_DEVELOPMENT_MODE、工程.fuc默认、内置auto。free优先当前模式，确需Edit才停止，不绕过共享保护。"
+      },
+      {
+        "name": "--project",
+        "type": "path",
+        "required": false,
+        "description": "Unity 工程根目录"
+      }
+    ],
+    "examples": [
+      "fuc editor template-list --project <root> --json"
+    ],
+    "recovery": null
+  },
+  "error": null,
+  "meta": {
+    "warnings": [],
+    "truncation": {
+      "truncated": false,
+      "total_count": 0,
+      "cursor": null,
+      "full_output_path": null
+    },
+    "artifacts": null,
+    "project": {
+      "root": "E:\\AAAA学习资料\\Demo\\哈基咩咩框架专用项目\\HakiSheep-Framework",
+      "unity_version": "6000.4.10f1",
+      "index_age_s": null
+    }
+  }
+}

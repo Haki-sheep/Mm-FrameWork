@@ -1,0 +1,346 @@
+{
+  "schema_version": "1.0",
+  "command": "selfcheck chapter13-bridge",
+  "ok": true,
+  "dry_run": false,
+  "data": {
+    "all_passed": true,
+    "total": 80,
+    "passed": 80,
+    "failed": 0,
+    "checks": [
+      {
+        "name": "live_update.offline_dry_run",
+        "pass": true
+      },
+      {
+        "name": "live_update.closed_editor_installs",
+        "pass": true
+      },
+      {
+        "name": "install.package_complete",
+        "pass": true
+      },
+      {
+        "name": "install.no_legacy_assets_bridge",
+        "pass": true
+      },
+      {
+        "name": "methods.explicit",
+        "pass": true
+      },
+      {
+        "name": "test_runner.valid_run_id",
+        "pass": true
+      },
+      {
+        "name": "test_runner.reject_id:../outside",
+        "pass": true
+      },
+      {
+        "name": "test_runner.reject_id:",
+        "pass": true
+      },
+      {
+        "name": "test_runner.reject_id:0123456789abcdef0123456789abcde/",
+        "pass": true
+      },
+      {
+        "name": "test_runner.reject_id:{01234567-89ab-cdef-0123-456789abcdef}",
+        "pass": true
+      },
+      {
+        "name": "test_runner.result:Passed:passed",
+        "pass": true
+      },
+      {
+        "name": "test_runner.result:Skipped:no_tests",
+        "pass": true
+      },
+      {
+        "name": "test_runner.result:Passed:no_tests",
+        "pass": true
+      },
+      {
+        "name": "test_runner.result:Failed:Cancelled:cancelled",
+        "pass": true
+      },
+      {
+        "name": "test_runner.result:Failed:Error:failed",
+        "pass": true
+      },
+      {
+        "name": "test_runner.result:Failed:failed",
+        "pass": true
+      },
+      {
+        "name": "test_runner.result:Passed:completed_with_skips",
+        "pass": true
+      },
+      {
+        "name": "test_runner.result:Inconclusive:inconclusive",
+        "pass": true
+      },
+      {
+        "name": "test_runner.result:Unknown:error",
+        "pass": true
+      },
+      {
+        "name": "test_runner.checkpoint_initial",
+        "pass": true
+      },
+      {
+        "name": "test_runner.persistence_denied_preserves_native_evidence",
+        "pass": true
+      },
+      {
+        "name": "test_runner.persistence_sharing_violation_bounded",
+        "pass": true
+      },
+      {
+        "name": "test_runner.persistence_permanent_failure_preserves_other_run",
+        "pass": true
+      },
+      {
+        "name": "test_runner.checkpoint_recovery_idempotent",
+        "pass": true
+      },
+      {
+        "name": "test_runner.recovery_requires_owned_complete_checkpoints",
+        "pass": true
+      },
+      {
+        "name": "test_runner.recovery_rejects_conflict_errors_and_bad_identity",
+        "pass": true
+      },
+      {
+        "name": "test_runner.recovery_rejects_partial_counts",
+        "pass": true
+      },
+      {
+        "name": "test_runner.custom_request_normal_completion_and_recovery:custom-request_42",
+        "pass": true
+      },
+      {
+        "name": "test_runner.custom_request_normal_completion_and_recovery:request_with_underscore",
+        "pass": true
+      },
+      {
+        "name": "test_runner.custom_request_normal_completion_and_recovery:请求_42",
+        "pass": true
+      },
+      {
+        "name": "test_runner.custom_request_normal_completion_and_recovery:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "pass": true
+      },
+      {
+        "name": "test_runner.invalid_request_rejected:",
+        "pass": true
+      },
+      {
+        "name": "test_runner.invalid_request_rejected: ",
+        "pass": true
+      },
+      {
+        "name": "test_runner.invalid_request_rejected:has space",
+        "pass": true
+      },
+      {
+        "name": "test_runner.invalid_request_rejected:../outside",
+        "pass": true
+      },
+      {
+        "name": "test_runner.invalid_request_rejected:slash/id",
+        "pass": true
+      },
+      {
+        "name": "test_runner.invalid_request_rejected:dot.id",
+        "pass": true
+      },
+      {
+        "name": "test_runner.invalid_request_rejected:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "pass": true
+      },
+      {
+        "name": "test_runner.run_id_stays_guid",
+        "pass": true
+      },
+      {
+        "name": "test_runner.late_completion_replaces_timeout_timestamp",
+        "pass": true
+      },
+      {
+        "name": "test_runner.recovery_preserves_actual_completion_timestamp",
+        "pass": true
+      },
+      {
+        "name": "test_runner.recovery_does_not_invent_missing_completion_timestamp",
+        "pass": true
+      },
+      {
+        "name": "test_runner.disposal_enqueue_is_deferred_and_unique",
+        "pass": true
+      },
+      {
+        "name": "test_runner.disposal_keeps_original_identity_and_removes_before_callback",
+        "pass": true
+      },
+      {
+        "name": "test_runner.disposal_new_items_wait_for_next_drain",
+        "pass": true
+      },
+      {
+        "name": "test_runner.disposal_next_tick_keeps_identity",
+        "pass": true
+      },
+      {
+        "name": "test_runner.disposal_failure_is_once_and_never_requeued",
+        "pass": true
+      },
+      {
+        "name": "test_runner.reload_pending_disposal_is_not_recoverable",
+        "pass": true
+      },
+      {
+        "name": "test_runner.separate_timeouts",
+        "pass": true
+      },
+      {
+        "name": "test_runner.query_routes_readonly",
+        "pass": true
+      },
+      {
+        "name": "test_runner.run_route_mutating_no_dry_run",
+        "pass": true
+      },
+      {
+        "name": "online.main_editor_single_owner",
+        "pass": true
+      },
+      {
+        "name": "online.file_queue_persistent",
+        "pass": true
+      },
+      {
+        "name": "online.instance_bound_without_pid_routing",
+        "pass": true
+      },
+      {
+        "name": "online.roslyn_runtime",
+        "pass": true
+      },
+      {
+        "name": "online.roslyn_diagnostics_signature",
+        "pass": true
+      },
+      {
+        "name": "online.roslyn_structured_result",
+        "pass": true
+      },
+      {
+        "name": "online.roslyn_structured_result_behavior",
+        "pass": true
+      },
+      {
+        "name": "online.roslyn_structured_result_budget",
+        "pass": true
+      },
+      {
+        "name": "online.structured_refresh_import",
+        "pass": true
+      },
+      {
+        "name": "online.structured_compile_request",
+        "pass": true
+      },
+      {
+        "name": "online.structured_prefab_extract",
+        "pass": true
+      },
+      {
+        "name": "online.provider_structural_contract",
+        "pass": true
+      },
+      {
+        "name": "online.provider_no_project_dependency",
+        "pass": true
+      },
+      {
+        "name": "online.provider_not_replayed",
+        "pass": true
+      },
+      {
+        "name": "screenshot.game_framebuffer_scene_explicit_render",
+        "pass": true
+      },
+      {
+        "name": "screenshot.explicit_scope_freshness",
+        "pass": true
+      },
+      {
+        "name": "screenshot.bounded_readback_cleanup",
+        "pass": true
+      },
+      {
+        "name": "screenshot.readonly_route_no_replay",
+        "pass": true
+      },
+      {
+        "name": "screenshot.attribution_deployed",
+        "pass": true
+      },
+      {
+        "name": "online.live_update_coordination",
+        "pass": true
+      },
+      {
+        "name": "online.live_update_not_replayed",
+        "pass": true
+      },
+      {
+        "name": "online.live_update_complete_file_set",
+        "pass": true
+      },
+      {
+        "name": "online.live_update_manifest_matches_embedded_files",
+        "pass": true
+      },
+      {
+        "name": "online.prefab_extract_not_replayed",
+        "pass": true
+      },
+      {
+        "name": "online.request_expiry_and_replay",
+        "pass": true
+      },
+      {
+        "name": "online.reload_race_guards",
+        "pass": true
+      },
+      {
+        "name": "migration.modified_legacy_rejected",
+        "pass": true
+      },
+      {
+        "name": "tamper.fail_closed",
+        "pass": true
+      },
+      {
+        "name": "run.requires_intact_adapter",
+        "pass": true
+      }
+    ]
+  },
+  "error": null,
+  "meta": {
+    "warnings": [],
+    "truncation": {
+      "truncated": false,
+      "total_count": 0,
+      "cursor": null,
+      "full_output_path": null
+    },
+    "artifacts": null,
+    "project": null
+  }
+}

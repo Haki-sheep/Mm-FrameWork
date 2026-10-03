@@ -1,0 +1,163 @@
+{
+  "schema_version": "1.0",
+  "command": "selfcheck assetops",
+  "ok": true,
+  "dry_run": false,
+  "data": {
+    "all_passed": true,
+    "total": 12,
+    "passed": 12,
+    "failed": 0,
+    "elapsed_ms": 542,
+    "scenarios": [
+      {
+        "name": "newguid_format_and_uniqueness",
+        "passed": true,
+        "detail": {
+          "format_ok": true,
+          "generated": 100000,
+          "distinct": 100000
+        }
+      },
+      {
+        "name": "meta_templates_exact",
+        "passed": true,
+        "detail": {
+          "template_mismatches": [],
+          "extract_ok": true,
+          "replace_ok": true,
+          "no_guid_threw": true,
+          "live_root_present": false,
+          "live_compared": 0,
+          "live_mismatches": []
+        }
+      },
+      {
+        "name": "move_file_guid_kept_meta_follows_refs_intact",
+        "passed": true,
+        "detail": {
+          "error": null,
+          "op_id": "20261002-155547-763-e183d975",
+          "broken_after": 0,
+          "referencers_of_moved": 0,
+          "resolved_foo": "Assets/B/foo.prefab",
+          "reverse_of_bar": [
+            "Assets/B/foo.prefab"
+          ]
+        }
+      },
+      {
+        "name": "move_undo_batch_byte_restore",
+        "passed": true,
+        "detail": {
+          "undo_error": null,
+          "source_back": true,
+          "source_meta_back": true,
+          "dest_gone": true,
+          "dest_meta_gone": true
+        }
+      },
+      {
+        "name": "rename_same_semantics_and_undo",
+        "passed": true,
+        "detail": {
+          "rename_error": null,
+          "undo_error": null,
+          "referencers": 1,
+          "op_id": "20261002-155547-867-41e4235e",
+          "rename_ok": true
+        }
+      },
+      {
+        "name": "rename_rejects_path_separator",
+        "passed": true,
+        "detail": {
+          "error": "rename 的 --path 只是新名称（不含目录分隔符）: sub/dir.mat"
+        }
+      },
+      {
+        "name": "dest_exists_refused",
+        "passed": true,
+        "detail": {
+          "move_error": "目标已存在，拒绝覆盖: C:\\Users\\fmz\\AppData\\Local\\Temp\\fuc-selfcheck-assetops-e6fed5bcf0b04e52b95a2cc50f7a0db8\\s6\\Assets\\B\\dup.prefab",
+          "move_code": "FUC_WRITE_DENIED",
+          "rename_same_name_code": "FUC_USAGE",
+          "rename_separator_code": "FUC_USAGE",
+          "source_untouched": true
+        }
+      },
+      {
+        "name": "directory_move_recursive_and_undo",
+        "passed": true,
+        "detail": {
+          "move_error": null,
+          "undo_error": null,
+          "files_moved": 5,
+          "log_kind": "move",
+          "log_files": 10,
+          "moved_ok": true,
+          "source_tree_back": true,
+          "dest_files_gone": true
+        }
+      },
+      {
+        "name": "dry_run_no_disk_writes",
+        "passed": true,
+        "detail": {
+          "error": null,
+          "actions": 4,
+          "source_exists": true,
+          "dest_exists": false
+        }
+      },
+      {
+        "name": "lock_stale_denied",
+        "passed": true,
+        "detail": {
+          "error": "检测到 stale 锁（Editor 崩溃残留），不放行写入。",
+          "code": "FUC_EDITOR_LOCK_STALE",
+          "source_exists": true
+        }
+      },
+      {
+        "name": "meta_ensure_templates_and_idempotent",
+        "passed": true,
+        "detail": {
+          "error": null,
+          "created": 5,
+          "kinds_ok": true,
+          "guids_ok": true,
+          "indexed_by_guid_index": true,
+          "second_run_error": null,
+          "second_run_created": 0
+        }
+      },
+      {
+        "name": "move_missing_meta_generates_new_guid",
+        "passed": true,
+        "detail": {
+          "error": null,
+          "new_guid": "e562128519e680debc2db4039d47c3a7",
+          "indexed": true,
+          "warnings": [
+            "源资产缺 .meta，已按模板生成新 meta（新 guid e562128519e680debc2db4039d47c3a7）: C:\\Users\\fmz\\AppData\\Local\\Temp\\fuc-selfcheck-assetops-e6fed5bcf0b04e52b95a2cc50f7a0db8\\s11\\Assets\\nometa.prefab。原 meta 缺失期间不存在稳定 guid，GUID 引用无从指向；若有路径字符串引用需人工核对。",
+            "下次 Unity 启动/聚焦时将触发 3 个资产重导入，Editor 会刷新对应 Library/ 导入产物。",
+            "覆盖声明：仅保证 GUID 硬引用零断裂（已复检）；potential_unverified_references 是启发式实际命中，字符串拼接路径、反射加载等仍不可静态发现。"
+          ]
+        }
+      }
+    ]
+  },
+  "error": null,
+  "meta": {
+    "warnings": [],
+    "truncation": {
+      "truncated": false,
+      "total_count": 0,
+      "cursor": null,
+      "full_output_path": null
+    },
+    "artifacts": null,
+    "project": null
+  }
+}

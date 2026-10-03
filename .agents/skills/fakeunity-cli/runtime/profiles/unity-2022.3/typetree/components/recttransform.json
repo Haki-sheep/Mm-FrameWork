@@ -1,0 +1,297 @@
+{
+ "full_name": "UnityEngine.RectTransform",
+ "dump_full_name": "UI.RectTransform",
+ "type_id": 224,
+ "base": "Transform",
+ "fields": [
+  {
+   "name": "m_GameObject",
+   "type": "PPtr<GameObject>",
+   "kind": "UnityObjectRef",
+   "byte_size": 12,
+   "children": [
+    {
+     "name": "m_FileID",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_PathID",
+     "type": "SInt64",
+     "kind": "Primitive",
+     "byte_size": 8
+    }
+   ]
+  },
+  {
+   "name": "m_LocalRotation",
+   "type": "Quaternionf",
+   "kind": "Struct",
+   "byte_size": 16,
+   "children": [
+    {
+     "name": "x",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "y",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "z",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "w",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    }
+   ]
+  },
+  {
+   "name": "m_LocalPosition",
+   "type": "Vector3f",
+   "kind": "Struct",
+   "byte_size": 12,
+   "children": [
+    {
+     "name": "x",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "y",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "z",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    }
+   ]
+  },
+  {
+   "name": "m_LocalScale",
+   "type": "Vector3f",
+   "kind": "Struct",
+   "byte_size": 12,
+   "children": [
+    {
+     "name": "x",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "y",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "z",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    }
+   ]
+  },
+  {
+   "name": "m_Children",
+   "type": "vector",
+   "kind": "Array",
+   "byte_size": -1,
+   "children": [
+    {
+     "name": "Array",
+     "type": "Array",
+     "kind": "Struct",
+     "byte_size": -1,
+     "children": [
+      {
+       "name": "size",
+       "type": "int",
+       "kind": "Primitive",
+       "byte_size": 4
+      },
+      {
+       "name": "data",
+       "type": "PPtr<Transform>",
+       "kind": "UnityObjectRef",
+       "byte_size": 12,
+       "children": [
+        {
+         "name": "m_FileID",
+         "type": "int",
+         "kind": "Primitive",
+         "byte_size": 4
+        },
+        {
+         "name": "m_PathID",
+         "type": "SInt64",
+         "kind": "Primitive",
+         "byte_size": 8
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "m_Father",
+   "type": "PPtr<Transform>",
+   "kind": "UnityObjectRef",
+   "byte_size": 12,
+   "children": [
+    {
+     "name": "m_FileID",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_PathID",
+     "type": "SInt64",
+     "kind": "Primitive",
+     "byte_size": 8
+    }
+   ]
+  },
+  {
+   "name": "m_LocalEulerAnglesHint",
+   "type": "Vector3f",
+   "kind": "Struct",
+   "byte_size": 12,
+   "children": [
+    { "name": "x", "type": "float", "kind": "Primitive", "byte_size": 4 },
+    { "name": "y", "type": "float", "kind": "Primitive", "byte_size": 4 },
+    { "name": "z", "type": "float", "kind": "Primitive", "byte_size": 4 }
+   ],
+   "default": "{x: 0, y: 0, z: 0}",
+   "default_source": "curated_yaml_editor_field"
+  },
+  {
+   "name": "m_AnchorMin",
+   "type": "Vector2f",
+   "kind": "Struct",
+   "byte_size": 8,
+   "children": [
+    {
+     "name": "x",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "y",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    }
+   ],
+   "default": "{x: 0, y: 0}",
+   "default_source": "curated_sample_inferred"
+  },
+  {
+   "name": "m_AnchorMax",
+   "type": "Vector2f",
+   "kind": "Struct",
+   "byte_size": 8,
+   "children": [
+    {
+     "name": "x",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "y",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    }
+   ],
+   "default": "{x: 0, y: 0}",
+   "default_source": "curated_sample_inferred"
+  },
+  {
+   "name": "m_AnchoredPosition",
+   "type": "Vector2f",
+   "kind": "Struct",
+   "byte_size": 8,
+   "children": [
+    {
+     "name": "x",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "y",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    }
+   ],
+   "default": "{x: 0, y: 0}",
+   "default_source": "curated_sample_inferred"
+  },
+  {
+   "name": "m_SizeDelta",
+   "type": "Vector2f",
+   "kind": "Struct",
+   "byte_size": 8,
+   "children": [
+    {
+     "name": "x",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "y",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    }
+   ],
+   "default": "{x: 0, y: 0}",
+   "default_source": "curated_sample_inferred"
+  },
+  {
+   "name": "m_Pivot",
+   "type": "Vector2f",
+   "kind": "Struct",
+   "byte_size": 8,
+   "children": [
+    {
+     "name": "x",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "y",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    }
+   ],
+   "default": "{x: 0.5, y: 0.5}",
+   "default_source": "curated_sample_inferred"
+  }
+ ]
+}

@@ -1,0 +1,770 @@
+{
+  "schema_version": "1.0",
+  "command": "selfcheck setprop",
+  "ok": true,
+  "dry_run": false,
+  "data": {
+    "all_passed": true,
+    "total": 70,
+    "passed": 70,
+    "failed": 0,
+    "by_category": {
+      "array": 4,
+      "bool": 5,
+      "crlf": 1,
+      "dry_run": 2,
+      "enum": 3,
+      "error": 10,
+      "float": 13,
+      "idempotent": 2,
+      "int": 6,
+      "lock": 2,
+      "long": 2,
+      "nested": 3,
+      "reference": 5,
+      "string": 12
+    },
+    "duration_ms": 1141,
+    "acceptance_scope": "未修改区 byte diff==0 + 修改区域符合 YamlFormat 语料归纳规则；与 Editor 同操作产物 diff 一致（黄金管线）属 P1-11",
+    "scenarios": [
+      {
+        "category": "string",
+        "name": "plain_to_plain",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            16
+          ]
+        }
+      },
+      {
+        "category": "string",
+        "name": "empty_string",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            16
+          ]
+        }
+      },
+      {
+        "category": "string",
+        "name": "colon_needs_quotes",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            16
+          ]
+        }
+      },
+      {
+        "category": "string",
+        "name": "digits_stay_plain",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            16
+          ]
+        }
+      },
+      {
+        "category": "string",
+        "name": "reserved_word_quoted",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            16
+          ]
+        }
+      },
+      {
+        "category": "string",
+        "name": "single_dash_quoted",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            16
+          ]
+        }
+      },
+      {
+        "category": "string",
+        "name": "quote_inside_roundtrip",
+        "passed": true,
+        "detail": {
+          "diff_lines": 1,
+          "roundtrip": "say \"hi\"",
+          "valid": true,
+          "error": null
+        }
+      },
+      {
+        "category": "string",
+        "name": "mono_empty_fill_degraded",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            59
+          ]
+        }
+      },
+      {
+        "category": "string",
+        "name": "chinese_quoted_u_escape",
+        "passed": true,
+        "detail": {
+          "line": "  m_Name: \"\\u65B0\\u540D\\u5B57\"",
+          "roundtrip": "新名字",
+          "error": null
+        }
+      },
+      {
+        "category": "string",
+        "name": "unknown_mono_string_refused_without_write",
+        "passed": true,
+        "detail": {
+          "code": "FUC_LIMITATION",
+          "error": "Asset type MonoBehaviour has no exact host or integrity-verified plugin schema; it is read-only."
+        }
+      },
+      {
+        "category": "string",
+        "name": "array_string_item",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            56
+          ]
+        }
+      },
+      {
+        "category": "float",
+        "name": "basic",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            30
+          ]
+        }
+      },
+      {
+        "category": "float",
+        "name": "negative_zero",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            30
+          ]
+        }
+      },
+      {
+        "category": "float",
+        "name": "fixed_exp_neg5",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            30
+          ]
+        }
+      },
+      {
+        "category": "float",
+        "name": "fixed_exp_neg9_boundary",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            30
+          ]
+        }
+      },
+      {
+        "category": "float",
+        "name": "sci_exp_neg10_outside",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            30
+          ]
+        }
+      },
+      {
+        "category": "float",
+        "name": "fixed_exp_pos8_boundary",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            30
+          ]
+        }
+      },
+      {
+        "category": "float",
+        "name": "sci_exp_pos9_outside",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            30
+          ]
+        }
+      },
+      {
+        "category": "float",
+        "name": "shortest_roundtrip",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            30
+          ]
+        }
+      },
+      {
+        "category": "float",
+        "name": "sci_negative_small",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            30
+          ]
+        }
+      },
+      {
+        "category": "float",
+        "name": "integer_like_no_trailing",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            30
+          ]
+        }
+      },
+      {
+        "category": "float",
+        "name": "flow_mapping_inner",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            40
+          ]
+        }
+      },
+      {
+        "category": "float",
+        "name": "mono_inferred_degraded",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            74
+          ]
+        }
+      },
+      {
+        "category": "int",
+        "name": "typed_u32_layer",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            15
+          ]
+        }
+      },
+      {
+        "category": "int",
+        "name": "typed_u32_max",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            15
+          ]
+        }
+      },
+      {
+        "category": "int",
+        "name": "mono_inferred",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            73
+          ]
+        }
+      },
+      {
+        "category": "int",
+        "name": "negative_inferred",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            76
+          ]
+        }
+      },
+      {
+        "category": "int",
+        "name": "scene_rendersettings",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            37
+          ]
+        }
+      },
+      {
+        "category": "int",
+        "name": "scene_resolution",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            36
+          ]
+        }
+      },
+      {
+        "category": "bool",
+        "name": "typed_false_text",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            21
+          ]
+        }
+      },
+      {
+        "category": "bool",
+        "name": "typed_true_numeric",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            21
+          ]
+        }
+      },
+      {
+        "category": "bool",
+        "name": "inferred_true_text",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            63
+          ]
+        }
+      },
+      {
+        "category": "bool",
+        "name": "inferred_false_canvas",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            48
+          ]
+        }
+      },
+      {
+        "category": "reference",
+        "name": "sprite_new_guid",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            69
+          ]
+        }
+      },
+      {
+        "category": "reference",
+        "name": "local_fileid",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            95
+          ]
+        }
+      },
+      {
+        "category": "reference",
+        "name": "null_reference",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            95
+          ]
+        }
+      },
+      {
+        "category": "reference",
+        "name": "reordered_keys_canonical",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            69
+          ]
+        }
+      },
+      {
+        "category": "reference",
+        "name": "unknown_mono_array_refused_without_write",
+        "passed": true,
+        "detail": {
+          "code": "FUC_LIMITATION",
+          "error": "Asset type MonoBehaviour has no exact host or integrity-verified plugin schema; it is read-only."
+        }
+      },
+      {
+        "category": "array",
+        "name": "modification_value",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            13
+          ]
+        }
+      },
+      {
+        "category": "array",
+        "name": "modification_name",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            57
+          ]
+        }
+      },
+      {
+        "category": "array",
+        "name": "modification_euler",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            45
+          ]
+        }
+      },
+      {
+        "category": "array",
+        "name": "modification_last_item",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            62
+          ]
+        }
+      },
+      {
+        "category": "nested",
+        "name": "position_y",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            30
+          ]
+        }
+      },
+      {
+        "category": "nested",
+        "name": "anchor_max_y",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            37
+          ]
+        }
+      },
+      {
+        "category": "nested",
+        "name": "quaternion_component_write_refused",
+        "passed": true,
+        "detail": {
+          "code": "FUC_WRITE_DENIED",
+          "message": "禁止通过 set-property 单独修改 Transform 旋转字段：逐分量写入可能产生非单位四元数，Unity 会拒绝矩阵转换。",
+          "recovery": "使用 `fuc prefab transform-set-euler <文件> --file-id <GameObject或Transform fileID> --value <x,y,z> --project <root> --json`，由 CLI 原子更新欧拉提示和归一化四元数。",
+          "byte_unchanged": true
+        }
+      },
+      {
+        "category": "crlf",
+        "name": "unknown_schema_crlf_asset_refused_without_write",
+        "passed": true,
+        "detail": {
+          "code": "FUC_LIMITATION",
+          "error": "Asset type VersionControlSettings has no exact host or integrity-verified plugin schema; it is read-only."
+        }
+      },
+      {
+        "category": "long",
+        "name": "typed_i64_big",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            33
+          ]
+        }
+      },
+      {
+        "category": "long",
+        "name": "typed_i64_max",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            33
+          ]
+        }
+      },
+      {
+        "category": "bool",
+        "name": "typed_mono_bool",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            36
+          ]
+        }
+      },
+      {
+        "category": "float",
+        "name": "typed_mono_float",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            31
+          ]
+        }
+      },
+      {
+        "category": "string",
+        "name": "typed_mono_string",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            34
+          ]
+        }
+      },
+      {
+        "category": "enum",
+        "name": "name_to_int_custom7",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            35
+          ]
+        }
+      },
+      {
+        "category": "enum",
+        "name": "name_to_int_ascending",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            35
+          ]
+        }
+      },
+      {
+        "category": "enum",
+        "name": "int_value_direct",
+        "passed": true,
+        "detail": {
+          "diff_lines": [
+            35
+          ]
+        }
+      },
+      {
+        "category": "idempotent",
+        "name": "same_value_skipped",
+        "passed": true,
+        "detail": {
+          "unchanged": true,
+          "error": null
+        }
+      },
+      {
+        "category": "idempotent",
+        "name": "repeat_same_diff_empty",
+        "passed": true,
+        "detail": {
+          "same_after_second": true,
+          "error": null
+        }
+      },
+      {
+        "category": "dry_run",
+        "name": "diff_without_write",
+        "passed": true,
+        "detail": {
+          "ok": true,
+          "unchanged": true,
+          "diff": "@@ -13,7 +13,7 @@\n   - component: {fileID: 4388376724360244287}\r\n   - component: {fileID: 1503988198947295759}\r\n   m_Layer: 5\r\n-  m_Name: BGComponent\r\n+  m_Name: DryName\r\n   m_TagString: Untagged\r\n   m_Icon: {fileID: 0}\r\n   m_NavMeshLayer: 0\r\n"
+        }
+      },
+      {
+        "category": "dry_run",
+        "name": "dry_run_idempotent_empty_diff",
+        "passed": true,
+        "detail": {
+          "unchanged": true
+        }
+      },
+      {
+        "category": "error",
+        "name": "unknown_field_didyoumean",
+        "passed": true,
+        "detail": {
+          "expected": "FUC_UNKNOWN_FIELD",
+          "actual": "FUC_UNKNOWN_FIELD",
+          "suggestions": [
+            "m_Name",
+            "m_Tag"
+          ],
+          "exit": 64,
+          "message": "类型 GameObject 不存在字段 'm_Nam'。"
+        }
+      },
+      {
+        "category": "error",
+        "name": "unknown_fileid",
+        "passed": true,
+        "detail": {
+          "expected": "FUC_ASSET_NOT_FOUND",
+          "actual": "FUC_ASSET_NOT_FOUND",
+          "suggestions": [],
+          "exit": 66,
+          "message": "文件内不存在 fileID 999999999 的文档: BGComponent-9b611675.prefab"
+        }
+      },
+      {
+        "category": "error",
+        "name": "bad_path_syntax",
+        "passed": true,
+        "detail": {
+          "expected": "FUC_USAGE",
+          "actual": "FUC_USAGE",
+          "suggestions": [],
+          "exit": 64,
+          "message": "属性路径含空段: 'm_LocalPosition..x'"
+        }
+      },
+      {
+        "category": "error",
+        "name": "int_field_alpha_value",
+        "passed": true,
+        "detail": {
+          "expected": "FUC_USAGE",
+          "actual": "FUC_USAGE",
+          "suggestions": [],
+          "exit": 64,
+          "message": "字段 m_Layer（u32）无法解析或值越界: 'abc'"
+        }
+      },
+      {
+        "category": "error",
+        "name": "u32_out_of_range",
+        "passed": true,
+        "detail": {
+          "expected": "FUC_USAGE",
+          "actual": "FUC_USAGE",
+          "suggestions": [],
+          "exit": 64,
+          "message": "字段 m_Layer（u32）无法解析或值越界: '-1'"
+        }
+      },
+      {
+        "category": "error",
+        "name": "reference_into_scalar_field",
+        "passed": true,
+        "detail": {
+          "expected": "FUC_USAGE",
+          "actual": "FUC_USAGE",
+          "suggestions": [],
+          "exit": 64,
+          "message": "字段 m_Layer（unsigned int）不是引用类型，不能接受引用文本。"
+        }
+      },
+      {
+        "category": "error",
+        "name": "scalar_into_reference_node",
+        "passed": true,
+        "detail": {
+          "expected": "FUC_USAGE",
+          "actual": "FUC_USAGE",
+          "suggestions": [],
+          "exit": 64,
+          "message": "属性路径目标是映射/序列节点，标量值无法写入。"
+        }
+      },
+      {
+        "category": "error",
+        "name": "missing_value_flag",
+        "passed": true,
+        "detail": {
+          "expected": "FUC_USAGE",
+          "actual": "FUC_USAGE",
+          "suggestions": [],
+          "exit": 64,
+          "message": "缺少必需 flag: --value。"
+        }
+      },
+      {
+        "category": "error",
+        "name": "enum_unknown_value",
+        "passed": true,
+        "detail": {
+          "expected": "FUC_UNKNOWN_ENUM_VALUE",
+          "actual": "FUC_UNKNOWN_ENUM_VALUE",
+          "suggestions": [
+            "Ascending",
+            "Custom",
+            "Off"
+          ],
+          "exit": 64,
+          "message": "枚举 SelfcheckBiz.SortMode 不存在值 'Bogus'。"
+        }
+      },
+      {
+        "category": "error",
+        "name": "array_index_out_of_range",
+        "passed": true,
+        "detail": {
+          "expected": "FUC_UNKNOWN_FIELD",
+          "actual": "FUC_UNKNOWN_FIELD",
+          "suggestions": [],
+          "exit": 64,
+          "message": "文档 PrefabInstance（fileID 4411304627178605123）中不存在属性路径 'm_Modification.m_Modifications.Array.data[99].value'。"
+        }
+      },
+      {
+        "category": "lock",
+        "name": "held_lock_denied",
+        "passed": true,
+        "detail": {
+          "expected": "FUC_EDITOR_LOCK_HELD",
+          "actual": "FUC_EDITOR_LOCK_HELD",
+          "suggestions": [],
+          "exit": 69,
+          "message": "Editor 正在运行并持有锁（独占探测命中，PID 未写入），默认拒绝写入。"
+        }
+      },
+      {
+        "category": "lock",
+        "name": "held_lock_force_allowed",
+        "passed": true,
+        "detail": {
+          "warnings": [
+            "已用 --force 突破活锁：Editor 正在运行，写入可能与 Editor 内存态冲突（最后保存者赢风险），建议写完后让 Editor 重新加载工程。",
+            "下次 Unity 启动/聚焦时将触发 1 个资产重导入，Editor 会刷新对应 Library/ 导入产物。"
+          ],
+          "error": null
+        }
+      }
+    ]
+  },
+  "error": null,
+  "meta": {
+    "warnings": [],
+    "truncation": {
+      "truncated": false,
+      "total_count": 0,
+      "cursor": null,
+      "full_output_path": null
+    },
+    "artifacts": null,
+    "project": null
+  }
+}

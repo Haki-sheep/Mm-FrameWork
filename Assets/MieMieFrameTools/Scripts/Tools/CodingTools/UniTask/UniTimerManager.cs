@@ -1,266 +1,161 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
-using System.Threading.Tasks;
 using static MieMieFrameWork.ModuleHub;
-using Stopwatch = System.Diagnostics.Stopwatch;
+
 namespace MieMieFrameWork
 {
     /// <summary>
-    /// 计时器信息类
+    /// 统一定时器管理器 由各 PlayerLoop 阶段集中驱动
     /// </summary>
-    public class TimerInfo
+    [ManagerAttribute(6)]
+    public partial class UniTimerManager : IManagerBase, IDisposable
     {
-        //令牌
-        public CancellationTokenSource Cts { get; set; }
-        //时间
-        public float TotalTime { get; set; }
-        public float RemainingTime { get; set; }
-        //参数
-        public PlayerLoopTiming PlayerLoopTiming { get; set; }
-        public bool IgnoreTimeScale { get; set; }
-        public Action CallBack { get; set; }
+        /// <summary> 补执行模式每个任务每次驱动的默认回调上限 </summary>
+        public const int DefaultMaxCallbacksPerTick = 32;
 
-        //状态
-        public bool IsPaused { get; set; }
+        /// <summary> 不依赖 Unity 时间读取的计时内核 </summary>
+        private readonly TimerScheduler scheduler = new TimerScheduler();
 
-    }
+        /// <summary> 各阶段集中驱动器 </summary>
+        private readonly List<TimerPlayerLoopDriver> driverList = new List<TimerPlayerLoopDriver>();
 
-    [ManagerAttribute(6)]    
-    public class UniTimerManager : IManagerBase, IDisposable
-    {
+        /// <summary> 是否已完成唯一初始化 </summary>
+        private bool isInitialized;
+
+        /// <summary> 是否已释放 </summary>
+        private bool isDisposed;
+
+        #region 生命周期
+
+        /// <summary>
+        /// 由 ModuleHub 唯一初始化入口注册各阶段驱动器
+        /// </summary>
         public void Init()
         {
+            if (isDisposed)
+                throw new ObjectDisposedException(nameof(UniTimerManager));
+            if (isInitialized)
+                throw new InvalidOperationException("[UniTimerManager] 禁止重复初始化");
+
+            var TimingList = (PlayerLoopTiming[])Enum.GetValues(typeof(PlayerLoopTiming));
+            try
+            {
+                foreach (var eTiming in TimingList)
+                {
+                    var Driver = new TimerPlayerLoopDriver(scheduler, eTiming);
+                    driverList.Add(Driver);
+                    PlayerLoopHelper.AddAction(eTiming, Driver);
+                }
+                isInitialized = true;
+            }
+            catch
+            {
+                Dispose();
+                throw;
+            }
         }
 
-        private Dictionary<int, TimerInfo> activeTimerDict = new();
-
         /// <summary>
-        /// 完全在子线程内延迟执行任务
+        /// 停止全部定时器并释放驱动器持有的内核引用
         /// </summary>
-        public async UniTask<TResult> DelayRunBgComplete<TResult>(float delaySeconds, Func<TResult> work)
-        {   
-            await UniTask.Delay(TimeSpan.FromSeconds(delaySeconds));
-            return await UniTask.RunOnThreadPool(work);
-        }
-
-        /// <summary>
-        ///在子线程延迟执行任务 并返回主线程完成另一个回调
-        /// </summary>
-        public async UniTaskVoid DelayRunBg(float delaySeconds, Action action, Action onComplete = null)
+        public void Dispose()
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(delaySeconds));
-            await UniTask.SwitchToThreadPool();
+            if (isDisposed)
+                return;
 
-            action?.Invoke();
-
-            await UniTask.SwitchToMainThread();
-            onComplete?.Invoke();
+            isDisposed = true;
+            foreach (var Driver in driverList)
+                Driver.Release();
+            driverList.Clear();
+            scheduler.Dispose();
         }
 
         /// <summary>
-        /// 启动定时器
+        /// 创建任务前确认管理器已完成初始化且未释放
         /// </summary>
-        /// <param name="time">时间</param>
-        /// <param name="playerLoopTiming">定时器执行时机</param>
-        /// <param name="ignoreTimeScale">是否忽略时间缩放</param>
-        /// <param name="action">定时器执行回调</param>
-        /// <returns>计时器ID，用于停止指定计时器</returns>
-        public int StartTimer(
+        private void RequireInitialized()
+        {
+            if (isDisposed)
+                throw new ObjectDisposedException(nameof(UniTimerManager));
+            if (!isInitialized)
+                throw new InvalidOperationException("[UniTimerManager] 请先由 ModuleHub 调用 Init");
+        }
+
+        #endregion
+
+        #region 创建定时器
+
+        /// <summary>
+        /// 启动单次定时器 返回实例内递增 ID 零延迟也不在创建调用栈执行
+        /// </summary>
+        public long StartTimer(
             float time,
             Action action = null,
             PlayerLoopTiming playerLoopTiming = PlayerLoopTiming.Update,
-            bool ignoreTimeScale = false
-           )
+            bool ignoreTimeScale = false)
         {
-            int timerId = Guid.NewGuid().GetHashCode();
-
-            var timerInfo = new TimerInfo
-            {
-                Cts = new CancellationTokenSource(),
-                TotalTime = time,
-                RemainingTime = time,
-                PlayerLoopTiming = playerLoopTiming,
-                IgnoreTimeScale = ignoreTimeScale,
-                CallBack = action,
-                IsPaused = false,
-            };
-
-            activeTimerDict[timerId] = timerInfo;
-            ExecuteTimerAsync(timerId, timerInfo).Forget();
-
-            return timerId;
+            RequireInitialized();
+            return scheduler.Add(time, 0f, 1, action, playerLoopTiming, ignoreTimeScale,
+                TimerCatchUpMode.SkipMissed, 1, UnityEngine.Time.frameCount);
         }
 
         /// <summary>
-        /// 执行计时器的异步方法
+        /// 启动循环定时器 首次回调计入次数 负次数无限循环 零次数无效
         /// </summary>
-        private async UniTaskVoid ExecuteTimerAsync(int timerId, TimerInfo timerInfo)
+        public long StartRepeatingTimer(
+            float startDelay,
+            float interval,
+            int loopCount,
+            Action action,
+            PlayerLoopTiming playerLoopTiming = PlayerLoopTiming.Update,
+            bool ignoreTimeScale = false,
+            TimerCatchUpMode catchUpMode = TimerCatchUpMode.SkipMissed,
+            int maxCallbacksPerTick = DefaultMaxCallbacksPerTick)
         {
-            Stopwatch runningTimeStopwatch = new Stopwatch();
-            runningTimeStopwatch.Start();
-
-            try
-            {
-                while (true)
-                {
-                    if (timerInfo.IsPaused)
-                    {
-                        // 暂停时，停止计时
-                        runningTimeStopwatch.Stop();
-
-                        while (timerInfo.IsPaused)
-                        {
-                            await UniTask.Yield(timerInfo.PlayerLoopTiming, timerInfo.Cts.Token);
-                        }
-
-                        // 恢复时，继续计时
-                        runningTimeStopwatch.Start();
-                    }
-
-                    // 直接获取已运行的秒数
-                    double runningSeconds = runningTimeStopwatch.Elapsed.TotalSeconds;
-                    timerInfo.RemainingTime = timerInfo.TotalTime - (float)runningSeconds;
-
-                    if (timerInfo.RemainingTime <= 0) break;
-
-                    await UniTask.Yield(timerInfo.PlayerLoopTiming, timerInfo.Cts.Token);
-                }
-
-                timerInfo.CallBack?.Invoke();
-            }
-            finally
-            {
-                // 清理计时器资源
-                CleanupTimer(timerId);
-            }
+            RequireInitialized();
+            if (interval <= 0f)
+                throw new ArgumentOutOfRangeException(nameof(interval), "循环间隔必须大于零");
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+            return scheduler.Add(startDelay, interval, loopCount, action, playerLoopTiming,
+                ignoreTimeScale, catchUpMode, maxCallbacksPerTick, UnityEngine.Time.frameCount);
         }
+
+        #endregion
+
+        #region 控制定时器
+
         /// <summary>
-        /// 停止指定的计时器
+        /// 停止指定的计时器 立即使 ID 失效并释放回调引用
         /// </summary>
-        /// <param name="timerId">计时器ID</param>
-        /// <returns>是否成功停止</returns>
-        public bool StopTimer(int timerId)
+        public bool StopTimer(long timerId)
         {
-            if (activeTimerDict.TryGetValue(timerId, out var timerInfo))
-            {
-                timerInfo.Cts.Cancel();
-                return true;
-            }
-
-            Debug.Log($"计时器 {timerId} 不存在或已停止");
-            return false;
+            return scheduler.Stop(timerId);
         }
 
         /// <summary>
-        /// 停止所有计时器
+        /// 停止所有计时器 不阻止后续创建新任务
         /// </summary>
         public void StopAllTimers()
         {
-            foreach (var timerInfo in activeTimerDict.Values)
-            {
-                timerInfo.Cts.Cancel();
-            }
-
-            Debug.Log($"已停止 {activeTimerDict.Count} 个计时器");
-        }
-
-        /// <summary>
-        /// 获取活跃计时器数量
-        /// </summary>
-        public int GetActiveTimerCount()
-        {
-            return activeTimerDict.Count;
-        }
-
-        /// <summary>
-        /// 检查指定计时器是否还在运行
-        /// </summary>
-        public bool IsTimerActive(int timerId)
-        {
-            return activeTimerDict.ContainsKey(timerId);
+            scheduler.StopAll();
         }
 
         /// <summary>
         /// 暂停指定的计时器
         /// </summary>
-        /// <param name="timerId">计时器ID</param>
-        /// <returns>是否成功暂停</returns>
-        public bool PauseTimer(int timerId)
+        public bool PauseTimer(long timerId)
         {
-            if (activeTimerDict.TryGetValue(timerId, out var timerInfo))
-            {
-                if (!timerInfo.IsPaused)
-                {
-                    timerInfo.IsPaused = true;
-                    Debug.Log($"计时器 {timerId} 已暂停，剩余时间: {timerInfo.RemainingTime:F2}秒");
-                    return true;
-                }
-                else
-                {
-                    Debug.Log($"计时器 {timerId} 已经是暂停状态");
-                    return false;
-                }
-            }
-
-            Debug.Log($"计时器 {timerId} 不存在");
-            return false;
+            return scheduler.SetPaused(timerId, true);
         }
 
         /// <summary>
         /// 恢复指定的计时器
         /// </summary>
-        /// <param name="timerId">计时器ID</param>
-        /// <returns>是否成功恢复</returns>
-        public bool ResumeTimer(int timerId)
+        public bool ResumeTimer(long timerId)
         {
-            if (activeTimerDict.TryGetValue(timerId, out var timerInfo))
-            {
-                if (timerInfo.IsPaused)
-                {
-                    timerInfo.IsPaused = false;
-                    Debug.Log($"计时器 {timerId} 已恢复，剩余时间: {timerInfo.RemainingTime:F2}秒");
-                    return true;
-                }
-                else
-                {
-                    Debug.Log($"计时器 {timerId} 不是暂停状态");
-                    return false;
-                }
-            }
-
-            Debug.Log($"计时器 {timerId} 不存在");
-            return false;
-        }
-
-        /// <summary>
-        /// 检查指定计时器是否暂停
-        /// </summary>
-        /// <param name="timerId">计时器ID</param>
-        /// <returns>是否暂停</returns>
-        public bool IsTimerPaused(int timerId)
-        {
-            if (activeTimerDict.TryGetValue(timerId, out var timerInfo))
-            {
-                return timerInfo.IsPaused;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// 获取指定计时器的剩余时间
-        /// </summary>
-        /// <param name="timerId">计时器ID</param>
-        /// <returns>剩余时间（秒）</returns>
-        public float GetRemainingTime(int timerId)
-        {
-            if (activeTimerDict.TryGetValue(timerId, out var timerInfo))
-            {
-                return Math.Max(0f, timerInfo.RemainingTime);
-            }
-            return 0f;
+            return scheduler.SetPaused(timerId, false);
         }
 
         /// <summary>
@@ -268,16 +163,7 @@ namespace MieMieFrameWork
         /// </summary>
         public void PauseAllTimers()
         {
-            int pausedCount = 0;
-            foreach (var timerInfo in activeTimerDict.Values)
-            {
-                if (!timerInfo.IsPaused)
-                {
-                    timerInfo.IsPaused = true;
-                    pausedCount++;
-                }
-            }
-            Debug.Log($"已暂停 {pausedCount} 个计时器");
+            scheduler.SetAllPaused(true);
         }
 
         /// <summary>
@@ -285,45 +171,45 @@ namespace MieMieFrameWork
         /// </summary>
         public void ResumeAllTimers()
         {
-            int resumedCount = 0;
-            foreach (var timerInfo in activeTimerDict.Values)
-            {
-                if (timerInfo.IsPaused)
-                {
-                    timerInfo.IsPaused = false;
-                    resumedCount++;
-                }
-            }
-            Debug.Log($"已恢复 {resumedCount} 个计时器");
+            scheduler.SetAllPaused(false);
+        }
+
+        #endregion
+
+        #region 查询定时器
+
+        /// <summary>
+        /// 获取活跃计时器数量 包含暂停与等待下一帧的任务
+        /// </summary>
+        public int GetActiveTimerCount()
+        {
+            return scheduler.Count;
         }
 
         /// <summary>
-        /// 清理计时器资源
+        /// 检查指定计时器是否还在运行
         /// </summary>
-        private void CleanupTimer(int timerId)
+        public bool IsTimerActive(long timerId)
         {
-            if (activeTimerDict.TryGetValue(timerId, out var timerInfo))
-            {
-                timerInfo.Cts.Dispose();
-                activeTimerDict.Remove(timerId);
-            }
+            return scheduler.IsActive(timerId);
         }
-
-
 
         /// <summary>
-        /// 组件销毁时清理所有资源
+        /// 检查指定计时器是否暂停
         /// </summary>
-        public void Dispose()
+        public bool IsTimerPaused(long timerId)
         {
-            StopAllTimers();
-
-            // 清理所有资源
-            foreach (var timerInfo in activeTimerDict.Values)
-            {
-                timerInfo.Cts.Dispose();
-            }
-            activeTimerDict.Clear();
+            return scheduler.IsPaused(timerId);
         }
+
+        /// <summary>
+        /// 获取指定计时器距下次回调的剩余秒数 已结束与积压任务返回零
+        /// </summary>
+        public float GetRemainingTime(long timerId)
+        {
+            return scheduler.GetRemainingTime(timerId);
+        }
+
+        #endregion
     }
 }

@@ -1,0 +1,16 @@
+{
+  "comment": "2021.3 只读查询所需常用 ClassID 快照",
+  "map": {
+    "1": "GameObject",
+    "4": "Transform",
+    "20": "Camera",
+    "23": "MeshRenderer",
+    "33": "MeshFilter",
+    "65": "BoxCollider",
+    "95": "Animator",
+    "108": "Light",
+    "114": "MonoBehaviour",
+    "224": "RectTransform",
+    "1001": "PrefabInstance"
+  }
+}

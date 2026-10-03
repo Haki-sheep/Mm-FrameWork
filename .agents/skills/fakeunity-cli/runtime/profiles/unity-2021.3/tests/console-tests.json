@@ -1,0 +1,10 @@
+{
+  "test_description_version": "1.0",
+  "runner": "console",
+  "offline_only": true,
+  "tests": [
+    { "id": "profile-load", "kind": "profile_load", "target": "profile.json", "assert": "support_level=readonly" },
+    { "id": "golden-roundtrip", "kind": "yaml_byte_roundtrip", "target": "golden/minimal-2021.prefab", "assert": "byte identical" },
+    { "id": "write-gate", "kind": "write_rejection", "target": "golden/minimal-2021.prefab", "assert": "FUC_VERSION_UNSUPPORTED" }
+  ]
+}

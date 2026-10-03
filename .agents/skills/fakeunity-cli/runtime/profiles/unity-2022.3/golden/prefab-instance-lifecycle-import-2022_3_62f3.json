@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "evidence_id": "prefab-instance-lifecycle-import-2022.3.62f3",
+  "unity_version": "2022.3.62f3",
+  "command": "prefab unpack",
+  "operation_id": "20260724-142313-459-1d7dee63",
+  "cli_read_verified": true,
+  "asset": "Assets/Golden/InstanceStructural/MixedContainer.prefab",
+  "import_errors": 0,
+  "import_warnings": 0,
+  "asset_sha256_before_editor": "7d895b972fda89d9c20e4764edf2656a81ebf4e02877df5c9fa2348eb5b88fac",
+  "asset_sha256_after_editor": "7d895b972fda89d9c20e4764edf2656a81ebf4e02877df5c9fa2348eb5b88fac",
+  "editor_observed": {
+    "container": {
+      "name": "MixedContainer",
+      "components": [
+        "Transform"
+      ]
+    },
+    "materialized_outer_root": {
+      "name": "CliOuterOverride",
+      "components": [
+        "Transform",
+        "BoxCollider"
+      ]
+    },
+    "preserved_nested_root": {
+      "name": "OuterNestedOverride",
+      "components": [
+        "Transform",
+        "CapsuleCollider",
+        "SphereCollider"
+      ],
+      "children": [
+        "NestedLeafChild",
+        "OuterAddedUnderNested"
+      ]
+    }
+  },
+  "assertions": {
+    "outer_local_layer_materialized": true,
+    "nested_property_override_preserved": true,
+    "nested_added_component_preserved": true,
+    "nested_added_child_preserved": true,
+    "nested_prefab_connection_preserved": true,
+    "editor_import_byte_stable": true
+  }
+}

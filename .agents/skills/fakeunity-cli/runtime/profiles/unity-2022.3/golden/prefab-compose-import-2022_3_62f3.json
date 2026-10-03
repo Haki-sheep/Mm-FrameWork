@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "evidence_id": "prefab-compose-import-2022.3.62f3",
+  "unity_version": "2022.3.62f3",
+  "command": "prefab compose",
+  "operation_id": "20260724-123840-859-62ece8a6",
+  "cli_read_verified": true,
+  "asset": "Assets/Golden/Created/ComposeLoginPanel.prefab",
+  "import_errors": 0,
+  "import_warnings": 0,
+  "asset_sha256_before_editor": "0acd4dc65cf768d84a84d22bb9bb2b16a8744cf4a05428678fa103e7b6295cf1",
+  "asset_sha256_after_editor": "0acd4dc65cf768d84a84d22bb9bb2b16a8744cf4a05428678fa103e7b6295cf1",
+  "editor_observed": {
+    "root": {
+      "name": "ComposeLoginPanel",
+      "transform": "RectTransform",
+      "components": [
+        "RectTransform",
+        "Canvas"
+      ]
+    },
+    "child": {
+      "name": "CameraNode",
+      "transform": "Transform",
+      "components": [
+        "Transform",
+        "Camera"
+      ]
+    },
+    "canvas_camera": {
+      "null": false,
+      "name": "CameraNode",
+      "guid": "3df1c29006bf443cb8c030bfe64bb841",
+      "fileID": 1896603882853402327,
+      "path": "Assets/Golden/Created/ComposeLoginPanel.prefab"
+    },
+    "local_position": {
+      "x": 1,
+      "y": 2,
+      "z": 3
+    },
+    "local_euler_hint": {
+      "x": 10,
+      "y": 20,
+      "z": 30
+    },
+    "local_rotation": {
+      "x": 0.12767943739891052,
+      "y": 0.14487811923027039,
+      "z": 0.23929834365844727,
+      "w": 0.9515485167503357
+    },
+    "local_rotation_length": 0.9999999925868215
+  },
+  "assertions": {
+    "hierarchy_and_component_types": true,
+    "intra_manifest_component_reference": true,
+    "explicit_transform_under_recttransform": true,
+    "euler_values_survived_import": true,
+    "quaternion_normalized": true,
+    "editor_import_byte_stable": true
+  }
+}

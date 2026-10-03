@@ -1,0 +1,271 @@
+{
+  "schema_version": "1.0",
+  "command": "editor bridge-install",
+  "ok": true,
+  "dry_run": false,
+  "data": {
+    "installed": true,
+    "dry_run": false,
+    "version": "1.20.0",
+    "package_path": "Packages/com.fakeunity.cli.editorbridge",
+    "delegate_path": "Packages/com.fakeunity.cli.editorbridge/Editor/EditorDelegateBridge.cs",
+    "package_sha256": {
+      "package.json": "324d42dddb5aab2e7289745e3358d7e5cc3be77bb6326bc67510062b74f4d84e",
+      "package-files.json": "79f54fe52840dce83e788282ef95ee40054d03df797cd670b9cc3d68e55540d4",
+      "THIRD-PARTY-NOTICES.md": "47a5655d94f0ccdc788d7d8d32797a1622fedbbaa72e2ad1a375140088bfc381",
+      "Editor/FakeUnityCLI.EditorBridge.asmdef": "cf3eed06b090df27ba404d0a55894faaf21a07efdf65d6386b5d7a612a2f4e41",
+      "Editor/BridgeBootstrap.cs": "1a870fc8bea758ff00f5bc7656d22d46d18799c97a9815e8fb240f2fde94cf25",
+      "Editor/EditorActivityBridge.cs": "543be942a3d813f1e8ddab0f86de1e29deb7b09be7ba7cad6ca9fa5e46eb3966",
+      "Editor/EditorDevelopmentOperations.cs": "1d1e210c12c7a4a5989dc8329afde3a765aa555fa70f914edd2797eb8b97d6a3",
+      "Editor/DevelopmentPreferences.cs": "7d9720fabe5c3ae49d1578aca0de0cb37e85378f0c06bfba310c3b70de8809b7",
+      "Editor/FakeUnityCliWindow.cs": "32f3dff39c3fdabebb1314fe1593a5fc69356f6f284d21b9185cb3d33546552e",
+      "Editor/EditorPreservationGuard.cs": "1c63f0391dbc4acb59b8542c1d5bbbc3a6e917aed61f447efd4c03ee08dbe5d7",
+      "Editor/ExternalAssetImportContract.cs": "17014ccc834b5748b332f1250c6f0e4ca6c9240fee31667a5d826fe36b6c1bfa",
+      "Editor/ExternalAssetImportBridge.cs": "b2de7728f0b7e95c75e71061beb67c93dc8ca27fb2b4ce022a6bdc8affdc2fa3",
+      "Editor/LogCaptureBridge.cs": "611b088c4d3ed35e3d2a010b743ce8f243926b0587bfa1d1f59f6fa7b57193a6",
+      "Editor/EditorDelegateBridge.cs": "b7b3012932c3427a8615297680e1cd0b8f33be655d8db96510a2c5544b00c767",
+      "Editor/RoslynExecutor.cs": "dd80539f848ccaa0065137b31f6459b2cafa1fb8a5f855638209a6352ade3319",
+      "Editor/ResultJson.cs": "f3dbda52b8ba528cdb28107eb5f7e9e47852b6ea77e47106a6c5ecf35eb8cbfe",
+      "Editor/EditorOnlineOperations.cs": "f55bb53afd8131c90d06cacd3cb4138236cc8b46a1af20435b56ecd566dbce87",
+      "Editor/EditorObjectTargets.cs": "eb9a97137741f981438e9c738a1a49eb19d93ad3c08c7f3b1a0db971461977bc",
+      "Editor/EditorIdentity.cs": "8759d49a1faf2e4f5fa731ef3573d2c37d317f54226ac1dac381048d11825b65",
+      "Editor/EditorPropertyValues.cs": "626fe17cdff6cc21daccc258f7f708109c6ba47f4323a87d1b0752c4c2e1b730",
+      "Editor/EditorInspectorOperations.cs": "ed7d4cb94ee8febadefb3ce3f71cad16ada97b6ccd8e09ee78d968691003ab8a",
+      "Editor/EditorPrefabOperations.cs": "46e72d894c0455a735522590eb7c3b2fabe54a3da951d7cdd9deef7a8eb384a3",
+      "Editor/EditorAssetChangeAudit.cs": "2753a6ed427a130da3d454ce6245723e49c8e600a5b7e66a9c041274b4cc0e44",
+      "Editor/EditorUiOperations.cs": "0f952e56eefb950cd808b76599ee3bef513babcb1bee25fc4a53253b85cd2ef6",
+      "Editor/EditorUiMetrics.cs": "3cdb2b8a4a0597c600accff0e518d8f3d034af838f6c13b9ede7a8df11fd32d2",
+      "Editor/EditorUiClick.cs": "a80669056d82a8186493f6f405abb97d74028f0bc9847801b96a3aa372f398ce",
+      "Editor/EditorTestRunContract.cs": "b88c0d81e8fc57543e095a06c0768c989af516dd9981f4d92e7f1f8a605d5a11",
+      "Editor/OnlineProviderRegistry.cs": "bf502b272a243e34c5ff3738cdb5313ff0e140876c4a998d4a385eed50bc733c",
+      "Editor/LiveBridgeUpdate.cs": "4b5d2861a6beb4d9c887fb4b674c1a09bb3bccef1a8cf396ad5bb52f364a15af",
+      "Editor/RoslynRequestBridge.cs": "ffb7d5e4d30a6532c5890a4547c343e78d97855e3057d381114b3b567b126819"
+    },
+    "methods": [
+      "FakeUnity.EditorBridge.Addressables.CreateGroup",
+      "FakeUnity.EditorBridge.Addressables.DeleteGroup",
+      "FakeUnity.EditorBridge.Addressables.ConfigureSchema",
+      "FakeUnity.EditorBridge.Addressables.ConfigureProfile",
+      "FakeUnity.EditorBridge.Addressables.Analyze",
+      "FakeUnity.EditorBridge.Addressables.BuildContent",
+      "FakeUnity.EditorBridge.Assets.Import",
+      "FakeUnity.EditorBridge.Rendering.CompileShaders",
+      "FakeUnity.EditorBridge.Rendering.BakeLighting",
+      "FakeUnity.EditorBridge.Build.BuildPlayer",
+      "FakeUnity.EditorBridge.Build.SwitchPlatform",
+      "FakeUnity.EditorBridge.TwoD.BakeSpriteShape",
+      "FakeUnity.EditorBridge.ThreeD.ApplyProBuilder"
+    ],
+    "log_capabilities": [
+      "console",
+      "structured_compile",
+      "compile_watermark",
+      "bounded_jsonl",
+      "cursor_incremental",
+      "reverse_filtered_snapshot"
+    ],
+    "online_capabilities": [
+      "roslyn_exec",
+      "structured_result_json",
+      "editor_refresh",
+      "asset_import",
+      "external_asset_import",
+      "editor_context",
+      "scene_hierarchy",
+      "scene_find",
+      "component_list",
+      "component_get",
+      "prefab_extract_child",
+      "prefab_extract_undo",
+      "online_providers",
+      "bridge_live_update",
+      "request_expiry",
+      "file_queue",
+      "domain_reload_recovery"
+    ],
+    "operation_id": "20261002-151304-760-fd04d62c",
+    "actions": [
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\package.json",
+        "action": "create",
+        "size_bytes": 678
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\package-files.json",
+        "action": "create",
+        "size_bytes": 1145
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\THIRD-PARTY-NOTICES.md",
+        "action": "create",
+        "size_bytes": 4436
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\FakeUnityCLI.EditorBridge.asmdef",
+        "action": "create",
+        "size_bytes": 353
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\BridgeBootstrap.cs",
+        "action": "create",
+        "size_bytes": 4551
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorActivityBridge.cs",
+        "action": "create",
+        "size_bytes": 10265
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorDevelopmentOperations.cs",
+        "action": "create",
+        "size_bytes": 15336
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\DevelopmentPreferences.cs",
+        "action": "create",
+        "size_bytes": 12540
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\FakeUnityCliWindow.cs",
+        "action": "create",
+        "size_bytes": 6627
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorPreservationGuard.cs",
+        "action": "create",
+        "size_bytes": 8723
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\ExternalAssetImportContract.cs",
+        "action": "create",
+        "size_bytes": 7537
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\ExternalAssetImportBridge.cs",
+        "action": "create",
+        "size_bytes": 15009
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\LogCaptureBridge.cs",
+        "action": "create",
+        "size_bytes": 24070
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorDelegateBridge.cs",
+        "action": "create",
+        "size_bytes": 14389
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\RoslynExecutor.cs",
+        "action": "create",
+        "size_bytes": 16751
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\ResultJson.cs",
+        "action": "create",
+        "size_bytes": 9180
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorOnlineOperations.cs",
+        "action": "create",
+        "size_bytes": 97756
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorObjectTargets.cs",
+        "action": "create",
+        "size_bytes": 10912
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorIdentity.cs",
+        "action": "create",
+        "size_bytes": 2311
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorPropertyValues.cs",
+        "action": "create",
+        "size_bytes": 22151
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorInspectorOperations.cs",
+        "action": "create",
+        "size_bytes": 15087
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorPrefabOperations.cs",
+        "action": "create",
+        "size_bytes": 23320
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorAssetChangeAudit.cs",
+        "action": "create",
+        "size_bytes": 3195
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorUiOperations.cs",
+        "action": "create",
+        "size_bytes": 14347
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorUiMetrics.cs",
+        "action": "create",
+        "size_bytes": 6714
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorUiClick.cs",
+        "action": "create",
+        "size_bytes": 7542
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorTestRunContract.cs",
+        "action": "create",
+        "size_bytes": 6436
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\OnlineProviderRegistry.cs",
+        "action": "create",
+        "size_bytes": 28543
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\LiveBridgeUpdate.cs",
+        "action": "create",
+        "size_bytes": 12451
+      },
+      {
+        "path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\Packages\\com.fakeunity.cli.editorbridge\\Editor\\RoslynRequestBridge.cs",
+        "action": "create",
+        "size_bytes": 32220
+      }
+    ],
+    "undo": "fuc undo 20261002-151304-760-fd04d62c --project \"E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\" --json",
+    "compatibility": "experimental-editor",
+    "offline_asset_write_supported": false
+  },
+  "error": null,
+  "meta": {
+    "warnings": [],
+    "truncation": {
+      "truncated": false,
+      "total_count": 0,
+      "cursor": null,
+      "full_output_path": null
+    },
+    "artifacts": {
+      "development_policy": {
+        "effective_mode": "auto",
+        "source": "builtin",
+        "selected_mode": "auto",
+        "selected_source": "builtin",
+        "settings_path": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject\\.fuc\\development-settings.json",
+        "settings_error": null,
+        "shared_protection": false
+      },
+      "editor_transitions": [],
+      "operation_artifacts": null
+    },
+    "project": {
+      "root": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b\\UnityProject",
+      "unity_version": "6000.4.10f1",
+      "index_age_s": null
+    }
+  }
+}

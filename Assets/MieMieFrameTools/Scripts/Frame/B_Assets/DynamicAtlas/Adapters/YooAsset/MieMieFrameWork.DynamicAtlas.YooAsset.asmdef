@@ -1,0 +1,6 @@
+{
+    "name": "MieMieFrameWork.DynamicAtlas.YooAsset",
+    "rootNamespace": "MieMieFrameWork.Asset.DynamicAtlas",
+    "references": ["MieMieFrameWork.DynamicAtlas", "YooAsset.RuntimeAdapter", "YooAsset", "UniTask"],
+    "autoReferenced": true
+}

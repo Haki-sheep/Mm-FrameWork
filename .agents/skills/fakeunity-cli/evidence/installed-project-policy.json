@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "command": "selfcheck editor-unity6-policy",
+  "ok": false,
+  "dry_run": false,
+  "data": null,
+  "error": {
+    "code": "FUC_INTERNAL",
+    "message": "内部错误: UnauthorizedAccessException: Access to the path 'C:\\Users\\fmz\\AppData\\Local\\Temp\\fuc-unity6-policy-0175020af5f94faab1d1dad19d93d288\\Assets' is denied.",
+    "location": null,
+    "suggestions": [],
+    "retryable": false,
+    "recovery": "保留命令、工程信息与 error.details；先查询原操作状态，确认副作用后再决定下一步，勿自动重放写操作。",
+    "details": {
+      "phase": "cli_boundary",
+      "operation": null,
+      "path": null,
+      "hresult": -2147024891,
+      "exception_type": "System.UnauthorizedAccessException",
+      "message": "Access to the path 'C:\\Users\\fmz\\AppData\\Local\\Temp\\fuc-unity6-policy-0175020af5f94faab1d1dad19d93d288\\Assets' is denied.",
+      "cleanup_failure": null
+    }
+  },
+  "meta": {
+    "warnings": [],
+    "truncation": {
+      "truncated": false,
+      "total_count": 0,
+      "cursor": null,
+      "full_output_path": null
+    },
+    "artifacts": null,
+    "project": null
+  }
+}

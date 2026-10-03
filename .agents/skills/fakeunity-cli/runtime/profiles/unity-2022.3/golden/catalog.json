@@ -1,0 +1,104 @@
+{
+  "catalog_version": "1.0",
+  "samples": [
+    {
+      "id": "dll-component-prefab-import-2022.3.62f3",
+      "path": "golden/dll-component-prefab-import-2022_3_62f3.json",
+      "category": "component-import",
+      "origin": "Unity 2022.3.62f3 batchmode verification",
+      "license_id": "project-internal",
+      "redistribution": "approved-with-profile-package",
+      "approved_by": "profile-maintainers",
+      "size": 106,
+      "sha256": "47d5afc350f68f5de98faa4994c6024aeaedf6fa922d7aeafdc6b55a8d61b6cd"
+    },
+    {
+      "id": "dll-monoscript-fileids-2022.3.62f3",
+      "path": "golden/dll-monoscript-fileids-2022_3_62f3.json",
+      "category": "dll-monoscript-fileid",
+      "origin": "Unity 2022.3.62f3 AssetDatabase probe",
+      "license_id": "project-internal",
+      "redistribution": "approved-with-profile-package",
+      "approved_by": "profile-maintainers",
+      "size": 709,
+      "sha256": "40b6c1ae3eb610f2cf285cfe7f2ab40f1b0aaa70db1f05a0c1c0bff1b73e09c8"
+    },
+    {
+      "id": "minimal-prefab",
+      "path": "golden/minimal-prefab.prefab",
+      "category": "prefab-roundtrip",
+      "origin": "FakeUnityCLI project-authored synthetic fixture",
+      "license_id": "project-internal",
+      "redistribution": "approved-with-profile-package",
+      "approved_by": "profile-maintainers",
+      "size": 705,
+      "sha256": "e3a685d41409efd2dfdd3c0f2885da08e1384b7283d72a87fecd9adb07b4a883"
+    },
+    {
+      "id": "prefab-compose-import-2022.3.62f3",
+      "path": "golden/prefab-compose-import-2022_3_62f3.json",
+      "category": "prefab-compose-import",
+      "origin": "Unity 2022.3.62f3 batchmode verification",
+      "license_id": "project-internal",
+      "redistribution": "approved-with-profile-package",
+      "approved_by": "profile-maintainers",
+      "size": 1740,
+      "sha256": "2a550526b9250a06f94fcca62860e4583c5c14a15062000660ead6a66242bbdc"
+    },
+    {
+      "id": "prefab-instance-lifecycle-import-2022.3.62f3",
+      "path": "golden/prefab-instance-lifecycle-import-2022_3_62f3.json",
+      "category": "prefab-instance-lifecycle",
+      "origin": "Unity 2022.3.62f3 batchmode verification",
+      "license_id": "project-internal",
+      "redistribution": "approved-with-profile-package",
+      "approved_by": "profile-maintainers",
+      "size": 1389,
+      "sha256": "eb84f36327fa0c3533e363c0b70d1ceb081cef7f58009c235625581ca2aad914"
+    },
+    {
+      "id": "primitive-import-2022.3.62f3",
+      "path": "golden/primitive-import-2022_3_62f3.json",
+      "category": "primitive-import",
+      "origin": "Unity 2022.3.62f3 GameObject.CreatePrimitive batchmode verification",
+      "license_id": "project-internal",
+      "redistribution": "approved-with-profile-package",
+      "approved_by": "profile-maintainers",
+      "size": 844,
+      "sha256": "bffb8810cf2f8e36b67f7b8485b5017944000107597f6a2f6834ba2cbce2fb60"
+    },
+    {
+      "id": "scene-lifecycle-import-2022.3.62f3",
+      "path": "golden/scene-lifecycle-import-2022_3_62f3.json",
+      "category": "scene-lifecycle",
+      "origin": "Unity 2022.3.62f3 batchmode verification",
+      "license_id": "project-internal",
+      "redistribution": "approved-with-profile-package",
+      "approved_by": "profile-maintainers",
+      "size": 1232,
+      "sha256": "d0f7bb6fb3d0ef65cab3bbc9974b55cb83bdbf69d25a290ef62cc2fcfd3ed74d"
+    },
+    {
+      "id": "ugui-image-component-import-2022.3.62f3",
+      "path": "golden/ugui-image-component-import-2022_3_62f3.json",
+      "category": "component-import",
+      "origin": "Unity 2022.3.62f3 batchmode verification",
+      "license_id": "project-internal",
+      "redistribution": "approved-with-profile-package",
+      "approved_by": "profile-maintainers",
+      "size": 120,
+      "sha256": "0fbe5ca6c3996609c3bdca1a6462a24f8e791a35587b9e50d4a000c4ba0135e4"
+    },
+    {
+      "id": "variant-override",
+      "path": "golden/variant-override.prefab",
+      "category": "variant-format",
+      "origin": "FakeUnityCLI project-authored synthetic fixture",
+      "license_id": "project-internal",
+      "redistribution": "approved-with-profile-package",
+      "approved_by": "profile-maintainers",
+      "size": 585,
+      "sha256": "abf5d4ef48fb724a5962962fdc0ac16ca75d57704cdbe09b2b78b245eb89d4f4"
+    }
+  ]
+}

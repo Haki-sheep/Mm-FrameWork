@@ -1,186 +1,154 @@
 namespace MieMieFrameWork
 {
-    using Cysharp.Threading.Tasks;
-    using MieMieFrameWork.Asset;
-    using MieMieFrameWork.Pool;
     using System;
+    using System.Threading;
+    using Cysharp.Threading.Tasks;
     using UnityEngine;
     using UnityEngine.Events;
 
     /// <summary>
-    /// 音频管理器 - 特效音（SFX）分部
+    /// 音频管理器 特效音请求与播放入口
     /// </summary>
     public partial class AudioManager
     {
-        #region 特效音量刷新
+        #region 兼容入口
 
         /// <summary>
-        /// 刷新所有正在播放的特效音的实际音量
+        /// 刷新特效音 Mixer 基准音量 不重复叠加总音量
         /// </summary>
-        private void ChangeEffectVolume()
-        {
-            // 倒序遍历以便安全移除空元素
-            for (int i = efAudioList.Count - 1; i >= 0; i--)
-            {
-                if (efAudioList[i] != null)
-                {
-                    SetEffectAudioPlay(efAudioList[i]);
-                }
-                else
-                {
-                    efAudioList.RemoveAt(i);
-                }
-            }
-        }
+        private void ChangeEffectVolume() => SetMixerVolume(EffectVolumeParameter, effectVolumeBaseNum);
+
+        /// <summary>
+        /// 播放一次特效音 支持外部 AudioClip 且不释放外部资源
+        /// </summary>
+        public void PlayOneShot(AudioClip clip, float volumeScale = 1, bool is3d = true,
+            Component component = null, UnityAction callBack = null, float callBackTime = 0)
+            => PlayEffect(clip, volumeScale, is3d, component, callBack, callBackTime);
+
+        /// <summary>
+        /// 播放一次特效音 支持 YooAsset 地址同步加载
+        /// </summary>
+        public void PlayOneShot(string clipPath, Component component = null, float volumeScale = 1,
+            bool is3d = true, UnityAction callBack = null, float callBacKTime = 0)
+            => PlayEffect(clipPath, component, volumeScale, is3d, callBack, callBacKTime);
+
+        /// <summary>
+        /// 播放一次特效音 2D UI 专用且禁用 3D 传播
+        /// </summary>
+        public void PlayOneShotWith2DUI(string clipPath, Component component = null, float volumeScale = 1,
+            UnityAction callBack = null, float callBacKTime = 0)
+            => PlayOneShot(clipPath, component, volumeScale, false, callBack, callBacKTime);
+
+        /// <summary>
+        /// 启动异步音效请求 保留现有无返回值业务入口
+        /// </summary>
+        public void PlayOneShotAsync(string clipPath, Component component = null, float volumeScale = 1,
+            bool is3d = true, UnityAction callBack = null, float callBackTime = 0)
+            => RequestEffectAsync(clipPath, component, volumeScale, is3d, callBack, callBackTime);
 
         #endregion
 
-        #region 特效音私有辅助
+        #region 可控播放
 
         /// <summary>
-        /// 配置单个特效音 AudioSource 的属性
+        /// 播放外部片段并返回本次句柄 超预算返回默认值 支持循环
         /// </summary>
-        /// <param name="efAudioSource">目标 AudioSource</param>
-        /// <param name="spatial">空间 Blend 值（0=2D, 1=3D）</param>
-        private void SetEffectAudioPlay(AudioSource efAudioSource, float spatial = 0)
+        public AudioPlaybackHandle PlayEffect(AudioClip clip, float volumeScale = 1, bool is3d = true,
+            Component component = null, UnityAction callBack = null, float callBackTime = 0, bool loop = false)
         {
-            efAudioSource.mute = isMute;
-            // 特效音实际音量 = 特效基准音量 * 全局系数
-            efAudioSource.volume = effectVolumeBaseNum * globalVolumeFactor;
-
-            if (spatial != 0)
-            {
-                efAudioSource.spatialBlend = spatial;
-            }
-
-            if (IsPause)
-                efAudioSource.Pause();
-            else
-                efAudioSource.UnPause();
-        }
-
-        /// <summary>
-        /// 从对象池获取一个特效音 AudioSource
-        /// </summary>
-        /// <param name="is3d">是否为 3D 声音</param>
-        private AudioSource GetEfAudio(bool is3d)
-        {
-            if (EffectClipRoot == null)
-            {
-                EffectClipRoot = serviceRoot.Find("EffectRoot");
-            }
-
-            AudioSource ef = effectPoolHandle.Get<AudioSource>(EffectClipRoot);
+            RequireActive();
+            var Playback = ReserveEffect(clip, callBack, callBackTime);
+            if (Playback == null) return default;
+            bool Started = false;
             try
             {
-                if (ef != null)
-                {
-                    SetEffectAudioPlay(ef, is3d ? 1 : 0);
-                    efAudioList.Add(ef);
-                    return ef;
-                }
+                Started = StartEffect(Playback, clip, volumeScale, is3d, component, loop);
+                return Started ? new AudioPlaybackHandle(this, Playback.Id) : default;
             }
-            catch (Exception e)
+            finally
             {
-                Debug.LogError("获取特效声音组件失败: " + e.Message);
+                if (!Started) ReleaseEffect(Playback);
             }
-            return null;
         }
 
         /// <summary>
-        /// 异步回收特效音播放器并触发回调
+        /// 同步加载并播放音效 返回可停止查询的本次句柄
         /// </summary>
-        private async UniTaskVoid DoRecycleAudioPlay(AudioSource audioSource, AudioClip clip, UnityAction callBak, float time)
+        public AudioPlaybackHandle PlayEffect(string clipPath, Component component = null, float volumeScale = 1,
+            bool is3d = true, UnityAction callBack = null, float callBackTime = 0, bool loop = false)
         {
-            // 等待音频播放完成
-            await UniTask.WaitForSeconds(clip.length);
-
-            if (audioSource != null)
+            RequireActive();
+            var Playback = ReserveEffect(clipPath, callBack, callBackTime);
+            if (Playback == null) return default;
+            Playback.Lease = new AudioClipLease(clipPath);
+            bool Started = false;
+            try
             {
-                if (efAudioList.Contains(audioSource))
-                    efAudioList.Remove(audioSource);
-
-                effectPoolHandle.Release(audioSource);
-
-                // 等待指定延迟后执行回调
-                await UniTask.Delay(
-                        TimeSpan.FromSeconds(time), ignoreTimeScale: true).
-                            ContinueWith(() => callBak?.Invoke()
-                    );
+                var Clip = Playback.Lease.Load();
+                Started = StartEffect(Playback, Clip, volumeScale, is3d, component, loop);
+                return Started ? new AudioPlaybackHandle(this, Playback.Id) : default;
             }
+            finally
+            {
+                if (!Started) ReleaseEffect(Playback);
+            }
+        }
+
+        /// <summary>
+        /// 提交异步加载立即返回句柄 加载中也可停止或暂停 错误交给 UniTask 上报
+        /// </summary>
+        public AudioPlaybackHandle RequestEffectAsync(string clipPath, Component component = null, float volumeScale = 1,
+            bool is3d = true, UnityAction callBack = null, float callBackTime = 0, bool loop = false)
+        {
+            RequireActive();
+            var Playback = ReserveEffect(clipPath, callBack, callBackTime);
+            if (Playback == null) return default;
+            LoadEffectAsync(Playback, clipPath, component, volumeScale, is3d, loop, default).Forget();
+            return new AudioPlaybackHandle(this, Playback.Id);
+        }
+
+        /// <summary>
+        /// 等待加载并返回已启动的播放句柄 外部取消抛出取消异常
+        /// </summary>
+        public async UniTask<AudioPlaybackHandle> PlayEffectAsync(string clipPath, Component component = null,
+            float volumeScale = 1, bool is3d = true, UnityAction callBack = null, float callBackTime = 0,
+            bool loop = false, CancellationToken cancellationToken = default)
+        {
+            RequireActive();
+            cancellationToken.ThrowIfCancellationRequested();
+            var Playback = ReserveEffect(clipPath, callBack, callBackTime);
+            if (Playback == null) return default;
+            return await LoadEffectAsync(Playback, clipPath, component, volumeScale, is3d, loop, cancellationToken);
         }
 
         #endregion
 
-        #region 特效音乐控制
+        #region 异步加载
 
         /// <summary>
-        /// 播放一次特效音（支持 AudioClip）
+        /// 加载期间预留预算 取消停止或退出均释放预留且不继续播放
         /// </summary>
-        /// <param name="clip">音频片段</param>
-        /// <param name="volumeScale">音量缩放（相对于特效基准音量）</param>
-        /// <param name="is3d">是否 3D</param>
-        /// <param name="component">跟随目标组件（为 null 则跟随 AudioManager 本身）</param>
-        /// <param name="callBack">播放完成回调</param>
-        /// <param name="callBackTime">回调延迟时间</param>
-        public void PlayOneShot(AudioClip clip,
-            float volumeScale = 1,
-            bool is3d = true,
-            Component component = null,
-            UnityAction callBack = null,
-            float callBackTime = 0)
+        private async UniTask<AudioPlaybackHandle> LoadEffectAsync(EffectPlayback playback, string location,
+            Component component, float volumeScale, bool is3d, bool loop, CancellationToken cancellationToken)
         {
-            AudioSource audioSource = GetEfAudio(is3d);
-            if (audioSource == null) return;
-
-            if (component != null)
+            playback.Cancellation = CancellationTokenSource.CreateLinkedTokenSource(lifetimeCancellation.Token, cancellationToken);
+            var Token = playback.Cancellation.Token;
+            playback.Lease = new AudioClipLease(location);
+            bool Started = false;
+            try
             {
-                audioSource.transform.SetParent(component.transform);
-                audioSource.transform.localPosition = Vector3.zero;
+                var Clip = await playback.Lease.LoadAsync(Token);
+                Token.ThrowIfCancellationRequested();
+                Started = StartEffect(playback, Clip, volumeScale, is3d, component, loop);
+                return Started ? new AudioPlaybackHandle(this, playback.Id) : default;
             }
-            else
+            catch (OperationCanceledException) when (Token.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
             {
-                audioSource.transform.position = serviceRoot.position;
+                return default;
             }
-
-            audioSource.PlayOneShot(clip, volumeScale);
-            DoRecycleAudioPlay(audioSource, clip, callBack, callBackTime).Forget();
-        }
-
-        /// <summary>
-        /// 播放一次特效音（支持 Addressable 路径同步加载）
-        /// </summary>
-        public void PlayOneShot(string clipPath, Component component = null,
-                    float volumeScale = 1, bool is3d = true, UnityAction callBack = null, float callBacKTime = 0)
-        {
-            AudioClip audioClip = MmAssetMgr.LoadAsset<AudioClip>(clipPath);
-            if (audioClip != null) PlayOneShot(audioClip, volumeScale, is3d, component, callBack, callBacKTime);
-        }
-
-        /// <summary>
-        /// 播放一次特效音（2D UI 专用，自动禁用 3D 传播）
-        /// </summary>
-        public void PlayOneShotWith2DUI(string clipPath, Component component = null,
-                    float volumeScale = 1, UnityAction callBack = null, float callBacKTime = 0)
-        {
-            PlayOneShot(clipPath, component: component, volumeScale: volumeScale, is3d: false,
-                                                        callBack: callBack, callBacKTime: callBacKTime);
-        }
-
-        /// <summary>
-        /// 播放一次特效音（异步加载）
-        /// </summary>
-        public async void PlayOneShotAsync(string clipPath,
-            Component component = null,
-            float volumeScale = 1,
-            bool is3d = true,
-            UnityAction callBack = null,
-            float callBackTime = 0)
-        {
-            AudioClip audioClip = await MmAssetMgr.LoadAssetAsync<AudioClip>(clipPath);
-            if (audioClip != null)
+            finally
             {
-                PlayOneShot(audioClip, volumeScale, is3d, component, callBack, callBackTime);
+                if (!Started) ReleaseEffect(playback);
             }
         }
 

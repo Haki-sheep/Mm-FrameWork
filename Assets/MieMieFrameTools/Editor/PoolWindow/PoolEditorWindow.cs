@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using MieMieFrameWork;
-using MieMieFrameWork.Asset;
 using MieMieFrameWork.Pool;
 using UnityEditor;
 using UnityEngine;
@@ -16,22 +15,22 @@ namespace MieMieFrameWork.Editor.PoolEditor
         private enum E_Tab
         {
             Dashboard,
-            MmAssetPool,
             Prewarm
         }
 
         private E_Tab currentTab = E_Tab.Dashboard;
         private Vector2 scrollPos;
         private readonly List<GameObjPoolReporter> poolInfoList = new();
-        private readonly List<MmAssetPoolReporter> mmAssetPoolInfoList = new();
         private readonly List<PrewarmPresetEntry> prewarmPresetList = new();
 
         private GameObject prewarmPrefab;
         private int prewarmCount = 10;
-        private int prewarmMaxSize = 50;
+        private int prewarmMaxSize = ObjectPool.DefaultMaxInactive;
         private int burstCount = 20;
         private bool autoPrewarmOnPlay;
         private double lastRefreshTime;
+
+        #region 编辑器功能
 
         public static void Open()
         {
@@ -63,7 +62,7 @@ namespace MieMieFrameWork.Editor.PoolEditor
         private void OnEditorUpdate()
         {
             if (!Application.isPlaying
-                || (currentTab != E_Tab.Dashboard && currentTab != E_Tab.MmAssetPool))
+                || currentTab != E_Tab.Dashboard)
                 return;
 
             if (EditorApplication.timeSinceStartup - lastRefreshTime > 0.25d)
@@ -84,7 +83,7 @@ namespace MieMieFrameWork.Editor.PoolEditor
             EditorGUILayout.Space(4);
             currentTab = (E_Tab)GUILayout.Toolbar(
                 (int)currentTab,
-                new[] { "实时监控", "MmAsset 资源池", "预热工坊" });
+                new[] { "实时监控", "预热工坊" });
             EditorGUILayout.Space(6);
 
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
@@ -92,9 +91,6 @@ namespace MieMieFrameWork.Editor.PoolEditor
             {
                 case E_Tab.Dashboard:
                     DrawDashboardTab();
-                    break;
-                case E_Tab.MmAssetPool:
-                    DrawMmAssetPoolTab();
                     break;
                 case E_Tab.Prewarm:
                     DrawPrewarmTab();
@@ -154,71 +150,9 @@ namespace MieMieFrameWork.Editor.PoolEditor
             }
 
             EditorGUILayout.Space(4);
-            EditorGUILayout.LabelField($"汇总  借出 {totalActive}  闲置 {totalPooled}  累计 {totalCreated}  池数 {poolInfoList.Count}", EditorStyles.helpBox);
+            EditorGUILayout.LabelField($"汇总  借出 {totalActive}  闲置 {totalPooled}  存活 {totalCreated}  池数 {poolInfoList.Count}", EditorStyles.helpBox);
         }
 
-        private void DrawMmAssetPoolTab()
-        {
-            if (!Application.isPlaying)
-            {
-                EditorGUILayout.HelpBox("进入 Play 模式后查看 MmAsset 资源池状态", MessageType.Info);
-                return;
-            }
-
-            MmAssetFrame mmAssetFrame = MmAssetFrame.Instance;
-            if (mmAssetFrame == null || mmAssetFrame.Resources == null)
-            {
-                EditorGUILayout.HelpBox("运行时未找到 MmAsset 资源服务", MessageType.Warning);
-                return;
-            }
-
-            IResourcesInterface resources = mmAssetFrame.Resources;
-            resources.CollectPoolInfoList(mmAssetPoolInfoList);
-
-            int totalActive = 0;
-            int totalPooled = 0;
-            int totalCreated = 0;
-            for (int i = 0; i < mmAssetPoolInfoList.Count; i++)
-            {
-                MmAssetPoolReporter info = mmAssetPoolInfoList[i];
-                totalActive += info.ActiveCount;
-                totalPooled += info.PooledCount;
-                totalCreated += info.TotalCreated;
-            }
-
-            EditorGUILayout.LabelField(
-                $"资源缓存 {resources.LoadedAssetCount}  资源实例池 {mmAssetPoolInfoList.Count}",
-                EditorStyles.helpBox);
-
-            if (mmAssetPoolInfoList.Count == 0)
-            {
-                EditorGUILayout.HelpBox("暂无 MmAsset 实例池 先通过 MmAsset 实例化或预加载一次", MessageType.None);
-                return;
-            }
-
-            for (int i = 0; i < mmAssetPoolInfoList.Count; i++)
-            {
-                MmAssetPoolReporter info = mmAssetPoolInfoList[i];
-                using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
-                {
-                    string resourceName = string.IsNullOrEmpty(info.ResourcePath)
-                        ? $"CRC {info.PoolKey}"
-                        : info.ResourcePath;
-                    EditorGUILayout.LabelField(resourceName, EditorStyles.boldLabel);
-                    DrawBar("活跃", info.ActiveCount, info.TotalCreated, new Color(1f, 0.55f, 0.2f));
-                    DrawBar("闲置", info.PooledCount, info.TotalCreated, new Color(0.3f, 0.75f, 1f));
-                    EditorGUILayout.LabelField(
-                        $"CRC {info.PoolKey}  活跃 {info.ActiveCount}  闲置 {info.PooledCount}",
-                        EditorStyles.miniLabel);
-                }
-
-                EditorGUILayout.Space(4);
-            }
-
-            EditorGUILayout.LabelField(
-                $"汇总  活跃 {totalActive}  闲置 {totalPooled}  累计 {totalCreated}",
-                EditorStyles.helpBox);
-        }
 
         private void DrawPoolInfoCard(GameObjPoolReporter info)
         {
@@ -230,14 +164,16 @@ namespace MieMieFrameWork.Editor.PoolEditor
                     GUILayout.FlexibleSpace();
                     Color old = GUI.color;
                     GUI.color = GetUsageColor(info.UsageRate);
-                    EditorGUILayout.LabelField($"{info.TotalCreated}/{info.MaxSize}", GUILayout.Width(70f));
+                    EditorGUILayout.LabelField($"闲置 {info.PooledCount}/{info.MaxInactive}", GUILayout.Width(100f));
                     GUI.color = old;
                 }
 
-                DrawBar("借出", info.ActiveCount, info.MaxSize, new Color(1f, 0.55f, 0.2f));
-                DrawBar("闲置", info.PooledCount, info.MaxSize, new Color(0.3f, 0.75f, 1f));
-                DrawBar("容量", info.TotalCreated, info.MaxSize, new Color(0.45f, 0.9f, 0.5f));
-                EditorGUILayout.LabelField($"Key {info.PoolKey}  借出 {info.ActiveCount}  闲置 {info.PooledCount}", EditorStyles.miniLabel);
+                int TotalLimit = info.MaxTotal > 0 ? info.MaxTotal : info.TotalCreated;
+                DrawBar("借出", info.ActiveCount, TotalLimit, new Color(1f, 0.55f, 0.2f));
+                DrawBar("闲置", info.PooledCount, info.MaxInactive, new Color(0.3f, 0.75f, 1f));
+                DrawBar("存活", info.TotalCreated, TotalLimit, new Color(0.45f, 0.9f, 0.5f));
+                string LimitText = info.MaxTotal > 0 ? info.MaxTotal.ToString() : "不限制";
+                EditorGUILayout.LabelField($"Key {info.PoolKey}  借出 {info.ActiveCount}  总量上限 {LimitText}", EditorStyles.miniLabel);
             }
         }
 
@@ -267,7 +203,7 @@ namespace MieMieFrameWork.Editor.PoolEditor
             EditorGUILayout.LabelField("快速预热", EditorStyles.boldLabel);
             prewarmPrefab = (GameObject)EditorGUILayout.ObjectField("预制体", prewarmPrefab, typeof(GameObject), false);
             prewarmCount = EditorGUILayout.IntField("预热数量", Mathf.Max(0, prewarmCount));
-            prewarmMaxSize = EditorGUILayout.IntField("池上限", Mathf.Max(1, prewarmMaxSize));
+            prewarmMaxSize = EditorGUILayout.IntField("缓存与总量上限", Mathf.Max(1, prewarmMaxSize));
 
             using (new EditorGUILayout.HorizontalScope())
             {
@@ -334,6 +270,9 @@ namespace MieMieFrameWork.Editor.PoolEditor
             Debug.Log($"[PoolEditor] 预热完成 {prefab.name} x{count}");
         }
 
+        /// <summary>
+        /// 连续租借测试容量 回收所有本次实例并汇总获取与清理错误
+        /// </summary>
         private void RunBurstTest(GameObject prefab, int count, int maxSize)
         {
             if (prefab == null)
@@ -343,15 +282,54 @@ namespace MieMieFrameWork.Editor.PoolEditor
             if (poolMgr == null)
                 return;
 
-            PoolHandle poolHandle = poolMgr.GetPool(prefab, maxSize);
-            int success = 0;
-            for (int i = 0; i < count; i++)
+            var Handle = poolMgr.GetPool(prefab, maxSize);
+            int Success = 0;
+            using (UnityEngine.Pool.ListPool<PressureLease>.Get(out var BorrowedList))
+            using (UnityEngine.Pool.ListPool<Exception>.Get(out var ErrorList))
             {
-                if (poolHandle.Get() != null)
-                    success++;
+                try
+                {
+                    for (int Index = 0; Index < count; Index++)
+                    {
+                        var Value = Handle.Get(activate: false);
+                        if (Value == null)
+                            break;
+                        BorrowedList.Add(new PressureLease(Value, Handle.GetLeaseVersion(Value)));
+                        Success++;
+                    }
+                }
+                catch (Exception Exception)
+                {
+                    ErrorList.Add(Exception);
+                }
+                finally
+                {
+                    foreach (var Lease in BorrowedList)
+                    {
+                        try
+                        {
+                            if (!Handle.TryRelease(Lease.Instance, Lease.Version))
+                                throw new InvalidOperationException($"[PoolEditor] 压力实例租借已失效 {prefab.name}");
+                        }
+                        catch (Exception Exception)
+                        {
+                            ErrorList.Add(Exception);
+                            try
+                            {
+                                Handle.DiscardAfterFailedRelease(Lease.Instance, Lease.Version);
+                            }
+                            catch (Exception CleanupException)
+                            {
+                                ErrorList.Add(CleanupException);
+                            }
+                        }
+                    }
+                }
+                if (ErrorList.Count > 0)
+                    throw new AggregateException($"[PoolEditor] 压力操作失败 {prefab.name}", ErrorList);
             }
 
-            Debug.Log($"[PoolEditor] 压力连取 {prefab.name} 请求 {count} 成功 {success}");
+            Debug.Log($"[PoolEditor] 压力连取 {prefab.name} 请求 {count} 成功 {Success} 已归还全部实例");
         }
 
         private void RunAllPrewarmPresets()
@@ -430,12 +408,29 @@ namespace MieMieFrameWork.Editor.PoolEditor
             EditorPrefs.SetString(PrewarmPrefsKey, JsonUtility.ToJson(wrapper));
         }
 
+        #endregion
+
+        private readonly struct PressureLease
+        {
+            public GameObject Instance { get; }
+            public ulong Version { get; }
+
+            /// <summary>
+            /// 保存本次压力实例与租借轮次
+            /// </summary>
+            public PressureLease(GameObject instance, ulong version)
+            {
+                Instance = instance;
+                Version = version;
+            }
+        }
+
         [Serializable]
         private class PrewarmPresetEntry
         {
             public string prefabGuid;
             public int count = 10;
-            public int maxSize = 50;
+            public int maxSize = ObjectPool.DefaultMaxInactive;
         }
 
         [Serializable]

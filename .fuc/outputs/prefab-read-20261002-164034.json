@@ -1,0 +1,222 @@
+﻿{
+  "file": "Assets/MieMieFrameTools/ADefaultRes/FramePrefabs/FrameRoot.prefab",
+  "resolved_asset_path": "Assets/MieMieFrameTools/ADefaultRes/FramePrefabs/FrameRoot.prefab",
+  "kind": "prefab",
+  "stats": {
+    "gameobjects": 6,
+    "components": 10,
+    "prefab_instances": 0,
+    "documents": 16,
+    "has_scene_roots": false,
+    "depth_limit": 4,
+    "depth_truncated_children": 0
+  },
+  "tree": [
+    {
+      "type": "gameobject",
+      "name": "FrameRoot",
+      "active": true,
+      "file_id": 1875632843843946708,
+      "components": [
+        {
+          "type": "Transform",
+          "class_id": 4,
+          "file_id": 1998272896780071737,
+          "script": null,
+          "script_guid": null,
+          "script_file_id": null,
+          "script_dll_internal": false,
+          "summary": {
+            "m_LocalPosition": "(0, 0, 0)",
+            "m_LocalRotation": "(0, 0, 0, 1)",
+            "m_LocalScale": "(1, 1, 1)"
+          },
+          "fields": null
+        },
+        {
+          "type": "MonoBehaviour",
+          "class_id": 114,
+          "file_id": 5584570498925309000,
+          "script": "Assets/MieMieFrameTools/Scripts/Frame/A_Frame/Frame/ModuleHub.cs",
+          "script_guid": "1632e6c60d6f50845937fe7aa4d7235a",
+          "script_file_id": 11500000,
+          "script_dll_internal": false,
+          "summary": {
+            "m_Enabled": "1"
+          },
+          "fields": null
+        },
+        {
+          "type": "MonoBehaviour",
+          "class_id": 114,
+          "file_id": 6241937801360263188,
+          "script": "Assets/MieMieFrameTools/Scripts/Frame/C_Data/Luban/LubanConfigModule.cs",
+          "script_guid": "847f0daa4fe0496aa143357ba5e67915",
+          "script_file_id": 11500000,
+          "script_dll_internal": false,
+          "summary": {
+            "m_Enabled": "1"
+          },
+          "fields": null
+        }
+      ],
+      "children": [
+        {
+          "type": "gameobject",
+          "name": "PoolRoot",
+          "active": true,
+          "file_id": 2397423521224059995,
+          "components": [
+            {
+              "type": "Transform",
+              "class_id": 4,
+              "file_id": 5836662951699793031,
+              "script": null,
+              "script_guid": null,
+              "script_file_id": null,
+              "script_dll_internal": false,
+              "summary": {
+                "m_LocalPosition": "(0, 0, 0)",
+                "m_LocalRotation": "(-0, -0, -0, 1)",
+                "m_LocalScale": "(1, 1, 1)"
+              },
+              "fields": null
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "gameobject",
+          "name": "AudioMixers",
+          "active": true,
+          "file_id": 6822662606574326724,
+          "components": [
+            {
+              "type": "Transform",
+              "class_id": 4,
+              "file_id": 3500662381957392522,
+              "script": null,
+              "script_guid": null,
+              "script_file_id": null,
+              "script_dll_internal": false,
+              "summary": {
+                "m_LocalPosition": "(0, 0, 0)",
+                "m_LocalRotation": "(-0, -0, -0, 1)",
+                "m_LocalScale": "(1, 1, 1)"
+              },
+              "fields": null
+            }
+          ],
+          "children": [
+            {
+              "type": "gameobject",
+              "name": "Groups",
+              "active": true,
+              "file_id": 191572968690961698,
+              "components": [
+                {
+                  "type": "Transform",
+                  "class_id": 4,
+                  "file_id": 5817671170270508172,
+                  "script": null,
+                  "script_guid": null,
+                  "script_file_id": null,
+                  "script_dll_internal": false,
+                  "summary": {
+                    "m_LocalPosition": "(0, 0, 0)",
+                    "m_LocalRotation": "(0, 0, 0, 1)",
+                    "m_LocalScale": "(1, 1, 1)"
+                  },
+                  "fields": null
+                }
+              ],
+              "children": [
+                {
+                  "type": "gameobject",
+                  "name": "BGM",
+                  "active": true,
+                  "file_id": 1142221032695910746,
+                  "components": [
+                    {
+                      "type": "Transform",
+                      "class_id": 4,
+                      "file_id": 8854677927054973890,
+                      "script": null,
+                      "script_guid": null,
+                      "script_file_id": null,
+                      "script_dll_internal": false,
+                      "summary": {
+                        "m_LocalPosition": "(0, 0, 0)",
+                        "m_LocalRotation": "(0, 0, 0, 1)",
+                        "m_LocalScale": "(1, 1, 1)"
+                      },
+                      "fields": null
+                    },
+                    {
+                      "type": "AudioSource",
+                      "class_id": 82,
+                      "file_id": 1563131090535853220,
+                      "script": null,
+                      "script_guid": null,
+                      "script_file_id": null,
+                      "script_dll_internal": false,
+                      "summary": {
+                        "m_audioClip": "fileID:0",
+                        "m_Volume": "1",
+                        "m_PlayOnAwake": "0",
+                        "Loop": "1"
+                      },
+                      "fields": null
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "gameobject",
+                  "name": "Ambience",
+                  "active": true,
+                  "file_id": 1716885435078574583,
+                  "components": [
+                    {
+                      "type": "Transform",
+                      "class_id": 4,
+                      "file_id": 3259613993754158632,
+                      "script": null,
+                      "script_guid": null,
+                      "script_file_id": null,
+                      "script_dll_internal": false,
+                      "summary": {
+                        "m_LocalPosition": "(0, 0, 0)",
+                        "m_LocalRotation": "(0, 0, 0, 1)",
+                        "m_LocalScale": "(1, 1, 1)"
+                      },
+                      "fields": null
+                    },
+                    {
+                      "type": "AudioSource",
+                      "class_id": 82,
+                      "file_id": 8374092957814860009,
+                      "script": null,
+                      "script_guid": null,
+                      "script_file_id": null,
+                      "script_dll_internal": false,
+                      "summary": {
+                        "m_audioClip": "fileID:0",
+                        "m_Volume": "0.8",
+                        "m_PlayOnAwake": "0",
+                        "Loop": "1"
+                      },
+                      "fields": null
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "singletons": []
+}

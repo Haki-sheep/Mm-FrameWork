@@ -1,0 +1,59 @@
+{
+  "manifest_version": "1.0",
+  "profile_id": "unity-2021.3",
+  "package_version": "1.0.0-readonly",
+  "covered_versions": [
+    "2021.3"
+  ],
+  "content_policy": "offline-only; no Unity DLL, UnityEditor, license, Console log, Profiler data, or internal corpus",
+  "files": [
+    {
+      "path": "classid-map.json",
+      "role": "format_snapshot",
+      "size": 349,
+      "sha256": "52f61ec5d44c7f25b79eca8d0814058b07afe04903e019eef2621a6e83de1376"
+    },
+    {
+      "path": "golden/catalog.json",
+      "role": "golden_sample",
+      "size": 487,
+      "sha256": "a1563978f5bc4b2a5af8981eedc7094c13a753cb8cadba0fb185a81fcd710c91"
+    },
+    {
+      "path": "golden/minimal-2021.prefab",
+      "role": "golden_sample",
+      "size": 292,
+      "sha256": "2ee7fb96af690214c35e8dc3b5bcfb0735c28ee4dde193bb143fd840d1ed7c47"
+    },
+    {
+      "path": "profile.json",
+      "role": "format_snapshot",
+      "size": 595,
+      "sha256": "bd2134889c1d87e3a7b1879b15f99ffe59222e330adf2cb871cdaa18c9365681"
+    },
+    {
+      "path": "struct-features.json",
+      "role": "format_snapshot",
+      "size": 454,
+      "sha256": "0730e22aa765a15a04894c06fe7fe9e27ce5c65caaffc6bb12d9d44fca952ede"
+    },
+    {
+      "path": "tests/console-tests.json",
+      "role": "console_test_description",
+      "size": 485,
+      "sha256": "964407484e73df45d05d53d36b8566eae087eac894b85e7b35d0b42a7ff20a79"
+    },
+    {
+      "path": "typetree/components/gameobject.json",
+      "role": "typetree",
+      "size": 530,
+      "sha256": "a09836c18ad75808b33f417216d6639683c780c2cb14967c30cad0fa6bbbe525"
+    },
+    {
+      "path": "typetree/manifest.json",
+      "role": "typetree",
+      "size": 293,
+      "sha256": "8b0e1b7063b0035fcbf9eea903edad2e21288a973cb041fd09d6dfcaf707ffdd"
+    }
+  ]
+}

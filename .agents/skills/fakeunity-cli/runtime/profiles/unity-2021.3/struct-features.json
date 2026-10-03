@@ -1,0 +1,17 @@
+{
+  "scene_roots": {
+    "class_id": 1660057539,
+    "expected": "absent",
+    "comment": "2021.3 场景无 SceneRoots 文档"
+  },
+  "m_modification_serialized_version": {
+    "expected": 2,
+    "comment": "2021 代 PrefabInstance m_Modification 版本"
+  },
+  "references_version": {
+    "expected": 2,
+    "comment": "2021.2+ SerializeReference references 版本"
+  },
+  "m_component_syntax": "- component:",
+  "root_order": "Transform.m_RootOrder"
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "FakeUnityCLI"
+  short_description: "通过 CLI 检查 Unity 工程并使用实验性 U6 Editor Bridge"
+  default_prompt: "使用 $fakeunity-cli，只通过内置 FakeUnityCLI 检查或修改这个 Unity 工程。"

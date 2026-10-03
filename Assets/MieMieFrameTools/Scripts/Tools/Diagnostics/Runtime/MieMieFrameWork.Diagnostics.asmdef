@@ -1,0 +1,6 @@
+{
+    "name": "MieMieFrameWork.Diagnostics",
+    "rootNamespace": "MieMieFrameWork.Diagnostics",
+    "references": [],
+    "autoReferenced": true
+}

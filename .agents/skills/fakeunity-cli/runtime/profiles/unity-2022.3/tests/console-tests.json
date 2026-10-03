@@ -1,0 +1,37 @@
+{
+  "test_description_version": "1.0",
+  "runner": "console",
+  "offline_only": true,
+  "tests": [
+    {
+      "id": "profile-load",
+      "kind": "profile_load",
+      "target": "profile.json",
+      "assert": "id=unity-2022.3; covered_versions contains 2022.3"
+    },
+    {
+      "id": "typetree-schema",
+      "kind": "schema_lookup",
+      "target": "typetree/components/gameobject.json",
+      "assert": "UnityEngine.GameObject type_id=1"
+    },
+    {
+      "id": "golden-roundtrip",
+      "kind": "yaml_byte_roundtrip",
+      "target": "golden/minimal-prefab.prefab",
+      "assert": "parse and serialize bytes are identical"
+    },
+    {
+      "id": "variant-format",
+      "kind": "variant_override_shape",
+      "target": "golden/variant-override.prefab",
+      "assert": "m_Modification serializedVersion=3 and target identity is preserved"
+    },
+    {
+      "id": "tamper-rejection",
+      "kind": "package_integrity",
+      "target": "release-manifest.sha256",
+      "assert": "single-byte mutation is rejected before profile load"
+    }
+  ]
+}

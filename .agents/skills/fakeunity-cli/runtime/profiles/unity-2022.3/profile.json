@@ -1,0 +1,18 @@
+{
+  "id": "unity-2022.3",
+  "covered_versions": ["2022.3"],
+  "support_level": "full",
+  "lts": true,
+  "notes": "2022.3 LTS 内部格式稳定（LTS 内 serializedVersion 不 bump，r1 §7.4）；Profile 按大版本粒度设计；新 Profile 必须黄金样本回归验证后才开放写入（r6 §1-#8）",
+  "write_policy": {
+    "hard_gate": "FUC_VERSION_UNSUPPORTED",
+    "exit_code": 73,
+    "comment": "写入需精确落入 covered_versions；不在支持列表但结构兼容的版本只读降级开放；本期（P0）全部只读，拒写钩子供 P1 写入动词接入"
+  },
+  "struct_features": "struct-features.json",
+  "classid_map": "classid-map.json",
+  "typetree": "typetree",
+  "golden": "golden",
+  "console_tests": "tests/console-tests.json",
+  "release_manifest": "release-manifest.json"
+}

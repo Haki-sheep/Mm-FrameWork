@@ -1,0 +1,167 @@
+{
+  "manifest_version": "1.0",
+  "profile_id": "unity-2022.3",
+  "package_version": "1.5",
+  "covered_versions": [
+    "2022.3"
+  ],
+  "content_policy": "offline-only; no Unity DLL, UnityEditor, license, Console log, Profiler data, or internal corpus",
+  "files": [
+    {
+      "path": "classid-map.json",
+      "role": "format_snapshot",
+      "size": 10385,
+      "sha256": "77025d6e431f74e6e2c7afbac75cef4236fb25c865f607229e093437ae9aea32"
+    },
+    {
+      "path": "golden/catalog.json",
+      "role": "golden_sample",
+      "size": 4273,
+      "sha256": "85bcd470598579fcccdb22ebb96e1ab72619c6f349bbeba09426903c583ba71e"
+    },
+    {
+      "path": "golden/dll-component-prefab-import-2022_3_62f3.json",
+      "role": "golden_sample",
+      "size": 106,
+      "sha256": "47d5afc350f68f5de98faa4994c6024aeaedf6fa922d7aeafdc6b55a8d61b6cd"
+    },
+    {
+      "path": "golden/dll-monoscript-fileids-2022_3_62f3.json",
+      "role": "golden_sample",
+      "size": 709,
+      "sha256": "40b6c1ae3eb610f2cf285cfe7f2ab40f1b0aaa70db1f05a0c1c0bff1b73e09c8"
+    },
+    {
+      "path": "golden/minimal-prefab.prefab",
+      "role": "golden_sample",
+      "size": 705,
+      "sha256": "e3a685d41409efd2dfdd3c0f2885da08e1384b7283d72a87fecd9adb07b4a883"
+    },
+    {
+      "path": "golden/prefab-compose-import-2022_3_62f3.json",
+      "role": "golden_sample",
+      "size": 1740,
+      "sha256": "2a550526b9250a06f94fcca62860e4583c5c14a15062000660ead6a66242bbdc"
+    },
+    {
+      "path": "golden/prefab-instance-lifecycle-import-2022_3_62f3.json",
+      "role": "golden_sample",
+      "size": 1389,
+      "sha256": "eb84f36327fa0c3533e363c0b70d1ceb081cef7f58009c235625581ca2aad914"
+    },
+    {
+      "path": "golden/primitive-import-2022_3_62f3.json",
+      "role": "golden_sample",
+      "size": 844,
+      "sha256": "bffb8810cf2f8e36b67f7b8485b5017944000107597f6a2f6834ba2cbce2fb60"
+    },
+    {
+      "path": "golden/scene-lifecycle-import-2022_3_62f3.json",
+      "role": "golden_sample",
+      "size": 1232,
+      "sha256": "d0f7bb6fb3d0ef65cab3bbc9974b55cb83bdbf69d25a290ef62cc2fcfd3ed74d"
+    },
+    {
+      "path": "golden/ugui-image-component-import-2022_3_62f3.json",
+      "role": "golden_sample",
+      "size": 120,
+      "sha256": "0fbe5ca6c3996609c3bdca1a6462a24f8e791a35587b9e50d4a000c4ba0135e4"
+    },
+    {
+      "path": "golden/variant-override.prefab",
+      "role": "golden_sample",
+      "size": 585,
+      "sha256": "abf5d4ef48fb724a5962962fdc0ac16ca75d57704cdbe09b2b78b245eb89d4f4"
+    },
+    {
+      "path": "profile.json",
+      "role": "format_snapshot",
+      "size": 813,
+      "sha256": "6a2f4cb7f7d683138c9499cd3a69fa75d8a60118b8a25e89589c2250cfd86ce0"
+    },
+    {
+      "path": "struct-features.json",
+      "role": "format_snapshot",
+      "size": 735,
+      "sha256": "7a8f59b59cc6612c1f588727b48acd0c4a4ef817dc38ac852af6683cedf61dc0"
+    },
+    {
+      "path": "tests/console-tests.json",
+      "role": "console_test_description",
+      "size": 1057,
+      "sha256": "9dc43d91c998657216612e2111fe7f737326b95da45863a32bd297ab06d782ba"
+    },
+    {
+      "path": "typetree/components/animator.json",
+      "role": "typetree",
+      "size": 2368,
+      "sha256": "8721f9cd09aaa50ff832a0bf9bd145d903e4e68049f2365fd8160ff7d25ae604"
+    },
+    {
+      "path": "typetree/components/audiosource.json",
+      "role": "typetree",
+      "size": 11137,
+      "sha256": "2db4366f2dab7c1859f9b14775e0e5a10b612c4a60847a2d0b36ecc049b3c6b0"
+    },
+    {
+      "path": "typetree/components/boxcollider.json",
+      "role": "typetree",
+      "size": 2757,
+      "sha256": "378323882c7643b0f73be77d10f62fa55cf2bc4466f5c692382f49ff93c3731d"
+    },
+    {
+      "path": "typetree/components/camera.json",
+      "role": "typetree",
+      "size": 6250,
+      "sha256": "14a700f09d63a103935bdb554553c0cea31e20952db30c47c089119ddb6cb201"
+    },
+    {
+      "path": "typetree/components/gameobject.json",
+      "role": "typetree",
+      "size": 1993,
+      "sha256": "c50e259cd91a90dd882d3f173c77b4f3bcc7360df66515438dedd810a3a12d01"
+    },
+    {
+      "path": "typetree/components/light.json",
+      "role": "typetree",
+      "size": 8383,
+      "sha256": "ca839ffaf98b2dc1f1483c15e6453e7c4d8a16bad50bcf69d5ab192d0bb982a9"
+    },
+    {
+      "path": "typetree/components/meshfilter.json",
+      "role": "typetree",
+      "size": 813,
+      "sha256": "a32269626f699691127a4084139290fe7f4fc14e7eb2bde23041ce6ea7551c2c"
+    },
+    {
+      "path": "typetree/components/meshrenderer.json",
+      "role": "typetree",
+      "size": 6392,
+      "sha256": "b988f117b358f3f3f797daa0304e33d6f214a341a5c486170c6ad763db381d9d"
+    },
+    {
+      "path": "typetree/components/recttransform.json",
+      "role": "typetree",
+      "size": 5391,
+      "sha256": "873d436e0f4b9b474ce56561620e8fe8cfba00687df23839c4ec65ab4bdee64e"
+    },
+    {
+      "path": "typetree/components/transform.json",
+      "role": "typetree",
+      "size": 3799,
+      "sha256": "5c40c5fcf8c28129ee8c38dbe8f0867ea3f596e169ab1c13b126859ab472f9fb"
+    },
+    {
+      "path": "typetree/manifest.json",
+      "role": "typetree",
+      "size": 2070,
+      "sha256": "2c8afdba3cdd5632078a5f68c47098cf389af8f2f7c11a54681ec4dbd851dde3"
+    },
+    {
+      "path": "typetree/native-component-defaults.json",
+      "role": "typetree",
+      "size": 346514,
+      "sha256": "d4fe7a8d43d339367934acfe5438416e8bbf338a7dc648accc280d66964ac348"
+    }
+  ]
+}

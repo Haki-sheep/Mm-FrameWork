@@ -1,0 +1,47 @@
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public static class __FakeUnityCLIEditorState
+{
+    public static object Execute()
+    {
+        var activeScene = SceneManager.GetActiveScene();
+        var loadedScenes = new List<object>();
+        for (var index = 0; index < SceneManager.sceneCount; index++)
+        {
+            var scene = SceneManager.GetSceneAt(index);
+            loadedScenes.Add(new Dictionary<string, object>
+            {
+                ["name"] = scene.name,
+                ["path"] = scene.path,
+                ["handle"] = scene.handle,
+                ["isLoaded"] = scene.isLoaded,
+                ["isDirty"] = scene.isDirty,
+                ["active"] = scene == activeScene
+            });
+        }
+        var prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
+        return new Dictionary<string, object>
+        {
+            ["unityVersion"] = Application.unityVersion,
+            ["activeScene"] = activeScene.name,
+            ["activeScenePath"] = activeScene.path,
+            ["loadedScenes"] = loadedScenes,
+            ["isPlaying"] = EditorApplication.isPlaying,
+            ["isPlayingOrWillChangePlaymode"] = EditorApplication.isPlayingOrWillChangePlaymode,
+            ["isPaused"] = EditorApplication.isPaused,
+            ["isCompiling"] = EditorApplication.isCompiling,
+            ["isUpdating"] = EditorApplication.isUpdating,
+            ["selectionCount"] = Selection.objects == null ? 0 : Selection.objects.Length,
+            ["prefabStage"] = prefabStage == null ? null : new Dictionary<string, object>
+            {
+                ["assetPath"] = prefabStage.assetPath,
+                ["scenePath"] = prefabStage.scene.path,
+                ["isDirty"] = prefabStage.scene.isDirty
+            }
+        };
+    }
+}

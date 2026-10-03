@@ -1,0 +1,13 @@
+{
+  "backup": "C:\\Users\\fmz\\Desktop\\AiWrok\\Skill\\UnityCLI-backup-20261003-001159",
+  "desktop": "C:\\Users\\fmz\\Desktop\\AiWrok\\Skill\\UnityCLI",
+  "payload_files": 114,
+  "backup_files": 65,
+  "project": "E:\\AAAA学习资料\\Demo\\哈基咩咩框架专用项目\\HakiSheep-Framework\\.agents\\skills\\fakeunity-cli",
+  "verified": true,
+  "build_id": "9261a004c8fd4de39f84c3eca5a867fb",
+  "desktop_selfcheck": "passed 125/125 including serial recheck",
+  "project_selfcheck": "failed UnauthorizedAccessException creating task-owned Temp/Assets three attempts saved no environment bypass",
+  "project_capabilities": "passed",
+  "independent_review": "passed before installation selfcheck environment failure"
+}

@@ -300,8 +300,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1998272896780071737}
-  - component: {fileID: -5375038227660211965}
-  - component: {fileID: 8670883959678435798}
   - component: {fileID: 5584570498925309000}
   m_Layer: 31
   m_Name: FrameRoot
@@ -327,30 +325,6 @@ Transform:
   - {fileID: 3500662381957392522}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-5375038227660211965
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1875632843843946708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1272d07047f4bc34b84ccaaa55ae1e24, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &8670883959678435798
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1875632843843946708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65b96b6eadf220245928611c714169a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5584570498925309000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -362,8 +336,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1632e6c60d6f50845937fe7aa4d7235a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MieMieFrameWork.ModuleHub
-  uICoreMgr: {fileID: 0}
+  m_EditorClassIdentifier: MieMieFrameWork.Runtime::MieMieFrameWork.ModuleHub
+  resourcePackageName: DefaultPackage
+  resourceManifestTimeout: 60
   archiveSubFolder: Archives
   poolManagerConfig:
     allGameObjectRoot: {fileID: 5836662951699793031}
@@ -372,6 +347,8 @@ MonoBehaviour:
     bgmSource: {fileID: 1563131090535853220}
     ambienceSource: {fileID: 8374092957814860009}
     effectClipRoot: {fileID: 5836662951699793031}
+    mixer: {fileID: 24100000, guid: 2b89ccebb63069242be7a744369ab882, type: 2}
+    effectMixerGroup: {fileID: 7072811385765674001, guid: 2b89ccebb63069242be7a744369ab882, type: 2}
     globalVolumeFactor: 1
     bgVolumeBaseNum: 1
     ambienceVolumeBaseNum: 0.8
@@ -379,6 +356,44 @@ MonoBehaviour:
     isMute: 0
     isLoop: 0
     isPause: 0
+    maxConcurrentEffects: 32
+    maxEffectsPerFrame: 10
+    maxSameClipEffects: 4
+    effectPrewarmCount: 8
+  effectManagerConfig:
+    definitionList: []
+    maxConcurrent: 64
+    maxPerFrame: 16
+    quality: 2
+    low:
+      particleFactor: 0.35
+      emissionFactor: 0.4
+    medium:
+      particleFactor: 0.65
+      emissionFactor: 0.7
+    high:
+      particleFactor: 1
+      emissionFactor: 1
+  qualityConfig:
+    presetList:
+    - level: 4
+      unityQualityName: Haki Very Low
+    - level: 1
+      unityQualityName: Haki Low
+    - level: 2
+      unityQualityName: Haki Medium
+    - level: 3
+      unityQualityName: Haki High
+    - level: 5
+      unityQualityName: Haki Very High
+    - level: 6
+      unityQualityName: Haki Ultra
+    mobileDefault: 2
+    desktopDefault: 3
+    targetFrameRate: 60
+    vSyncCount: 0
+    preferenceKey: HakiSheep.Graphics
+  uiCoreMgrBehaviour: {fileID: 0}
 --- !u!1 &2397423521224059995
 GameObject:
   m_ObjectHideFlags: 0

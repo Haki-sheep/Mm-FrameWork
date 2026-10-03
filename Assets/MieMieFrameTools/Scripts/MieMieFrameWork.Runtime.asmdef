@@ -4,11 +4,12 @@
  "references": [
   "PrimeTween.Runtime",
   "UniTask",
+        "MieMieFrameWork.Diagnostics",
         "MessagePack.Unity",
         "MessagePack",
         "MessagePack.Annotations",
-        "Unity.Addressables",
-        "Unity.ResourceManager",
+        "YooAsset",
+        "YooAsset.RuntimeAdapter",
         "Unity.InputSystem",
         "UnityEngine.UI",
         "Unity.TextMeshPro"

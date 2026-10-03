@@ -1,4 +1,5 @@
 using UnityEngine;
+using MieMieFrameWork.Diagnostics;
 
 namespace MiMieEventBus.Unity
 {
@@ -13,7 +14,7 @@ namespace MiMieEventBus.Unity
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Init()
         {
-            EventBusLog.LogError = Debug.LogError;
+            EventBusLog.LogError = Message => FrameLog.Error(Message, "Event");
             EventBusTrace.NowFunc = () => Time.realtimeSinceStartup;
         }
     }

@@ -404,13 +404,12 @@ namespace MieMieFrameWork.Editor.AsmdefTool
                     referenceHash.Add("UnityEngine.UI");
                 else if (ns.StartsWith("Unity.Cinemachine", StringComparison.Ordinal))
                     referenceHash.Add("Unity.Cinemachine");
-                else if (ns.StartsWith("Unity.AddressableAssets", StringComparison.Ordinal)
-                         || ns.StartsWith("UnityEngine.AddressableAssets", StringComparison.Ordinal)
-                         || ns.StartsWith("UnityEngine.ResourceManagement", StringComparison.Ordinal))
+                else if (ns.StartsWith("YooAsset", StringComparison.Ordinal))
                 {
-                    referenceHash.Add("Unity.Addressables");
-                    referenceHash.Add("Unity.ResourceManager");
+                    referenceHash.Add("YooAsset");
                 }
+                else if (ns.StartsWith("MieMieFrameWork.Asset", StringComparison.Ordinal))
+                    referenceHash.Add("YooAsset.RuntimeAdapter");
                 else if (ns.StartsWith("MiMieFSM.Unity", StringComparison.Ordinal)
                          || ns.StartsWith("MiMieFSM", StringComparison.Ordinal))
                     referenceHash.Add("MieMieFrameWork.Runtime");

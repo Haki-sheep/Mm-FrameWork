@@ -1,0 +1,22 @@
+{
+  "name": "com.fakeunity.cli.editorbridge",
+  "version": "1.20.0",
+  "displayName": "FakeUnityCLI Editor Integration",
+  "description": "Unity Editor integration for FakeUnityCLI structured operations, project-owned online providers, safe live package updates, compile request/continuity, structured Roslyn results, incremental Console logs, and batchmode delegation.",
+  "unity": "2022.3",
+  "dependencies": {
+    "com.unity.test-framework": "1.1.33",
+    "com.unity.nuget.newtonsoft-json": "3.0.2",
+    "com.unity.ugui": "1.0.0"
+  },
+  "author": {
+    "name": "FakeUnityCLI"
+  },
+  "keywords": [
+    "editor",
+    "console",
+    "logs",
+    "roslyn",
+    "automation"
+  ]
+}

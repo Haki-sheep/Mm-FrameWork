@@ -1,0 +1,108 @@
+{
+ "full_name": "UnityEngine.GameObject",
+ "dump_full_name": "GameObject",
+ "type_id": 1,
+ "base": "EditorExtension",
+ "fields": [
+  {
+   "name": "m_Component",
+   "type": "vector",
+   "kind": "Array",
+   "byte_size": -1,
+   "children": [
+    {
+     "name": "Array",
+     "type": "Array",
+     "kind": "Struct",
+     "byte_size": -1,
+     "children": [
+      {
+       "name": "size",
+       "type": "int",
+       "kind": "Primitive",
+       "byte_size": 4
+      },
+      {
+       "name": "data",
+       "type": "ComponentPair",
+       "kind": "Struct",
+       "byte_size": 12,
+       "children": [
+        {
+         "name": "component",
+         "type": "PPtr<Component>",
+         "kind": "UnityObjectRef",
+         "byte_size": 12,
+         "children": [
+          {
+           "name": "m_FileID",
+           "type": "int",
+           "kind": "Primitive",
+           "byte_size": 4
+          },
+          {
+           "name": "m_PathID",
+           "type": "SInt64",
+           "kind": "Primitive",
+           "byte_size": 8
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "m_Layer",
+   "type": "unsigned int",
+   "kind": "Primitive",
+   "byte_size": 4,
+   "default": "0",
+   "default_source": "curated_sample_inferred"
+  },
+  {
+   "name": "m_Name",
+   "type": "string",
+   "kind": "Primitive",
+   "byte_size": -1,
+   "children": [
+    {
+     "name": "Array",
+     "type": "Array",
+     "kind": "Struct",
+     "byte_size": -1,
+     "children": [
+      {
+       "name": "size",
+       "type": "int",
+       "kind": "Primitive",
+       "byte_size": 4
+      },
+      {
+       "name": "data",
+       "type": "char",
+       "kind": "Primitive",
+       "byte_size": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "m_Tag",
+   "type": "UInt16",
+   "kind": "Primitive",
+   "byte_size": 2
+  },
+  {
+   "name": "m_IsActive",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1,
+   "default": "1",
+   "default_source": "curated_sample_inferred"
+  }
+ ]
+}

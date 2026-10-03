@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "command": "project preflight",
+  "ok": false,
+  "dry_run": false,
+  "data": null,
+  "error": {
+    "code": "FUC_VERSION_UNSUPPORTED",
+    "message": "Unity 6000.4.10f1 未有允许该离线写入的正式 Profile",
+    "location": null,
+    "suggestions": [],
+    "retryable": false,
+    "recovery": null,
+    "details": null
+  },
+  "meta": {
+    "warnings": [],
+    "truncation": {
+      "truncated": false,
+      "total_count": 0,
+      "cursor": null,
+      "full_output_path": null
+    },
+    "artifacts": null,
+    "project": null
+  }
+}

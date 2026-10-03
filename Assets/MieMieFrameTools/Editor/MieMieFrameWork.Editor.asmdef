@@ -3,9 +3,10 @@
     "rootNamespace": "MieMieFrameWork",
     "references": [
         "MieMieFrameWork.Runtime",
+        "MieMieFrameWork.Diagnostics.Editor",
+        "MieMieFrameWork.FontManager.Editor",
+        "YooAsset.Editor",
         "UniTask",
-        "Unity.Addressables",
-        "Unity.ResourceManager",
         "UnityEngine.UI"
     ],
     "includePlatforms": [

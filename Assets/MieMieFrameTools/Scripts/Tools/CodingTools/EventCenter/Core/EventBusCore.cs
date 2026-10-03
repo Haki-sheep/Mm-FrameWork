@@ -8,183 +8,83 @@
     /// 约定仅在主线程调用 Subscribe Publish Unsubscribe
     /// Unsubscribe 必须传入与 Subscribe 相同的委托实例 禁止用新 Lambda 取消
     /// 推荐持有 Subscribe 返回的 IDisposable 令牌并 Dispose
+    /// 同步按订阅顺序派发 监听变更从下一轮生效 异常原样传播
     /// </summary>
     public class EventBusCore
     {
         /// <summary>
         /// 事件字典
         /// </summary>
-        private readonly Dictionary<(string name, Type handlerType), Delegate> eventDict =
-            new ();
+        private readonly Dictionary<(string name, Type handlerType), EventBusSlot> eventDict = new();
+
+        #region 订阅与派发
 
         /// <summary>
-        /// 注册无参监听
+        /// 注册无参监听 返回只取消本次订阅的令牌
         /// </summary>
         public IDisposable Subscribe(EventKey eventKey, Action action)
         {
-            CombineDelegate((eventKey.Name, typeof(Action)), action);
-            // 创建订阅令牌 传入移除订阅信息
-            return new EventBusSubscription(() => Unsubscribe(eventKey, action));
+            return Subscribe((eventKey.Name, typeof(Action)), action, action);
         }
 
         /// <summary>
-        /// 注册单参监听
+        /// 注册消息监听 返回只取消本次订阅的令牌
         /// </summary>
-        public IDisposable Subscribe<T>(EventKey<T> eventKey, Action<T> action)
+        public IDisposable Subscribe<TEvent>(EventKey<TEvent> eventKey, Action<TEvent> action)
         {
-            CombineDelegate((eventKey.Name, typeof(Action<T>)), action);
-            return new EventBusSubscription(() => Unsubscribe(eventKey, action));
+            // 逆变委托转换为槽位消息类型 原委托仍用于准确注销
+            var DispatchHandler = action == null || action.GetType() == typeof(Action<TEvent>)
+                ? action
+                : new Action<TEvent>(action);
+            return Subscribe((eventKey.Name, typeof(Action<TEvent>)), action, DispatchHandler);
         }
 
         /// <summary>
-        /// 注册双参监听
-        /// </summary>
-        public IDisposable Subscribe<T0, T1>(EventKey<T0, T1> eventKey, Action<T0, T1> action)
-        {
-            CombineDelegate((eventKey.Name, typeof(Action<T0, T1>)), action);
-            return new EventBusSubscription(() => Unsubscribe(eventKey, action));
-        }
-
-        /// <summary>
-        /// 注册三参监听
-        /// </summary>
-        public IDisposable Subscribe<T0, T1, T2>(EventKey<T0, T1, T2> eventKey, Action<T0, T1, T2> action)
-        {
-            CombineDelegate((eventKey.Name, typeof(Action<T0, T1, T2>)), action);
-            return new EventBusSubscription(() => Unsubscribe(eventKey, action));
-        }
-
-        /// <summary>
-        /// 注册四参监听
-        /// </summary>
-        public IDisposable Subscribe<T0, T1, T2, T3>(EventKey<T0, T1, T2, T3> eventKey, Action<T0, T1, T2, T3> action)
-        {
-            CombineDelegate((eventKey.Name, typeof(Action<T0, T1, T2, T3>)), action);
-            return new EventBusSubscription(() => Unsubscribe(eventKey, action));
-        }
-
-        /// <summary>
-        /// 注册五参监听
-        /// </summary>
-        public IDisposable Subscribe<T0, T1, T2, T3, T4>(EventKey<T0, T1, T2, T3, T4> eventKey, Action<T0, T1, T2, T3, T4> action)
-        {
-            CombineDelegate((eventKey.Name, typeof(Action<T0, T1, T2, T3, T4>)), action);
-            return new EventBusSubscription(() => Unsubscribe(eventKey, action));
-        }
-
-        /// <summary>
-        /// 发布无参事件
+        /// 发布无参事件 监听异常立即中断并向上传播
         /// </summary>
         public void Publish(EventKey eventKey)
         {
-            Invoke((eventKey.Name, typeof(Action)), eventKey.Name, eventDelegate =>
-            {
-                (eventDelegate as Action)?.Invoke();
-            });
+            if (!eventDict.TryGetValue((eventKey.Name, typeof(Action)), out var Slot))
+                return;
+
+            // 多播委托快照保持本轮监听顺序且不为派发创建数组
+            var Handler = (Action)Slot.Handler;
+            EventBusTrace.MarkTriggered(eventKey.Name);
+            Handler.Invoke();
         }
 
         /// <summary>
-        /// 发布单参事件
+        /// 发布消息事件 监听异常立即中断并向上传播
         /// </summary>
-        public void Publish<T>(EventKey<T> eventKey, T arg)
+        public void Publish<TEvent>(EventKey<TEvent> eventKey, TEvent message)
         {
-            Invoke((eventKey.Name, typeof(Action<T>)), eventKey.Name, eventDelegate =>
-            {
-                (eventDelegate as Action<T>)?.Invoke(arg);
-            });
+            if (!eventDict.TryGetValue((eventKey.Name, typeof(Action<TEvent>)), out var Slot))
+                return;
+
+            var Handler = (Action<TEvent>)Slot.Handler;
+            EventBusTrace.MarkTriggered(eventKey.Name);
+            Handler.Invoke(message);
         }
 
         /// <summary>
-        /// 发布双参事件
-        /// </summary>
-        public void Publish<T0, T1>(EventKey<T0, T1> eventKey, T0 arg0, T1 arg1)
-        {
-            Invoke((eventKey.Name, typeof(Action<T0, T1>)), eventKey.Name, eventDelegate =>
-            {
-                (eventDelegate as Action<T0, T1>)?.Invoke(arg0, arg1);
-            });
-        }
-
-        /// <summary>
-        /// 发布三参事件
-        /// </summary>
-        public void Publish<T0, T1, T2>(EventKey<T0, T1, T2> eventKey, T0 arg0, T1 arg1, T2 arg2)
-        {
-            Invoke((eventKey.Name, typeof(Action<T0, T1, T2>)), eventKey.Name, eventDelegate =>
-            {
-                (eventDelegate as Action<T0, T1, T2>)?.Invoke(arg0, arg1, arg2);
-            });
-        }
-
-        /// <summary>
-        /// 发布四参事件
-        /// </summary>
-        public void Publish<T0, T1, T2, T3>(EventKey<T0, T1, T2, T3> eventKey, T0 arg0, T1 arg1, T2 arg2, T3 arg3)
-        {
-            Invoke((eventKey.Name, typeof(Action<T0, T1, T2, T3>)), eventKey.Name, eventDelegate =>
-            {
-                (eventDelegate as Action<T0, T1, T2, T3>)?.Invoke(arg0, arg1, arg2, arg3);
-            });
-        }
-
-        /// <summary>
-        /// 发布五参事件
-        /// </summary>
-        public void Publish<T0, T1, T2, T3, T4>(EventKey<T0, T1, T2, T3, T4> eventKey, T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-        {
-            Invoke((eventKey.Name, typeof(Action<T0, T1, T2, T3, T4>)), eventKey.Name, eventDelegate =>
-            {
-                (eventDelegate as Action<T0, T1, T2, T3, T4>)?.Invoke(arg0, arg1, arg2, arg3, arg4);
-            });
-        }
-
-        /// <summary>
-        /// 取消无参监听 必须传入 Subscribe 时同一委托实例
+        /// 取消最后一次匹配的无参订阅 必须传入 Subscribe 时同一委托实例
         /// </summary>
         public void Unsubscribe(EventKey eventKey, Action action)
         {
-            RemoveDelegate((eventKey.Name, typeof(Action)), action);
+            Unsubscribe((eventKey.Name, typeof(Action)), action);
         }
 
         /// <summary>
-        /// 取消单参监听 必须传入 Subscribe 时同一委托实例
+        /// 取消最后一次匹配的消息订阅 必须传入 Subscribe 时同一委托实例
         /// </summary>
-        public void Unsubscribe<T>(EventKey<T> eventKey, Action<T> action)
+        public void Unsubscribe<TEvent>(EventKey<TEvent> eventKey, Action<TEvent> action)
         {
-            RemoveDelegate((eventKey.Name, typeof(Action<T>)), action);
+            Unsubscribe((eventKey.Name, typeof(Action<TEvent>)), action);
         }
 
-        /// <summary>
-        /// 取消双参监听 必须传入 Subscribe 时同一委托实例
-        /// </summary>
-        public void Unsubscribe<T0, T1>(EventKey<T0, T1> eventKey, Action<T0, T1> action)
-        {
-            RemoveDelegate((eventKey.Name, typeof(Action<T0, T1>)), action);
-        }
+        #endregion
 
-        /// <summary>
-        /// 取消三参监听 必须传入 Subscribe 时同一委托实例
-        /// </summary>
-        public void Unsubscribe<T0, T1, T2>(EventKey<T0, T1, T2> eventKey, Action<T0, T1, T2> action)
-        {
-            RemoveDelegate((eventKey.Name, typeof(Action<T0, T1, T2>)), action);
-        }
-
-        /// <summary>
-        /// 取消四参监听 必须传入 Subscribe 时同一委托实例
-        /// </summary>
-        public void Unsubscribe<T0, T1, T2, T3>(EventKey<T0, T1, T2, T3> eventKey, Action<T0, T1, T2, T3> action)
-        {
-            RemoveDelegate((eventKey.Name, typeof(Action<T0, T1, T2, T3>)), action);
-        }
-
-        /// <summary>
-        /// 取消五参监听 必须传入 Subscribe 时同一委托实例
-        /// </summary>
-        public void Unsubscribe<T0, T1, T2, T3, T4>(EventKey<T0, T1, T2, T3, T4> eventKey, Action<T0, T1, T2, T3, T4> action)
-        {
-            RemoveDelegate((eventKey.Name, typeof(Action<T0, T1, T2, T3, T4>)), action);
-        }
+        #region 清理与诊断
 
         /// <summary>
         /// 按事件名移除全部类型槽位 含同名带参监听
@@ -194,15 +94,18 @@
             if (string.IsNullOrEmpty(keyName))
                 return;
 
-            var removeList = new List<(string name, Type handlerType)>();
-            foreach (var slotKey in eventDict.Keys)
+            var RemoveList = new List<(string name, Type handlerType)>();
+            foreach (var SlotKey in eventDict.Keys)
             {
-                if (slotKey.name == keyName)
-                    removeList.Add(slotKey);
+                if (SlotKey.name == keyName)
+                    RemoveList.Add(SlotKey);
             }
 
-            for (int i = 0; i < removeList.Count; i++)
-                eventDict.Remove(removeList[i]);
+            for (int Index = 0; Index < RemoveList.Count; Index++)
+            {
+                eventDict[RemoveList[Index]].Clear();
+                eventDict.Remove(RemoveList[Index]);
+            }
         }
 
         /// <summary>
@@ -216,16 +119,19 @@
         /// <summary>
         /// 按事件名移除全部类型槽位 含同名带参监听
         /// </summary>
-        public void RemoveAll<T>(EventKey<T> eventKey)
+        public void RemoveAll<TEvent>(EventKey<TEvent> eventKey)
         {
             RemoveAllByName(eventKey.Name);
         }
 
         /// <summary>
-        /// 清空全部监听
+        /// 清空全部监听并解除旧订阅令牌持有的引用
         /// </summary>
         public void Clear()
         {
+            foreach (var Slot in eventDict.Values)
+                Slot.Clear();
+
             eventDict.Clear();
         }
 
@@ -248,41 +154,9 @@
         /// <summary>
         /// 获取指定 Key 的监听数量
         /// </summary>
-        public int GetListenerCount<T>(EventKey<T> eventKey)
+        public int GetListenerCount<TEvent>(EventKey<TEvent> eventKey)
         {
-            return GetListenerCount((eventKey.Name, typeof(Action<T>)));
-        }
-
-        /// <summary>
-        /// 获取指定 Key 的监听数量
-        /// </summary>
-        public int GetListenerCount<T0, T1>(EventKey<T0, T1> eventKey)
-        {
-            return GetListenerCount((eventKey.Name, typeof(Action<T0, T1>)));
-        }
-
-        /// <summary>
-        /// 获取指定 Key 的监听数量
-        /// </summary>
-        public int GetListenerCount<T0, T1, T2>(EventKey<T0, T1, T2> eventKey)
-        {
-            return GetListenerCount((eventKey.Name, typeof(Action<T0, T1, T2>)));
-        }
-
-        /// <summary>
-        /// 获取指定 Key 的监听数量
-        /// </summary>
-        public int GetListenerCount<T0, T1, T2, T3>(EventKey<T0, T1, T2, T3> eventKey)
-        {
-            return GetListenerCount((eventKey.Name, typeof(Action<T0, T1, T2, T3>)));
-        }
-
-        /// <summary>
-        /// 获取指定 Key 的监听数量
-        /// </summary>
-        public int GetListenerCount<T0, T1, T2, T3, T4>(EventKey<T0, T1, T2, T3, T4> eventKey)
-        {
-            return GetListenerCount((eventKey.Name, typeof(Action<T0, T1, T2, T3, T4>)));
+            return GetListenerCount((eventKey.Name, typeof(Action<TEvent>)));
         }
 
         /// <summary>
@@ -290,15 +164,15 @@
         /// </summary>
         public List<string> GetRegisteredKeyNameList()
         {
-            var nameList = new List<string>();
-            foreach (var slotKey in eventDict.Keys)
+            var NameList = new List<string>();
+            foreach (var SlotKey in eventDict.Keys)
             {
-                if (!nameList.Contains(slotKey.name))
-                    nameList.Add(slotKey.name);
+                if (!NameList.Contains(SlotKey.name))
+                    NameList.Add(SlotKey.name);
             }
 
-            nameList.Sort(StringComparer.Ordinal);
-            return nameList;
+            NameList.Sort(StringComparer.Ordinal);
+            return NameList;
         }
 
         /// <summary>
@@ -306,84 +180,44 @@
         /// </summary>
         public int GetListenerCountByName(string keyName)
         {
-            int count = 0;
-            foreach (KeyValuePair<(string name, Type handlerType), Delegate> pair in eventDict)
+            int Count = 0;
+            foreach (var Pair in eventDict)
             {
-                if (pair.Key.name != keyName)
-                    continue;
-
-                count += pair.Value.GetInvocationList().Length;
+                if (Pair.Key.name == keyName)
+                    Count += Pair.Value.ListenerCount;
             }
 
-            return count;
+            return Count;
+        }
+
+        #endregion
+
+        #region 槽位操作
+
+        /// <summary>
+        /// 按名称与委托类型注册监听并返回独立订阅令牌
+        /// </summary>
+        private IDisposable Subscribe((string name, Type handlerType) slotKey, Delegate action, Delegate dispatchHandler)
+        {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
+            if (!eventDict.TryGetValue(slotKey, out var Slot))
+            {
+                Slot = new EventBusSlot(() => eventDict.Remove(slotKey));
+                eventDict.Add(slotKey, Slot);
+            }
+
+            return Slot.Subscribe(action, dispatchHandler);
         }
 
         /// <summary>
-        /// 合并委托
+        /// 按槽位取消最后一次匹配的订阅
         /// </summary>
-        private void CombineDelegate((string name, Type handlerType) slotKey, Delegate newDelegate)
+        private void Unsubscribe((string name, Type handlerType) slotKey, Delegate action)
         {
-            if (eventDict.TryGetValue(slotKey, out Delegate existingEvent))
-            {
-                if (existingEvent.GetType() != newDelegate.GetType())
-                {
-                    EventBusLog.LogError(
-                        $"事件 {slotKey.name} 委托类型冲突 已有 {existingEvent.GetType().Name} 尝试注册 {newDelegate.GetType().Name}");
-                    return;
-                }
-
-                eventDict[slotKey] = Delegate.Combine(existingEvent, newDelegate);
-            }
-            else
-            {
-                eventDict[slotKey] = newDelegate;
-            }
-        }
-
-        /// <summary>
-        /// 触发事件 按监听器隔离异常
-        /// </summary>
-        private void Invoke((string name, Type handlerType) slotKey, string traceName, Action<Delegate> invoker)
-        {
-            if (!eventDict.TryGetValue(slotKey, out Delegate eventDelegate))
-                return;
-
-            EventBusTrace.MarkTriggered(traceName);
-
-            Delegate[] listenerList = eventDelegate.GetInvocationList();
-            for (int i = 0; i < listenerList.Length; i++)
-            {
-                try
-                {
-                    invoker(listenerList[i]);
-                }
-                catch (Exception ex)
-                {
-                    EventBusLog.LogError($"触发事件 {traceName} 失败: {ex.Message}\n{ex.StackTrace}");
-                }
-            }
-        }
-
-        /// <summary>
-        /// 移除委托
-        /// </summary>
-        private void RemoveDelegate((string name, Type handlerType) slotKey, Delegate action)
-        {
-            if (!eventDict.TryGetValue(slotKey, out Delegate existingEvent))
-                return;
-
-            try
-            {
-                Delegate newEvent = Delegate.Remove(existingEvent, action);
-                if (newEvent == null)
-                    eventDict.Remove(slotKey);
-                else
-                    eventDict[slotKey] = newEvent;
-            }
-            catch (Exception ex)
-            {
-                EventBusLog.LogError($"删除事件 {slotKey.name} 失败: {ex.Message}");
-            }
+            if (eventDict.TryGetValue(slotKey, out var Slot))
+                Slot.Unsubscribe(action);
         }
 
         /// <summary>
@@ -391,11 +225,13 @@
         /// </summary>
         private int GetListenerCount((string name, Type handlerType) slotKey)
         {
-            if (eventDict.TryGetValue(slotKey, out Delegate eventDelegate))
-                return eventDelegate.GetInvocationList().Length;
+            if (eventDict.TryGetValue(slotKey, out var Slot))
+                return Slot.ListenerCount;
 
             return 0;
         }
+
+        #endregion
     }
 }
 

@@ -1,0 +1,712 @@
+{
+  "product_version": "0.2.0-preview-unity6",
+  "payload": [
+    {
+      "sha256": "52ad65a59803ff453b86070a5bb6ad39732de0d619cc834ab9aac668e23e6105",
+      "size_bytes": 245,
+      "path": "agents/openai.yaml"
+    },
+    {
+      "sha256": "0ea027d6b583f00245dc219a955c79526e7a7ab1ece9e5e450cba45af00e6505",
+      "size_bytes": 3029,
+      "path": "evidence/acceptance.md"
+    },
+    {
+      "sha256": "9db0c1e9f6f534b78a7bbb152e3745c4867eae4fc13e1fbe1a593fdfb050d86a",
+      "size_bytes": 4987,
+      "path": "evidence/assetops-final-hardlink.json"
+    },
+    {
+      "sha256": "6789e3938eea0886d6f50856095c39344098037b2109af149a12f38b7b565d5b",
+      "size_bytes": 2135,
+      "path": "evidence/capabilities.json"
+    },
+    {
+      "sha256": "dc3d903131acfc29f12bd14e0de1582a3236688fab15b547daee8575831b1db3",
+      "size_bytes": 8830,
+      "path": "evidence/chapter13-bridge.json"
+    },
+    {
+      "sha256": "cdb44f4062aea2506c47bf77ab921384348319b4b7ec55b99d457c5a7eed537f",
+      "size_bytes": 409,
+      "path": "evidence/delivery-package-negative-test.json"
+    },
+    {
+      "sha256": "80550ea105000933cfa962129b310c70c445ffe89c10a6e46861802e3d84d285",
+      "size_bytes": 5487,
+      "path": "evidence/dryrun-final-hardlink.json"
+    },
+    {
+      "sha256": "ae3fa418ca09660b076acd99cce9055b95ec3b0072f168b49055d68e8c187148",
+      "size_bytes": 3990,
+      "path": "evidence/editor-online.json"
+    },
+    {
+      "sha256": "3364723a0488e57eda84726ce99e69258059420268700cf724e71fed72641bcf",
+      "size_bytes": 11990,
+      "path": "evidence/editor-unity6-policy.json"
+    },
+    {
+      "sha256": "d77037266be28c8dfa00304c95d9700eba9535472ba3d89729a69ad8643dcba3",
+      "size_bytes": 7834,
+      "path": "evidence/final-native-evidence.json"
+    },
+    {
+      "sha256": "cabb9162069f23e9d3a99dbad2ff7b37470d60b2e7996bcfa5de32648550af63",
+      "size_bytes": 81,
+      "path": "evidence/final-package-negative-test.json"
+    },
+    {
+      "sha256": "6840231217df618be0b0e3e33517c856e1f588216c4d60bdc9e0ec36963cef27",
+      "size_bytes": 734,
+      "path": "evidence/installation-final.json"
+    },
+    {
+      "sha256": "3364723a0488e57eda84726ce99e69258059420268700cf724e71fed72641bcf",
+      "size_bytes": 11990,
+      "path": "evidence/installed-desktop-policy-recheck.json"
+    },
+    {
+      "sha256": "e7ffd5132d937c2c9a2084fe7169c81352467852b32d447e4731696edd718397",
+      "size_bytes": 1208,
+      "path": "evidence/installed-project-policy-explicit-fixture.json"
+    },
+    {
+      "sha256": "952f958bfc9d2c35424a02704d215830612e8a82525d647283e6c47f31e9f8d5",
+      "size_bytes": 1208,
+      "path": "evidence/installed-project-policy-recheck.json"
+    },
+    {
+      "sha256": "ea629e1086a7a41d2437631dc6ef3a79626eaf954cd12def7423738107b839c4",
+      "size_bytes": 1208,
+      "path": "evidence/installed-project-policy.json"
+    },
+    {
+      "sha256": "0acdd8605edb43c848de28fcb920048ae6d22b512e1afbecab98872f97c34dcc",
+      "size_bytes": 601,
+      "path": "evidence/main-preflight-asset-clone.json"
+    },
+    {
+      "sha256": "44524199eedd3a7d45ac14aa875870392673f51b84c1df010f3b6c87d07139ed",
+      "size_bytes": 607,
+      "path": "evidence/main-preflight-editor-bridge-install.json"
+    },
+    {
+      "sha256": "12ff5a6f5b576017cd58aae813417f819ce6b83c17651a3e2e2ba3b2bf0e035f",
+      "size_bytes": 597,
+      "path": "evidence/main-preflight-editor-exec.json"
+    },
+    {
+      "sha256": "4fc6aca4d56d61fafea1fc4881e13495dd13cb2f3f5ceb2225f00fa51cf8a99e",
+      "size_bytes": 1666,
+      "path": "evidence/main-preflight-editor-template-list.json"
+    },
+    {
+      "sha256": "f68d801a137a35b08d5f0e051341b7b0c378addf060ba2e9db04dfe7e22b6542",
+      "size_bytes": 679,
+      "path": "evidence/native-payload-check.json"
+    },
+    {
+      "sha256": "610923feb047cd64d7152a5aba55c28c3a44e10ce1685621b1c84e65ceea2aff",
+      "size_bytes": 7831,
+      "path": "evidence/native/2022.3.62f3/compile.json"
+    },
+    {
+      "sha256": "8c11c8dadf3cbdc725008280664d225c5ce37c0743a8e74d8d0fa27a69d8b578",
+      "size_bytes": 3200,
+      "path": "evidence/native/2022.3.62f3/context.json"
+    },
+    {
+      "sha256": "96ba3d57c773a470523b3d8756a8e563dcadfdf4d6cabce4ecabcec08214b3aa",
+      "size_bytes": 330193,
+      "path": "evidence/native/2022.3.62f3/Editor.log"
+    },
+    {
+      "sha256": "1f7835b839354dcfc01c512f7e42f6a931ce3c12f483345520b4c82bf461d14f",
+      "size_bytes": 15750,
+      "path": "evidence/native/2022.3.62f3/install.json"
+    },
+    {
+      "sha256": "8600049682793af52c27afbcb4da472bc9c0b879a1f08967d577be7f8103d3ef",
+      "size_bytes": 3582,
+      "path": "evidence/native/2022.3.62f3/roslyn-prefab.json"
+    },
+    {
+      "sha256": "4d1ec443db7e2e26f21161a5bfff08fe51f83c827c1f3b802e96423b4c73655a",
+      "size_bytes": 432,
+      "path": "evidence/native/2022.3.62f3/summary.json"
+    },
+    {
+      "sha256": "7af7b40c0c514650c4f01a0b1cd213bef368321ce5dc47326f8ad292a030bb5c",
+      "size_bytes": 7831,
+      "path": "evidence/native/6000.4.10f1/compile.json"
+    },
+    {
+      "sha256": "a59e7811e08a2459d8e631b7be7132c99bb8ec49ba9a2ac3cfdce0fec56a9882",
+      "size_bytes": 3230,
+      "path": "evidence/native/6000.4.10f1/context.json"
+    },
+    {
+      "sha256": "c1d1b72aa4a5963d28b0901b0355d28a16c74dfe6d7712d86dc23fb004929251",
+      "size_bytes": 161027,
+      "path": "evidence/native/6000.4.10f1/Editor.log"
+    },
+    {
+      "sha256": "dfa450533dca12c878e05189e677df980880736421caf1dce9486ebf066442e0",
+      "size_bytes": 15761,
+      "path": "evidence/native/6000.4.10f1/install.json"
+    },
+    {
+      "sha256": "fc5aa6fb8380f664a1f86d4cc70cad04e6d5c8ded9260c3d3e399e182ea1814a",
+      "size_bytes": 3627,
+      "path": "evidence/native/6000.4.10f1/roslyn-prefab.json"
+    },
+    {
+      "sha256": "e19c053fb1e3d5f1fd548c840b95c6a80625d2919f3d05d70cb2cfb34ebef4ef",
+      "size_bytes": 432,
+      "path": "evidence/native/6000.4.10f1/summary.json"
+    },
+    {
+      "sha256": "d89bfe03b27b0cec98dd11cf75af0862eda7601ec315ea668d876f4a34e713f9",
+      "size_bytes": 7821,
+      "path": "evidence/native/6000.5.1f1/compile.json"
+    },
+    {
+      "sha256": "914074bc90e608f226a0697ffc2db6cb5e48afd09c8bcc6a5d06de950967a878",
+      "size_bytes": 3222,
+      "path": "evidence/native/6000.5.1f1/context.json"
+    },
+    {
+      "sha256": "dd0e51fd2bb8221bd6c86393e60cc2f83193073145f58dadb34253d2446b9be2",
+      "size_bytes": 183696,
+      "path": "evidence/native/6000.5.1f1/Editor.log"
+    },
+    {
+      "sha256": "af6944845756ce867d1ebad759bf1eadc8606e80f7da7116dbe0ba0314a3f5f8",
+      "size_bytes": 15727,
+      "path": "evidence/native/6000.5.1f1/install.json"
+    },
+    {
+      "sha256": "e13b80c84560742e7b1d5ca5597aa79ddb2247b030888efc084aeff73845cecc",
+      "size_bytes": 3614,
+      "path": "evidence/native/6000.5.1f1/roslyn-prefab.json"
+    },
+    {
+      "sha256": "455d833ade1a2662f44f60105ddfe8efc522f87c6003272891cce995fd483215",
+      "size_bytes": 430,
+      "path": "evidence/native/6000.5.1f1/summary.json"
+    },
+    {
+      "sha256": "837a184d0ce775f695d82ba5fea46dffa416216e7393b89a900b0aca96d81622",
+      "size_bytes": 7821,
+      "path": "evidence/native/6000.6.4f1/compile.json"
+    },
+    {
+      "sha256": "e042a34059e53738bcccb583f044283880f20ad0b7f546e642ff1f94da3aef05",
+      "size_bytes": 3211,
+      "path": "evidence/native/6000.6.4f1/context.json"
+    },
+    {
+      "sha256": "1a495cf533eeb2e3940ac3fde7f30463ebdae72feeee6ef8594ff6bcc6d1164c",
+      "size_bytes": 308920,
+      "path": "evidence/native/6000.6.4f1/Editor.log"
+    },
+    {
+      "sha256": "57b287738c22294ef843fc8fa1ee1d1c346cb96ada936bc98253b3275471cc2d",
+      "size_bytes": 15727,
+      "path": "evidence/native/6000.6.4f1/install.json"
+    },
+    {
+      "sha256": "e3b71a44f9cbb3d32eaf572a997035f3b42579ca77b882a27093cf1021242ca7",
+      "size_bytes": 3598,
+      "path": "evidence/native/6000.6.4f1/roslyn-prefab.json"
+    },
+    {
+      "sha256": "6a918d02225b6f4b50469e9830cc50a1b022d1c41cf1e4e1cb95a56cb7a3ff55",
+      "size_bytes": 430,
+      "path": "evidence/native/6000.6.4f1/summary.json"
+    },
+    {
+      "sha256": "64ed65403e647cdc621018e30953559af3df849b706566e587d62d9e44011388",
+      "size_bytes": 2097,
+      "path": "evidence/profile-unity6.json"
+    },
+    {
+      "sha256": "ca31374edc6a74d4a083c721d3b25d2142a6c73ff2889e94a73d3d05e8421054",
+      "size_bytes": 4116,
+      "path": "evidence/safety.json"
+    },
+    {
+      "sha256": "1aec8c26e873d64aa32f75e3442b14412f566c8822393c1981131d6dca00f7d4",
+      "size_bytes": 18545,
+      "path": "evidence/setprop-final-hardlink.json"
+    },
+    {
+      "sha256": "5a7a88191dff8e18a48b6f4317d4471c9878cce4ea986261ab65269c9bf9ddb9",
+      "size_bytes": 281,
+      "path": "evidence/skill-routing.json"
+    },
+    {
+      "sha256": "9df85c6d2cacde2106d85d35136dbb6c6925beaf7ee009baba056c29e0a1b3a4",
+      "size_bytes": 3866,
+      "path": "evidence/undo.json"
+    },
+    {
+      "sha256": "f7e9a306f549db4bf47c15371aca00991f35f75bfb65d021b136ba14ec76099a",
+      "size_bytes": 787,
+      "path": "evidence/version.json"
+    },
+    {
+      "sha256": "12f95e12e99d731dc7e13adc93a21d244c4387a4c9c2f6dcf7d8b7400bb2e14e",
+      "size_bytes": 2390,
+      "path": "references/addressables.md"
+    },
+    {
+      "sha256": "d170d10ee5682dda7fd30f3115aa2c784c3d1a76993d5d58d2ccedd33dc0ba18",
+      "size_bytes": 2909,
+      "path": "references/asset-management.md"
+    },
+    {
+      "sha256": "cebabc3d0b53a309774e057fa491da0c5c368016e8a4c96694d0fe0a0e9e0bb9",
+      "size_bytes": 4301,
+      "path": "references/audit-profile-selfcheck.md"
+    },
+    {
+      "sha256": "2c5dbd9eed60c8680240e13c172be8d8268e55e29eb7f503ceb1e0777b4321dc",
+      "size_bytes": 3644,
+      "path": "references/compatibility-and-validation.md"
+    },
+    {
+      "sha256": "0814a32e410b5b305ca91b5d49bb346373de48e0ff48dd36f4d2c6ff7f938a4e",
+      "size_bytes": 6967,
+      "path": "references/editor-development-modes.md"
+    },
+    {
+      "sha256": "b9e95999a74a883b2ce6f1f2963c41dda8f839ea54e70093ff4849733b3bc883",
+      "size_bytes": 3822,
+      "path": "references/editor-inspector-prefab.md"
+    },
+    {
+      "sha256": "d2dc7764b14045d79076d90fe4964e0cc10e3004e0d7c61e59d62c0322eb42e7",
+      "size_bytes": 12297,
+      "path": "references/editor-online-roslyn.md"
+    },
+    {
+      "sha256": "4930f11b7a0025771348fefb3d649cce700b3b9e6e1c3ddcb915098abc655439",
+      "size_bytes": 3060,
+      "path": "references/editor-ui.md"
+    },
+    {
+      "sha256": "77260191ddd22c560cd3d217507a2215fbdd8b016336490575a81f87966e44bd",
+      "size_bytes": 1631,
+      "path": "references/environment-and-schema.md"
+    },
+    {
+      "sha256": "6629d08472493890285e106f9513eec059a4905bfe6ae211ca0b18d2f196a4b6",
+      "size_bytes": 3175,
+      "path": "references/feature-directory.md"
+    },
+    {
+      "sha256": "a9232278e073d1c3417fe0282e113e5f2de485e6a78c270613c256aa7176a3d3",
+      "size_bytes": 5350,
+      "path": "references/logs-and-project-refresh.md"
+    },
+    {
+      "sha256": "f42578f5ee3f0bd2999e9614e347d28e817b3b94d1c0dc5605863c82c64a15c5",
+      "size_bytes": 1092,
+      "path": "references/material-and-scriptableobject.md"
+    },
+    {
+      "sha256": "4e43f9b164eeb5496bd1741e35e494589cbf202e36d27ec4e0c1fde2cd3bc905",
+      "size_bytes": 3545,
+      "path": "references/prefab-variant.md"
+    },
+    {
+      "sha256": "8b23be6a07503dd737a47e0cdabe3f39ba9c3bbb37ab658561a7085c46e37fdd",
+      "size_bytes": 752,
+      "path": "references/project-settings.md"
+    },
+    {
+      "sha256": "606b7ca53777fa7bb9ec9d003c0b2387e010f6eaa04af30db532517bdb77e34f",
+      "size_bytes": 5512,
+      "path": "references/properties-and-components.md"
+    },
+    {
+      "sha256": "400fa7992413231aa8f0ff103ca5f724a275e9a89c054cd690b6f0c715105b8e",
+      "size_bytes": 1306,
+      "path": "references/queries-and-diagnostics.md"
+    },
+    {
+      "sha256": "4c875722d8b11803b83c60ccddf91e8b10b88caf9ff340e8e5ce6af0e3eb208b",
+      "size_bytes": 7510,
+      "path": "references/scene-prefab-structure.md"
+    },
+    {
+      "sha256": "694f380b363b6695ff7f3beb4c1b3bc1a3a146b14118daa05520cf4841043613",
+      "size_bytes": 1972,
+      "path": "references/serialize-reference.md"
+    },
+    {
+      "sha256": "903f5f17a3d9f97699798046553fb2d220edda233dffc732b7572581491c4965",
+      "size_bytes": 5375,
+      "path": "references/transactions-workflows-views.md"
+    },
+    {
+      "sha256": "189a19378ff9ffa83ba6f58649c2d62417fb158543aafb00a83ada4d57abd434",
+      "size_bytes": 7608,
+      "path": "references/ugui-and-tmp.md"
+    },
+    {
+      "sha256": "e97b4f7e8eebf31739077174fdb64c3f2e9891a37e4f07ffb95252c9927996cc",
+      "size_bytes": 5584,
+      "path": "runtime/docs/research/unity-6-profile-assessment.md"
+    },
+    {
+      "sha256": "3253c8a888cde7db65824c0d647906479ca386ebd0a5f009e113f32230dcf093",
+      "size_bytes": 365,
+      "path": "runtime/profiles/unity-2021.3/classid-map.json"
+    },
+    {
+      "sha256": "8699093d91b9b45c87456a96e5bb0000096199676e7d14fe3323098aa4ae015c",
+      "size_bytes": 503,
+      "path": "runtime/profiles/unity-2021.3/golden/catalog.json"
+    },
+    {
+      "sha256": "89b2ccf96962b0385f081b70f4529004b2924925c040a816af3bcad59eb147c4",
+      "size_bytes": 308,
+      "path": "runtime/profiles/unity-2021.3/golden/minimal-2021.prefab"
+    },
+    {
+      "sha256": "3b852e0d0eef0924f386b089bd2716fcee9e69cf1dc0b29e2b1c39d1471fe28d",
+      "size_bytes": 613,
+      "path": "runtime/profiles/unity-2021.3/profile.json"
+    },
+    {
+      "sha256": "498fc5f71214154d51350f5779a8567b39997ae6205afbe978abf3aa49cf39ac",
+      "size_bytes": 1834,
+      "path": "runtime/profiles/unity-2021.3/release-manifest.json"
+    },
+    {
+      "sha256": "544bc07d47ae88d1703ec905b84737aee11166ed7d53f31a6532cb376cef1260",
+      "size_bytes": 66,
+      "path": "runtime/profiles/unity-2021.3/release-manifest.sha256"
+    },
+    {
+      "sha256": "062f34d4e11b64238cd0166400904bb1843465196b99114d2d8867c484c5abfd",
+      "size_bytes": 471,
+      "path": "runtime/profiles/unity-2021.3/struct-features.json"
+    },
+    {
+      "sha256": "3a8d4993ba74aaaebc28e1f309406809e8f6a513ebe54a36092bf9071644c404",
+      "size_bytes": 495,
+      "path": "runtime/profiles/unity-2021.3/tests/console-tests.json"
+    },
+    {
+      "sha256": "21412b37a799588ba92f9fb73a33e2ec989c2ea5ad4807bac0e0ec838011f4b9",
+      "size_bytes": 541,
+      "path": "runtime/profiles/unity-2021.3/typetree/components/gameobject.json"
+    },
+    {
+      "sha256": "0ab06240c11e6520555fc5b7ab8f92e3e3ea901eb7d4a5dbe277afcee15c22b5",
+      "size_bytes": 306,
+      "path": "runtime/profiles/unity-2021.3/typetree/manifest.json"
+    },
+    {
+      "sha256": "f20ddedad29d45182900518b371ca28c690f4bb62f4d11d398b6e5161ed80702",
+      "size_bytes": 10714,
+      "path": "runtime/profiles/unity-2022.3/classid-map.json"
+    },
+    {
+      "sha256": "5097c1fe53123239542e46ea4cf9d9a41d88f4576f2d033b5b768333b3b58523",
+      "size_bytes": 4377,
+      "path": "runtime/profiles/unity-2022.3/golden/catalog.json"
+    },
+    {
+      "sha256": "361a99d18e913dfe285d700c2c79ef5211d352df8663ead0b0f7f2d4ee5f0eeb",
+      "size_bytes": 112,
+      "path": "runtime/profiles/unity-2022.3/golden/dll-component-prefab-import-2022_3_62f3.json"
+    },
+    {
+      "sha256": "9ec619a573b6a4a8f5462588e79b799bbc1efd169d483be5dec42c81f4fd67ed",
+      "size_bytes": 718,
+      "path": "runtime/profiles/unity-2022.3/golden/dll-monoscript-fileids-2022_3_62f3.json"
+    },
+    {
+      "sha256": "ef53771bb9c19e212c56eff380f43eea62f1a7d5db906e51c22ed035b9eb3890",
+      "size_bytes": 733,
+      "path": "runtime/profiles/unity-2022.3/golden/minimal-prefab.prefab"
+    },
+    {
+      "sha256": "f536539ce3af7004ad7ae6cbae26c50fac226107d7220359ea6a8704ae99c8de",
+      "size_bytes": 1803,
+      "path": "runtime/profiles/unity-2022.3/golden/prefab-compose-import-2022_3_62f3.json"
+    },
+    {
+      "sha256": "299d1496681c3c3ba255c163c8c416913f75928753c0d56b0fbdf6c4722aae96",
+      "size_bytes": 1437,
+      "path": "runtime/profiles/unity-2022.3/golden/prefab-instance-lifecycle-import-2022_3_62f3.json"
+    },
+    {
+      "sha256": "10fb8c13aaf3d76ae786b9a317846e2f93940917080d2d1996f7bcec19e018bb",
+      "size_bytes": 862,
+      "path": "runtime/profiles/unity-2022.3/golden/primitive-import-2022_3_62f3.json"
+    },
+    {
+      "sha256": "bd6ab6e0302723e87b5a2dad6303ad704021fd6ceb754bf4d6622a6a9fbf4e2d",
+      "size_bytes": 1271,
+      "path": "runtime/profiles/unity-2022.3/golden/scene-lifecycle-import-2022_3_62f3.json"
+    },
+    {
+      "sha256": "61c45914380126d0657e9a8366c9c74b2a1b509663ba801d99a4ef5fc387365b",
+      "size_bytes": 126,
+      "path": "runtime/profiles/unity-2022.3/golden/ugui-image-component-import-2022_3_62f3.json"
+    },
+    {
+      "sha256": "3082391a728edb62d46ee13e40f1fc515adb1c3d36d2e33545990eea2ecc0a9a",
+      "size_bytes": 604,
+      "path": "runtime/profiles/unity-2022.3/golden/variant-override.prefab"
+    },
+    {
+      "sha256": "30450336ef048bfabb1bc63d30b13d0152825665edca59ebe0e62611758a233f",
+      "size_bytes": 831,
+      "path": "runtime/profiles/unity-2022.3/profile.json"
+    },
+    {
+      "sha256": "0288108fc4cc2eb98ab35b736e73fb1ded33a00b61c486816237c89ec8fa4e4b",
+      "size_bytes": 5570,
+      "path": "runtime/profiles/unity-2022.3/release-manifest.json"
+    },
+    {
+      "sha256": "bfbacc0eabb4ba9579835ef6a21d25723ec218101db424ac84a4befd2e345d85",
+      "size_bytes": 66,
+      "path": "runtime/profiles/unity-2022.3/release-manifest.sha256"
+    },
+    {
+      "sha256": "1ba8ad93110a7ddc0629137d6eee97c106e5600e98e63c9da6c8195568f3a39e",
+      "size_bytes": 753,
+      "path": "runtime/profiles/unity-2022.3/struct-features.json"
+    },
+    {
+      "sha256": "2247fa3c9cd2d1d315ac124b137eb99c877e38fe6c358df31cedcd73be2c33a0",
+      "size_bytes": 1094,
+      "path": "runtime/profiles/unity-2022.3/tests/console-tests.json"
+    },
+    {
+      "sha256": "db6cf6047ddcf396266927addf0ea923d98ee70403c6c4fe1859cba91dc5e7fa",
+      "size_bytes": 2499,
+      "path": "runtime/profiles/unity-2022.3/typetree/components/animator.json"
+    },
+    {
+      "sha256": "a4774ad82ce3226a9b054e6ccec4959502ecdce7c9fa91c19a2f20960308ac01",
+      "size_bytes": 11706,
+      "path": "runtime/profiles/unity-2022.3/typetree/components/audiosource.json"
+    },
+    {
+      "sha256": "5998b07a73f29fbd1e2eac70535afa2d21b9a7bfa81b02e3221970e182d0f913",
+      "size_bytes": 2914,
+      "path": "runtime/profiles/unity-2022.3/typetree/components/boxcollider.json"
+    },
+    {
+      "sha256": "59437cb1d23cc359dbf4af4007a783f68cbeda09c23a106be18852f7dcd62121",
+      "size_bytes": 6615,
+      "path": "runtime/profiles/unity-2022.3/typetree/components/camera.json"
+    },
+    {
+      "sha256": "c547517255247af9ff229967878b090b14e003d6ab9e64f3dee034313e0fe1b4",
+      "size_bytes": 2100,
+      "path": "runtime/profiles/unity-2022.3/typetree/components/gameobject.json"
+    },
+    {
+      "sha256": "386483753142e820b9675e939f80c55715251f6e3dee01846d3251e80d0f939c",
+      "size_bytes": 8862,
+      "path": "runtime/profiles/unity-2022.3/typetree/components/light.json"
+    },
+    {
+      "sha256": "a98a76e4a94b6f8fdca6c78123797d5302fe97cc240f5ed5f92f1d5e71f795d7",
+      "size_bytes": 860,
+      "path": "runtime/profiles/unity-2022.3/typetree/components/meshfilter.json"
+    },
+    {
+      "sha256": "ee65c233ba5c14b023bd85182dc3149803e86be20085e0bb7165cfaf063e2c86",
+      "size_bytes": 6753,
+      "path": "runtime/profiles/unity-2022.3/typetree/components/meshrenderer.json"
+    },
+    {
+      "sha256": "3d9bdb7b424fa63003c3bec12e611227cd5b86aa57ece8aab5cc05ffe43e1eab",
+      "size_bytes": 5688,
+      "path": "runtime/profiles/unity-2022.3/typetree/components/recttransform.json"
+    },
+    {
+      "sha256": "3b6310c1180ef12faaf1995c21194a1645d282411da511bdba0c19cbd2623987",
+      "size_bytes": 3996,
+      "path": "runtime/profiles/unity-2022.3/typetree/components/transform.json"
+    },
+    {
+      "sha256": "53fb2d7c197fd9e1f4e0d210a5c6526ad2cbe66b982ed8fece05ebb04aa9100b",
+      "size_bytes": 2143,
+      "path": "runtime/profiles/unity-2022.3/typetree/manifest.json"
+    },
+    {
+      "sha256": "f127238cd43bcd48aff6f419c127f4dde6b3a278ddc455148d14c5fcddea9690",
+      "size_bytes": 346904,
+      "path": "runtime/profiles/unity-2022.3/typetree/native-component-defaults.json"
+    },
+    {
+      "sha256": "319d509f26848f2cadaebe2eb74a4b56c6cc2241a62a4d40eeaec3e74d415c60",
+      "size_bytes": 1669,
+      "path": "runtime/profiles/unity-6000-draft/classid-map.json"
+    },
+    {
+      "sha256": "9fb0e238b78798fc425f819f31211e955af3e7554b00ee77b00dad1406fd6b56",
+      "size_bytes": 683,
+      "path": "runtime/profiles/unity-6000-draft/profile.json"
+    },
+    {
+      "sha256": "f71749989d881cba621e7f886a41c0a90dd41dc171d736f9dcf75d0f7aac99ed",
+      "size_bytes": 1642,
+      "path": "runtime/profiles/unity-6000-draft/struct-features.json"
+    },
+    {
+      "sha256": "afc956bd7ab67e67c652b1af10c8f305614c2f589548268a87f7ae9714b59686",
+      "size_bytes": 89984398,
+      "path": "runtime/windows-x64/fuc.exe"
+    },
+    {
+      "sha256": "46efd59660f76c551313c76acb979cb3ba6bc00498298b1b4a51709b1bf1c6e8",
+      "size_bytes": 2061,
+      "path": "scripts/verify-package.ps1"
+    },
+    {
+      "sha256": "fba58b47535f30ecebad3bb3aa40e85261d13612e0674fbcee6889c0472dcbc3",
+      "size_bytes": 5995,
+      "path": "SKILL.md"
+    },
+    {
+      "sha256": "11529e12f3baa36a539035c447f420a3c54999bfc7c15e9236ee3e8254996f39",
+      "size_bytes": 1772,
+      "path": "templates/editor-online/capture-game-camera.cs.txt"
+    },
+    {
+      "sha256": "b77f88f5561aacb181cd75b05c90ef814b534120120d07b1c926b7aacb6fd8c8",
+      "size_bytes": 1678,
+      "path": "templates/editor-online/capture-scene-view.cs.txt"
+    },
+    {
+      "sha256": "496385839436f0213d88250ce146ed218a7e60ddc346b30c3e129a45af57558e",
+      "size_bytes": 1934,
+      "path": "templates/editor-online/editor-state.cs.txt"
+    }
+  ],
+  "unbuilt_platforms": [
+    "linux-x64",
+    "macos-arm64"
+  ],
+  "source_tree_sha256": "f5003da0244cef7a43a2df71a204601386ae0866b968e1a988fc14598c6223a5",
+  "build_id": "9261a004c8fd4de39f84c3eca5a867fb",
+  "release_channel": "preview",
+  "source_dirty": true,
+  "runtimes": [
+    {
+      "size_bytes": 89984398,
+      "platform": "windows-x64",
+      "path_from_runtime_root": "windows-x64/fuc.exe",
+      "execution_validation": "passed-packaged-offline-selfchecks",
+      "sha256": "afc956bd7ab67e67c652b1af10c8f305614c2f589548268a87f7ae9714b59686"
+    }
+  ],
+  "manifest_version": "1.1",
+  "built_at_utc": "2026-10-02T16:04:29.4385041Z",
+  "source_commit": "unknown",
+  "native_editor_validation": [
+    {
+      "initial_compile_warnings": [
+        "Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorActivityBridge.cs(40,13): warning CS0618: 'CompilationPipeline.assemblyCompilationStarted' is obsolete: 'Use compilationStarted, compilationFinished or assemblyCompilationFinished instead. Note that using any of these functions to do time measurements is a bad idea as they run async to actual compilation.'",
+        "Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorActivityBridge.cs(51,13): warning CS0618: 'CompilationPipeline.assemblyCompilationStarted' is obsolete: 'Use compilationStarted, compilationFinished or assemblyCompilationFinished instead. Note that using any of these functions to do time measurements is a bad idea as they run async to actual compilation.'"
+      ],
+      "compile_coverage": "cross_reload_verified",
+      "compile_generation": 1,
+      "verified_dependency_scope": "Newtonsoft 3.2.1 UGUI 1.0.0 TestFramework 1.1.33",
+      "passed": true,
+      "version": "2022.3.62f3",
+      "compile_history_gap": false,
+      "identity_roundtrip": true,
+      "fixture_evidence": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\2022.3.62f3-11462a36dd1f494aabcc3f98c16fc7c5",
+      "compile_errors": 0,
+      "bridge_payload_matches_final": true
+    },
+    {
+      "initial_compile_warnings": [
+        "Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorActivityBridge.cs(40,13): warning CS0618: 'CompilationPipeline.assemblyCompilationStarted' is obsolete: 'Use compilationStarted, compilationFinished or assemblyCompilationFinished instead. Note that using any of these functions to do time measurements is a bad idea as they run async to actual compilation.'",
+        "Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorActivityBridge.cs(51,13): warning CS0618: 'CompilationPipeline.assemblyCompilationStarted' is obsolete: 'Use compilationStarted, compilationFinished or assemblyCompilationFinished instead. Note that using any of these functions to do time measurements is a bad idea as they run async to actual compilation.'"
+      ],
+      "compile_coverage": "cross_reload_verified",
+      "compile_generation": 1,
+      "verified_dependency_scope": "Newtonsoft 3.2.2 UGUI 2.0.0 TestFramework 1.6.0",
+      "passed": true,
+      "version": "6000.4.10f1",
+      "compile_history_gap": false,
+      "identity_roundtrip": true,
+      "fixture_evidence": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b",
+      "compile_errors": 0,
+      "bridge_payload_matches_final": true
+    },
+    {
+      "initial_compile_warnings": [
+        "Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorActivityBridge.cs(40,13): warning CS0618: 'CompilationPipeline.assemblyCompilationStarted' is obsolete: 'Use compilationStarted, compilationFinished or assemblyCompilationFinished instead. Note that using any of these functions to do time measurements is a bad idea as they run async to actual compilation.'",
+        "Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorActivityBridge.cs(51,13): warning CS0618: 'CompilationPipeline.assemblyCompilationStarted' is obsolete: 'Use compilationStarted, compilationFinished or assemblyCompilationFinished instead. Note that using any of these functions to do time measurements is a bad idea as they run async to actual compilation.'"
+      ],
+      "compile_coverage": "cross_reload_verified",
+      "compile_generation": 1,
+      "verified_dependency_scope": "Newtonsoft 3.2.2 UGUI 2.0.0 TestFramework 1.6.0",
+      "passed": true,
+      "version": "6000.5.1f1",
+      "compile_history_gap": false,
+      "identity_roundtrip": true,
+      "fixture_evidence": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.5.1f1-38897634b3504bbbbeaa792db2270924",
+      "compile_errors": 0,
+      "bridge_payload_matches_final": true
+    },
+    {
+      "initial_compile_warnings": [
+        "Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorActivityBridge.cs(40,13): warning CS0618: 'CompilationPipeline.assemblyCompilationStarted' is obsolete: 'Use compilationStarted, compilationFinished or assemblyCompilationFinished instead. Note that using any of these functions to do time measurements is a bad idea as they run async to actual compilation.'",
+        "Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorActivityBridge.cs(51,13): warning CS0618: 'CompilationPipeline.assemblyCompilationStarted' is obsolete: 'Use compilationStarted, compilationFinished or assemblyCompilationFinished instead. Note that using any of these functions to do time measurements is a bad idea as they run async to actual compilation.'",
+        "Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorDelegateBridge.cs(105,24): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.",
+        "Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorDelegateBridge.cs(229,29): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.",
+        "Packages\\com.fakeunity.cli.editorbridge\\Editor\\OnlineProviderRegistry.cs(201,31): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.",
+        "Packages\\com.fakeunity.cli.editorbridge\\Editor\\RoslynExecutor.cs(135,53): warning UAC0020: System.Reflection.Assembly.LoadFrom(string) loads assembly into non-Unity AssemblyLoadContext and is not supported. Use Unity API instead.",
+        "Packages\\com.fakeunity.cli.editorbridge\\Editor\\RoslynExecutor.cs(150,26): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.",
+        "Packages\\com.fakeunity.cli.editorbridge\\Editor\\RoslynExecutor.cs(152,30): warning UAC0020: System.Reflection.Assembly.LoadFrom(string) loads assembly into non-Unity AssemblyLoadContext and is not supported. Use Unity API instead.",
+        "Packages\\com.fakeunity.cli.editorbridge\\Editor\\RoslynExecutor.cs(158,38): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.",
+        "Packages\\com.fakeunity.cli.editorbridge\\Editor\\RoslynExecutor.cs(318,59): warning UAC0007: Assembly.Location returns \"\" in Unity as assemblies are loaded from stream. Use extension method 'Assembly.GetLoadedAssemblyPath()' instead.",
+        "Packages\\com.fakeunity.cli.editorbridge\\Editor\\RoslynExecutor.cs(76,32): warning UAC0020: System.Reflection.Assembly.Load(byte[]) loads assembly into non-Unity AssemblyLoadContext and is not supported. Use Unity API instead."
+      ],
+      "compile_coverage": "cross_reload_verified",
+      "compile_generation": 1,
+      "verified_dependency_scope": "Newtonsoft 3.2.2 UGUI 2.0.0 TestFramework 1.6.0",
+      "passed": true,
+      "version": "6000.6.4f1",
+      "compile_history_gap": false,
+      "identity_roundtrip": true,
+      "fixture_evidence": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.6.4f1-4899c3716c9c47f4991d1c1b72a132f7",
+      "compile_errors": 0,
+      "bridge_payload_matches_final": true
+    }
+  ],
+  "native_payload_check": "evidence/native-payload-check.json",
+  "unverified_scope": [
+    "Other Unity 6000 versions including 6000.3",
+    "U6 offline asset writes remain disabled",
+    "U6 live-update and complete preservation matrix",
+    "Full Inspector UI TestRunner and third-party Provider matrix",
+    "Linux macOS Player",
+    "2022.3 Newtonsoft 3.0.2 download failed only 3.2.1 verified",
+    "Installed project path selfcheck failed Temp/Assets access three times cause undetermined not PASS"
+  ],
+  "independent_review": {
+    "evidence": "evidence/acceptance.md",
+    "reviewer": "Fermat",
+    "status": "conditional",
+    "reviewed_payload_files": 113,
+    "security_findings": "original P1 closed no new concrete P0/P1 found"
+  }
+}

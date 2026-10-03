@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "command": "selfcheck capabilities",
+  "ok": true,
+  "dry_run": false,
+  "data": {
+    "all_passed": true,
+    "total": 9,
+    "passed": 9,
+    "failed": 0,
+    "elapsed_ms": 145,
+    "checks": [
+      {
+        "name": "packages.detected",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "name": "version.detected",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "name": "package.preflight",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "name": "schema.registered",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "name": "recipes.exclude_object_creation_templates",
+        "pass": true,
+        "detail": [
+          "prefab-instance",
+          "texture-sprite"
+        ]
+      },
+      {
+        "name": "recipes_keep_lifecycle_and_importer_only",
+        "pass": true,
+        "detail": "[{\"name\":\"prefab-instance\",\"recipe\":{\"command\":\"scene instance-add\",\"requires\":[],\"example\":\"fuc scene instance-add Assets/Main.unity --value Assets/UI/HUD.prefab --project \\u003Croot\\u003E --json\"}},{\"name\":\"texture-sprite\",\"recipe\":{\"command\":\"importer set-many\",\"requires\":[],\"example\":\"fuc importer set-many Assets/UI/Icon.png --values \\u0027{\\u0022textureType\\u0022:8,\\u0022spriteMode\\u0022:1,\\u0022spritePixelsToUnits\\u0022:100,\\u0022platformSettings[1].textureCompression\\u0022:1}\\u0027 --project \\u003Croot\\u003E --json\"}}]"
+      },
+      {
+        "name": "capabilities.executable",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "name": "validate.executable",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "name": "schema.all_commands_described",
+        "pass": true,
+        "detail": null
+      }
+    ]
+  },
+  "error": null,
+  "meta": {
+    "warnings": [],
+    "truncation": {
+      "truncated": false,
+      "total_count": 0,
+      "cursor": null,
+      "full_output_path": null
+    },
+    "artifacts": null,
+    "project": null
+  }
+}

@@ -19,37 +19,10 @@
             "category": "框架",
             "description": "框架数据模块基础定义与数据层入口",
             "version": "1.0.0",
-            "installCheckPath": "Assets/MieMieFrameTools/Scripts/Frame/C_Data/DataModule.cs",
+            "installCheckPath": "Assets/MieMieFrameTools/Scripts/Frame/C_Data/IConfigModule.cs",
             "tags": [
                 "数据",
                 "核心"
-            ],
-            "isBuiltIn": true
-        },
-        {
-            "id": "addressable-res",
-            "displayName": "Addressable 资源加载",
-            "category": "框架",
-            "description": "AddressableMgr 同步异步加载与资源生命周期管理",
-            "version": "1.0.0",
-            "installCheckPath": "Assets/MieMieFrameTools/Scripts/Frame/B_Assets/Addressable/AddressableMgr.cs",
-            "tags": [
-                "资源",
-                "Addressables"
-            ],
-            "isBuiltIn": true
-        },
-        {
-            "id": "mmasset-bundle",
-            "displayName": "MmAsset AB 资源管线",
-            "category": "框架",
-            "description": "AssetBundle 整包构建 热更新资源加载与资源生命周期管理",
-            "version": "1.0.0",
-            "installCheckPath": "Assets/MieMieFrameTools/Scripts/Frame/B_Assets/MmAsset/Runtime/Core/MmAssetFrame.cs",
-            "tags": [
-                "资源",
-                "AB",
-                "热更"
             ],
             "isBuiltIn": true
         },
@@ -58,7 +31,7 @@
             "displayName": "YooAsset 资源管线",
             "category": "框架",
             "description": "YooAsset 资源构建 加载 下载与缓存管理框架",
-            "version": "2.3.16",
+            "version": "3.0.5",
             "installCheckPath": "Assets/MieMieFrameTools/Scripts/Frame/B_Assets/Yooasset/package.json",
             "tags": [
                 "资源",
@@ -435,12 +408,12 @@
             "isBuiltIn": true
         },
         {
-            "id": "mmasset-editor",
-            "displayName": "MmAsset 资源管线编辑器",
+            "id": "yooasset-editor",
+            "displayName": "YooAsset 资源管线编辑器",
             "category": "编辑器拓展",
-            "description": "MmAsset 构建 热更新 配置与诊断编辑器工具",
-            "version": "1.0.0",
-            "installCheckPath": "Assets/MieMieFrameTools/Editor/MmAssetForEditor/RootWindow/BuildWindow.cs",
+            "description": "YooAsset 原生资源采集 构建与运行时调试工具",
+            "version": "3.0.5",
+            "installCheckPath": "Assets/MieMieFrameTools/Scripts/Frame/B_Assets/Yooasset/Editor/BundleBuilder/BundleBuilderWindow.cs",
             "tags": [
                 "编辑器",
                 "资源",
@@ -452,7 +425,7 @@
             "id": "pool-editor",
             "displayName": "Object Pool Editor",
             "category": "编辑器拓展",
-            "description": "对象池预热与运行时监控 MmAsset 资源实例池查看",
+            "description": "对象池预热与运行时监控 资源句柄请使用 YooAsset 原生调试器",
             "version": "1.0.0",
             "installCheckPath": "Assets/MieMieFrameTools/Editor/PoolWindow/PoolEditorWindow.cs",
             "tags": [

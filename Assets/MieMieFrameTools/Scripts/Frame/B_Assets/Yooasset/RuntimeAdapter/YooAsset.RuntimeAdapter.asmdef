@@ -2,7 +2,9 @@
     "name": "YooAsset.RuntimeAdapter",
     "rootNamespace": "MieMieFrameWork.Asset",
     "references": [
-        "YooAsset"
+        "YooAsset",
+        "UniTask",
+        "MieMieFrameWork.Diagnostics"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

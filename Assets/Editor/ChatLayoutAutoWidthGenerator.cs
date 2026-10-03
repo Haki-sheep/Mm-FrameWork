@@ -19,7 +19,6 @@ public static class ChatLayoutAutoWidthGenerator
     /// <summary>
     /// 生成聊天气泡自动宽度示例场景
     /// </summary>
-    [MenuItem("Tools/HakiSheep/聊天布局/生成自动宽度示例")]
     public static void GenerateDemo()
     {
         if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())

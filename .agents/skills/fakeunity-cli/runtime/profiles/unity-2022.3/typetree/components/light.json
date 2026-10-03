@@ -1,0 +1,480 @@
+{
+ "full_name": "UnityEngine.Light",
+ "dump_full_name": "Light",
+ "type_id": 108,
+ "base": "Behaviour",
+ "fields": [
+  {
+   "name": "m_GameObject",
+   "type": "PPtr<GameObject>",
+   "kind": "UnityObjectRef",
+   "byte_size": 12,
+   "children": [
+    {
+     "name": "m_FileID",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_PathID",
+     "type": "SInt64",
+     "kind": "Primitive",
+     "byte_size": 8
+    }
+   ]
+  },
+  {
+   "name": "m_Enabled",
+   "type": "UInt8",
+   "kind": "Primitive",
+   "byte_size": 1
+  },
+  {
+   "name": "m_Type",
+   "type": "int",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "m_Shape",
+   "type": "int",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "m_Color",
+   "type": "ColorRGBA",
+   "kind": "Struct",
+   "byte_size": 16,
+   "children": [
+    {
+     "name": "r",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "g",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "b",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "a",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    }
+   ]
+  },
+  {
+   "name": "m_Intensity",
+   "type": "float",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "m_Range",
+   "type": "float",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "m_SpotAngle",
+   "type": "float",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "m_InnerSpotAngle",
+   "type": "float",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "m_CookieSize",
+   "type": "float",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "m_Shadows",
+   "type": "ShadowSettings",
+   "kind": "Struct",
+   "byte_size": 93,
+   "children": [
+    {
+     "name": "m_Type",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_Resolution",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_CustomResolution",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_Strength",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_Bias",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_NormalBias",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_NearPlane",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_CullingMatrixOverride",
+     "type": "Matrix4x4f",
+     "kind": "Struct",
+     "byte_size": 64,
+     "children": [
+      {
+       "name": "e00",
+       "type": "float",
+       "kind": "Primitive",
+       "byte_size": 4
+      },
+      {
+       "name": "e01",
+       "type": "float",
+       "kind": "Primitive",
+       "byte_size": 4
+      },
+      {
+       "name": "e02",
+       "type": "float",
+       "kind": "Primitive",
+       "byte_size": 4
+      },
+      {
+       "name": "e03",
+       "type": "float",
+       "kind": "Primitive",
+       "byte_size": 4
+      },
+      {
+       "name": "e10",
+       "type": "float",
+       "kind": "Primitive",
+       "byte_size": 4
+      },
+      {
+       "name": "e11",
+       "type": "float",
+       "kind": "Primitive",
+       "byte_size": 4
+      },
+      {
+       "name": "e12",
+       "type": "float",
+       "kind": "Primitive",
+       "byte_size": 4
+      },
+      {
+       "name": "e13",
+       "type": "float",
+       "kind": "Primitive",
+       "byte_size": 4
+      },
+      {
+       "name": "e20",
+       "type": "float",
+       "kind": "Primitive",
+       "byte_size": 4
+      },
+      {
+       "name": "e21",
+       "type": "float",
+       "kind": "Primitive",
+       "byte_size": 4
+      },
+      {
+       "name": "e22",
+       "type": "float",
+       "kind": "Primitive",
+       "byte_size": 4
+      },
+      {
+       "name": "e23",
+       "type": "float",
+       "kind": "Primitive",
+       "byte_size": 4
+      },
+      {
+       "name": "e30",
+       "type": "float",
+       "kind": "Primitive",
+       "byte_size": 4
+      },
+      {
+       "name": "e31",
+       "type": "float",
+       "kind": "Primitive",
+       "byte_size": 4
+      },
+      {
+       "name": "e32",
+       "type": "float",
+       "kind": "Primitive",
+       "byte_size": 4
+      },
+      {
+       "name": "e33",
+       "type": "float",
+       "kind": "Primitive",
+       "byte_size": 4
+      }
+     ]
+    },
+    {
+     "name": "m_UseCullingMatrixOverride",
+     "type": "bool",
+     "kind": "Primitive",
+     "byte_size": 1
+    }
+   ]
+  },
+  {
+   "name": "m_Cookie",
+   "type": "PPtr<Texture>",
+   "kind": "UnityObjectRef",
+   "byte_size": 12,
+   "children": [
+    {
+     "name": "m_FileID",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_PathID",
+     "type": "SInt64",
+     "kind": "Primitive",
+     "byte_size": 8
+    }
+   ]
+  },
+  {
+   "name": "m_DrawHalo",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1
+  },
+  {
+   "name": "m_BakingOutput",
+   "type": "LightBakingOutput",
+   "kind": "Struct",
+   "byte_size": 17,
+   "children": [
+    {
+     "name": "probeOcclusionLightIndex",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "occlusionMaskChannel",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "lightmapBakeMode",
+     "type": "LightmapBakeMode",
+     "kind": "Struct",
+     "byte_size": 8,
+     "children": [
+      {
+       "name": "lightmapBakeType",
+       "type": "int",
+       "kind": "Primitive",
+       "byte_size": 4
+      },
+      {
+       "name": "mixedLightingMode",
+       "type": "int",
+       "kind": "Primitive",
+       "byte_size": 4
+      }
+     ]
+    },
+    {
+     "name": "isBaked",
+     "type": "bool",
+     "kind": "Primitive",
+     "byte_size": 1
+    }
+   ]
+  },
+  {
+   "name": "m_Flare",
+   "type": "PPtr<Flare>",
+   "kind": "UnityObjectRef",
+   "byte_size": 12,
+   "children": [
+    {
+     "name": "m_FileID",
+     "type": "int",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "m_PathID",
+     "type": "SInt64",
+     "kind": "Primitive",
+     "byte_size": 8
+    }
+   ]
+  },
+  {
+   "name": "m_RenderMode",
+   "type": "int",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "m_CullingMask",
+   "type": "BitField",
+   "kind": "Struct",
+   "byte_size": 4,
+   "children": [
+    {
+     "name": "m_Bits",
+     "type": "unsigned int",
+     "kind": "Primitive",
+     "byte_size": 4
+    }
+   ]
+  },
+  {
+   "name": "m_RenderingLayerMask",
+   "type": "unsigned int",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "m_Lightmapping",
+   "type": "int",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "m_LightShadowCasterMode",
+   "type": "int",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "m_AreaSize",
+   "type": "Vector2f",
+   "kind": "Struct",
+   "byte_size": 8,
+   "children": [
+    {
+     "name": "x",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "y",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    }
+   ]
+  },
+  {
+   "name": "m_BounceIntensity",
+   "type": "float",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "m_ColorTemperature",
+   "type": "float",
+   "kind": "Primitive",
+   "byte_size": 4
+  },
+  {
+   "name": "m_UseColorTemperature",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1
+  },
+  {
+   "name": "m_BoundingSphereOverride",
+   "type": "Vector4f",
+   "kind": "Struct",
+   "byte_size": 16,
+   "children": [
+    {
+     "name": "x",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "y",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "z",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    },
+    {
+     "name": "w",
+     "type": "float",
+     "kind": "Primitive",
+     "byte_size": 4
+    }
+   ]
+  },
+  {
+   "name": "m_UseBoundingSphereOverride",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1
+  },
+  {
+   "name": "m_UseViewFrustumForShadowCasterCull",
+   "type": "bool",
+   "kind": "Primitive",
+   "byte_size": 1
+  }
+ ]
+}

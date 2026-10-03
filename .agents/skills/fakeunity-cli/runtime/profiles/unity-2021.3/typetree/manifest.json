@@ -1,0 +1,13 @@
+{
+  "status": "readonly-minimal",
+  "source_version": "2021.3",
+  "license_note": "project-authored compatibility snapshot",
+  "components": [
+    {
+      "file": "components/gameobject.json",
+      "full_name": "UnityEngine.GameObject",
+      "type_id": 1,
+      "field_count": 5
+    }
+  ]
+}

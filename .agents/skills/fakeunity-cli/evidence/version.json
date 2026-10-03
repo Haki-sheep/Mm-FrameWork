@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "command": "version",
+  "ok": true,
+  "dry_run": false,
+  "data": {
+    "name": "fuc",
+    "version": "0.2.0-preview-unity6",
+    "schema_version": "1.0",
+    "build_identity": {
+      "product_version": "0.2.0-preview-unity6",
+      "source_commit": "unknown",
+      "source_dirty": true,
+      "release_channel": "preview",
+      "build_id": "9261a004c8fd4de39f84c3eca5a867fb",
+      "built_at_utc": "2026-10-02T16:04:29.4385041Z",
+      "identity_source": "assembly_build_metadata"
+    }
+  },
+  "error": null,
+  "meta": {
+    "warnings": [],
+    "truncation": {
+      "truncated": false,
+      "total_count": 0,
+      "cursor": null,
+      "full_output_path": null
+    },
+    "artifacts": null,
+    "project": null
+  }
+}

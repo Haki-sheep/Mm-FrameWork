@@ -1,0 +1,75 @@
+[
+  {
+    "initial_compile_warnings": [
+      "Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorActivityBridge.cs(40,13): warning CS0618: 'CompilationPipeline.assemblyCompilationStarted' is obsolete: 'Use compilationStarted, compilationFinished or assemblyCompilationFinished instead. Note that using any of these functions to do time measurements is a bad idea as they run async to actual compilation.'",
+      "Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorActivityBridge.cs(51,13): warning CS0618: 'CompilationPipeline.assemblyCompilationStarted' is obsolete: 'Use compilationStarted, compilationFinished or assemblyCompilationFinished instead. Note that using any of these functions to do time measurements is a bad idea as they run async to actual compilation.'"
+    ],
+    "compile_coverage": "cross_reload_verified",
+    "compile_generation": 1,
+    "verified_dependency_scope": "Newtonsoft 3.2.1 UGUI 1.0.0 TestFramework 1.1.33",
+    "passed": true,
+    "version": "2022.3.62f3",
+    "compile_history_gap": false,
+    "identity_roundtrip": true,
+    "fixture_evidence": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\2022.3.62f3-11462a36dd1f494aabcc3f98c16fc7c5",
+    "compile_errors": 0,
+    "bridge_payload_matches_final": true
+  },
+  {
+    "initial_compile_warnings": [
+      "Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorActivityBridge.cs(40,13): warning CS0618: 'CompilationPipeline.assemblyCompilationStarted' is obsolete: 'Use compilationStarted, compilationFinished or assemblyCompilationFinished instead. Note that using any of these functions to do time measurements is a bad idea as they run async to actual compilation.'",
+      "Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorActivityBridge.cs(51,13): warning CS0618: 'CompilationPipeline.assemblyCompilationStarted' is obsolete: 'Use compilationStarted, compilationFinished or assemblyCompilationFinished instead. Note that using any of these functions to do time measurements is a bad idea as they run async to actual compilation.'"
+    ],
+    "compile_coverage": "cross_reload_verified",
+    "compile_generation": 1,
+    "verified_dependency_scope": "Newtonsoft 3.2.2 UGUI 2.0.0 TestFramework 1.6.0",
+    "passed": true,
+    "version": "6000.4.10f1",
+    "compile_history_gap": false,
+    "identity_roundtrip": true,
+    "fixture_evidence": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.4.10f1-b888eb105137443fbfe6c6b561f9d31b",
+    "compile_errors": 0,
+    "bridge_payload_matches_final": true
+  },
+  {
+    "initial_compile_warnings": [
+      "Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorActivityBridge.cs(40,13): warning CS0618: 'CompilationPipeline.assemblyCompilationStarted' is obsolete: 'Use compilationStarted, compilationFinished or assemblyCompilationFinished instead. Note that using any of these functions to do time measurements is a bad idea as they run async to actual compilation.'",
+      "Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorActivityBridge.cs(51,13): warning CS0618: 'CompilationPipeline.assemblyCompilationStarted' is obsolete: 'Use compilationStarted, compilationFinished or assemblyCompilationFinished instead. Note that using any of these functions to do time measurements is a bad idea as they run async to actual compilation.'"
+    ],
+    "compile_coverage": "cross_reload_verified",
+    "compile_generation": 1,
+    "verified_dependency_scope": "Newtonsoft 3.2.2 UGUI 2.0.0 TestFramework 1.6.0",
+    "passed": true,
+    "version": "6000.5.1f1",
+    "compile_history_gap": false,
+    "identity_roundtrip": true,
+    "fixture_evidence": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.5.1f1-38897634b3504bbbbeaa792db2270924",
+    "compile_errors": 0,
+    "bridge_payload_matches_final": true
+  },
+  {
+    "initial_compile_warnings": [
+      "Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorActivityBridge.cs(40,13): warning CS0618: 'CompilationPipeline.assemblyCompilationStarted' is obsolete: 'Use compilationStarted, compilationFinished or assemblyCompilationFinished instead. Note that using any of these functions to do time measurements is a bad idea as they run async to actual compilation.'",
+      "Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorActivityBridge.cs(51,13): warning CS0618: 'CompilationPipeline.assemblyCompilationStarted' is obsolete: 'Use compilationStarted, compilationFinished or assemblyCompilationFinished instead. Note that using any of these functions to do time measurements is a bad idea as they run async to actual compilation.'",
+      "Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorDelegateBridge.cs(105,24): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.",
+      "Packages\\com.fakeunity.cli.editorbridge\\Editor\\EditorDelegateBridge.cs(229,29): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.",
+      "Packages\\com.fakeunity.cli.editorbridge\\Editor\\OnlineProviderRegistry.cs(201,31): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.",
+      "Packages\\com.fakeunity.cli.editorbridge\\Editor\\RoslynExecutor.cs(135,53): warning UAC0020: System.Reflection.Assembly.LoadFrom(string) loads assembly into non-Unity AssemblyLoadContext and is not supported. Use Unity API instead.",
+      "Packages\\com.fakeunity.cli.editorbridge\\Editor\\RoslynExecutor.cs(150,26): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.",
+      "Packages\\com.fakeunity.cli.editorbridge\\Editor\\RoslynExecutor.cs(152,30): warning UAC0020: System.Reflection.Assembly.LoadFrom(string) loads assembly into non-Unity AssemblyLoadContext and is not supported. Use Unity API instead.",
+      "Packages\\com.fakeunity.cli.editorbridge\\Editor\\RoslynExecutor.cs(158,38): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.",
+      "Packages\\com.fakeunity.cli.editorbridge\\Editor\\RoslynExecutor.cs(318,59): warning UAC0007: Assembly.Location returns \"\" in Unity as assemblies are loaded from stream. Use extension method 'Assembly.GetLoadedAssemblyPath()' instead.",
+      "Packages\\com.fakeunity.cli.editorbridge\\Editor\\RoslynExecutor.cs(76,32): warning UAC0020: System.Reflection.Assembly.Load(byte[]) loads assembly into non-Unity AssemblyLoadContext and is not supported. Use Unity API instead."
+    ],
+    "compile_coverage": "cross_reload_verified",
+    "compile_generation": 1,
+    "verified_dependency_scope": "Newtonsoft 3.2.2 UGUI 2.0.0 TestFramework 1.6.0",
+    "passed": true,
+    "version": "6000.6.4f1",
+    "compile_history_gap": false,
+    "identity_roundtrip": true,
+    "fixture_evidence": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\6000.6.4f1-4899c3716c9c47f4991d1c1b72a132f7",
+    "compile_errors": 0,
+    "bridge_payload_matches_final": true
+  }
+]

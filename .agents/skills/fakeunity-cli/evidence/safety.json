@@ -1,0 +1,133 @@
+{
+  "schema_version": "1.0",
+  "command": "selfcheck safety",
+  "ok": true,
+  "dry_run": false,
+  "data": {
+    "all_passed": true,
+    "total": 11,
+    "passed": 11,
+    "failed": 0,
+    "scenarios": [
+      {
+        "name": "no_lock_allowed",
+        "passed": true,
+        "detail": {
+          "allowed": true,
+          "state": "Unlocked",
+          "detail": "无 UnityLockfile：Editor 未运行"
+        }
+      },
+      {
+        "name": "stale_dead_pid_denied",
+        "passed": true,
+        "detail": {
+          "allowed": false,
+          "deny_code": "FUC_EDITOR_LOCK_STALE",
+          "detail": "lockfile PID=4194303 无对应存活进程：stale 锁（崩溃残留）",
+          "recovery": "确认无 Editor 运行后手动删除 Temp/UnityLockfile，或加 --force 显式突破。"
+        }
+      },
+      {
+        "name": "stale_pid_reused_denied",
+        "passed": true,
+        "detail": {
+          "skipped": false,
+          "allowed": false,
+          "deny_code": "FUC_EDITOR_LOCK_STALE",
+          "pid": 44168,
+          "process_name": "fuc",
+          "detail": "lockfile PID=44168 已被非 Unity 进程（fuc）复用：stale 锁"
+        }
+      },
+      {
+        "name": "stale_force_allowed_with_warning",
+        "passed": true,
+        "detail": {
+          "allowed": true,
+          "warning": "已用 --force 突破 stale 锁（崩溃残留）；建议确认无 Editor 运行后手动删除 Temp/UnityLockfile。"
+        }
+      },
+      {
+        "name": "held_lock_denied",
+        "passed": true,
+        "detail": {
+          "allowed": false,
+          "deny_code": "FUC_EDITOR_LOCK_HELD",
+          "detail": "lockfile 为 0 字节且被独占锁定：活 Editor 持锁（PID 未写入，无法解析）"
+        }
+      },
+      {
+        "name": "held_force_allowed_with_warning",
+        "passed": true,
+        "detail": {
+          "allowed": true,
+          "warning": "已用 --force 突破活锁：Editor 正在运行，写入可能与 Editor 内存态冲突（最后保存者赢风险），建议写完后让 Editor 重新加载工程。"
+        }
+      },
+      {
+        "name": "guard_unchanged_pass",
+        "passed": true,
+        "detail": {
+          "unchanged": true
+        }
+      },
+      {
+        "name": "guard_tamper_detected",
+        "passed": true,
+        "detail": {
+          "unchanged": false,
+          "mismatches": [
+            {
+              "path": "C:\\Users\\fmz\\AppData\\Local\\Temp\\fuc-selfcheck-safety-00619c9bcc284ce58eb8e7995116178a\\target.asset",
+              "kind": "content_changed",
+              "detail": "内容已变化（sha256 1204aff32598… → 71f643538028…）：可能被 Editor 后台保存覆盖，请重新 plan"
+            }
+          ]
+        }
+      },
+      {
+        "name": "guard_expected_absent_created",
+        "passed": true,
+        "detail": {
+          "unchanged": false,
+          "mismatches": [
+            {
+              "path": "C:\\Users\\fmz\\AppData\\Local\\Temp\\fuc-selfcheck-safety-00619c9bcc284ce58eb8e7995116178a\\new.asset",
+              "kind": "created",
+              "detail": "计划时路径不存在，但落盘前已被外部创建；拒绝覆盖新对象"
+            }
+          ]
+        }
+      },
+      {
+        "name": "batch_delete_failure_rolls_back",
+        "passed": true,
+        "detail": {
+          "success": false,
+          "error_code": "FUC_WRITE_DENIED",
+          "overwrite": "before"
+        }
+      },
+      {
+        "name": "reimport_expectation_text",
+        "passed": true,
+        "detail": {
+          "text": "下次 Unity 启动/聚焦时将触发 3 个资产重导入，Editor 会刷新对应 Library/ 导入产物。"
+        }
+      }
+    ]
+  },
+  "error": null,
+  "meta": {
+    "warnings": [],
+    "truncation": {
+      "truncated": false,
+      "total_count": 0,
+      "cursor": null,
+      "full_output_path": null
+    },
+    "artifacts": null,
+    "project": null
+  }
+}

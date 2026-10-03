@@ -14,7 +14,7 @@
 | 子表 | `cfg.demo.Tbitem` | Excel 整张 `#demo.item.xlsx` |
 | 一行 | `cfg.demo.item` | 表里的一条记录（Bean） |
 
-Bean = 一条有类型的记录 不是豆子  
+Bean = 一条有类型的记录
 `vector2` 也是 Bean 只是嵌在字段里的复合结构 不一定对应一张表
 
 命名：`demo` 是模块 `Tb` 是 Table `item` 是行类型  
@@ -61,7 +61,7 @@ Tbitem = new demo.Tbitem(loader("demo_tbitem"));
 `ResolveRef` 不是加载 是事后填引用指针
 
 读硬盘不在 Generated 里 由传入的 `Func<string, JArray>` 负责  
-当前工程尚未接入 `new Tables(` 需要业务侧自己写 loader
+当前工程由 `LubanTablesDataModule` 接入 `new cfg.Tables(loader)` 本地文件加载器按生成表名读取 JSON
 
 ---
 
@@ -111,4 +111,8 @@ foreach (var eRow in eTables.Tbitem.DataList)
 运行时数量背包等不要改 `item` 放自己的 RuntimeData
 
 热更配表应整份替换 `Tables` 不要改已有行对象  
-框架侧可用 `DataModule<cfg.Tables>` 做 Init/Reload 快照 目前尚未接线
+框架通过 `LubanConfigModule` 接入启动与释放 由 `LubanTablesDataModule` 直接管理 Init/Reload/Dispose 和当前 `cfg.Tables` 不再依赖通用数据基类
+
+FrameRoot 可以预挂配置组件 ModuleHub 优先复用同物体接口 没有组件时通过通用 GetOrAdd 扩展补挂已安装的 Luban 组件 无需拖入配置槽位 业务等待 `ModuleHub.Instance.ReadyTask` 后通过 `GetConfig<LubanConfigModule>()` 获取配置
+
+启动 所有权 平台限制 重载失败与退出规则统一见 [数据模块生命周期](README.md)

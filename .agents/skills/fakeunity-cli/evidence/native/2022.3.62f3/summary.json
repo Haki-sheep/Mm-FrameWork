@@ -1,0 +1,16 @@
+{
+  "offline_asset_write": "blocked",
+  "checks": [
+    "bridge_install",
+    "ready",
+    "context",
+    "roslyn",
+    "serialized_object",
+    "prefab_save_import",
+    "shutdown"
+  ],
+  "compile_evidence": "compile.json",
+  "evidence": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\unity6-evidence\\delivery-editors\\2022.3.62f3-11462a36dd1f494aabcc3f98c16fc7c5",
+  "passed": true,
+  "version": "2022.3.62f3"
+}

@@ -37,6 +37,7 @@ namespace MiMieFSM.ChainedFsm
             if (!chainedFsmDict.TryGetValue(stateType, out IChainedFsm state))
             {
                 state = new T();
+                state.Owner = this;
                 chainedFsmDict.Add(stateType, state);
             }
 

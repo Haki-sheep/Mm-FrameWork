@@ -1,0 +1,8 @@
+{
+  "final_build_id": "9261a004c8fd4de39f84c3eca5a867fb",
+  "unmanifested_payload_error": "Unmanifested payload file: unexpected-payload.txt",
+  "fixture": "E:\\AAAA学习资料\\Demo\\UnityFakeCLI\\out\\package-tamper-final-61aa1de54d374466bd6d548ec60eb988",
+  "changed_skill_error": "Payload missing or changed: SKILL.md",
+  "unmanifested_payload_rejected": true,
+  "changed_skill_rejected": true
+}

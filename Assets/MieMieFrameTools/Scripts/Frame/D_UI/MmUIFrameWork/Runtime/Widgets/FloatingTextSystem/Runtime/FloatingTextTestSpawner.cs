@@ -92,6 +92,8 @@ namespace MieMieUIFrameWork.UI.FloatingText
         private int m_GlyphSum;
         private string m_LastReportSummary = string.Empty;
 
+        #region 测试运行与统计
+
         private void Reset()
         {
             var manager = FindFirstObjectByType<FloatingTextManager>();
@@ -132,12 +134,16 @@ namespace MieMieUIFrameWork.UI.FloatingText
 
         private void ApplyFpsCap()
         {
+            if (MieMieFrameWork.ModuleHub.Instance != null)
+                return;
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = (int)m_FpsCap;
         }
 
         private void SetFpsCap(EFpsCap eCap)
         {
+            if (MieMieFrameWork.ModuleHub.Instance != null)
+                return;
             if (m_FpsCap == eCap) return;
             m_FpsCap = eCap;
             ApplyFpsCap();
@@ -265,7 +271,7 @@ namespace MieMieUIFrameWork.UI.FloatingText
             float warmup = GetReportWarmupSeconds();
             Debug.Log(
                 $"[FloatingText] 标准压测开始 总时长={ReportTotalSeconds:0}s 预热={warmup:0}s " +
-                $"锁帧={(int)m_FpsCap} 目标同屏={m_ReportTargetActive}");
+                $"目标帧率={Application.targetFrameRate} VSync={QualitySettings.vSyncCount} 目标同屏={m_ReportTargetActive}");
         }
 
         private void TickReport()
@@ -348,7 +354,9 @@ namespace MieMieUIFrameWork.UI.FloatingText
 
             float avgFps = avgDt > 0.0001f ? 1f / avgDt : 0f;
             float avgFrameMs = avgDt * 1000f;
-            int cap = (int)m_FpsCap;
+            int cap = MieMieFrameWork.ModuleHub.Instance != null
+                ? (QualitySettings.vSyncCount == 0 ? Application.targetFrameRate : -1)
+                : (int)m_FpsCap;
             float hitRate = cap > 0 ? Mathf.Clamp01(avgFps / cap) * 100f : 0f;
 
             var sb = new StringBuilder(512);
@@ -360,7 +368,7 @@ namespace MieMieUIFrameWork.UI.FloatingText
             sb.AppendLine($"FPS Avg/Min/Max: {avgFps:F2} / {minFps:F2} / {maxFps:F2}");
             sb.AppendLine($"FPS 1% Low / 5% Low: {fps1Low:F2} / {fps5Low:F2}");
             sb.AppendLine($"Frame ms Avg/Max: {avgFrameMs:F2} / {maxFrameMs:F2}");
-            sb.AppendLine($"Cap Hit Rate(Avg/Cap): {hitRate:F1}%");
+            sb.AppendLine(cap > 0 ? $"Cap Hit Rate(Avg/Cap): {hitRate:F1}%" : "Cap Hit Rate(Avg/Cap): N/A VSync或平台默认策略");
             sb.AppendLine("========================================================");
             return sb.ToString();
         }
@@ -453,9 +461,12 @@ namespace MieMieUIFrameWork.UI.FloatingText
 
         private void OnGUI()
         {
+            bool HasFrameRoot = MieMieFrameWork.ModuleHub.Instance != null;
             GUILayout.BeginArea(new Rect(12f, 12f, 720f, 380f));
             GUILayout.Label("FloatingText 测试");
-            GUILayout.Label("A 日常 | B 压测4k | C 压测1万 | D 压测10万 | Space 预览 | Esc 取消 | 1锁60 | 2锁120");
+            GUILayout.Label(HasFrameRoot
+                ? "A 日常 | B 压测4k | C 压测1万 | D 压测10万 | Space 预览 | Esc 取消 | 锁帧由画质服务管理"
+                : "A 日常 | B 压测4k | C 压测1万 | D 压测10万 | Space 预览 | Esc 取消 | 1锁60 | 2锁120");
             string modeLabel = m_Mode == ETestMode.Off ? "Off" : m_Mode == ETestMode.Daily ? "Daily" : "StressReport";
             GUILayout.Label($"模式: {modeLabel}");
             if (m_World != null)
@@ -465,7 +476,9 @@ namespace MieMieUIFrameWork.UI.FloatingText
 
             float showMin = m_MinFps > 100000f ? 0f : m_MinFps;
             GUILayout.Label($"FPS Avg: {m_AvgFps:0.0}   Min: {showMin:0.0}   Max: {m_MaxFps:0.0}");
-            GUILayout.Label($"当前锁帧: {(int)m_FpsCap}");
+            GUILayout.Label(HasFrameRoot
+                ? $"画质服务帧率策略: {Application.targetFrameRate}  VSync: {QualitySettings.vSyncCount}"
+                : $"当前锁帧: {(int)m_FpsCap}");
 
             if (m_ReportRunning)
             {
@@ -476,15 +489,18 @@ namespace MieMieUIFrameWork.UI.FloatingText
             }
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(m_FpsCap == EFpsCap.Cap60 ? "[锁60]" : "锁60", GUILayout.Width(80f)))
+            bool PreviousGUIEnabled = GUI.enabled;
+            GUI.enabled = PreviousGUIEnabled && !HasFrameRoot;
+            if (GUILayout.Button(!HasFrameRoot && m_FpsCap == EFpsCap.Cap60 ? "[锁60]" : "锁60", GUILayout.Width(80f)))
             {
                 SetFpsCap(EFpsCap.Cap60);
             }
 
-            if (GUILayout.Button(m_FpsCap == EFpsCap.Cap120 ? "[锁120]" : "锁120", GUILayout.Width(80f)))
+            if (GUILayout.Button(!HasFrameRoot && m_FpsCap == EFpsCap.Cap120 ? "[锁120]" : "锁120", GUILayout.Width(80f)))
             {
                 SetFpsCap(EFpsCap.Cap120);
             }
+            GUI.enabled = PreviousGUIEnabled;
 
             if (GUILayout.Button(m_ReportRunning ? "取消压测" : "压测4k", GUILayout.Width(90f)))
             {
@@ -523,6 +539,8 @@ namespace MieMieUIFrameWork.UI.FloatingText
             m_World.Play(transform.position + Vector3.up * 1.5f + Vector3.right * 1.2f, "CRIT", true);
             m_World.Play(transform.position + Vector3.up * 1.8f, "HEAL", false);
         }
+
+        #endregion
 
         private static readonly string[] s_WordPool =
         {
