@@ -13,6 +13,7 @@ namespace MieMieFrameWork.Diagnostics
         public int Frame { get; }
         public int ThreadId { get; }
         public ELogLevel Level { get; }
+        public ELogColor Color { get; }
         public string Channel { get; }
         public string Message { get; }
         public string StackTrace { get; }
@@ -24,13 +25,14 @@ namespace MieMieFrameWork.Diagnostics
         /// 接收采集信息生成只读记录
         /// </summary>
         internal LogRecord(long sequence, int frame, ELogLevel level, string channel,
-            string message, string stackTrace, string memberName, string filePath, int lineNumber)
+            string message, string stackTrace, string memberName, string filePath, int lineNumber, ELogColor color)
         {
             Sequence = sequence;
             TimeUtc = DateTime.UtcNow;
             Frame = frame;
             ThreadId = System.Threading.Thread.CurrentThread.ManagedThreadId;
             Level = level;
+            Color = color;
             Channel = channel;
             Message = message;
             StackTrace = stackTrace;
@@ -44,7 +46,7 @@ namespace MieMieFrameWork.Diagnostics
         /// </summary>
         public override string ToString()
         {
-            string Text = $"[{TimeUtc.ToString("O", CultureInfo.InvariantCulture)}] #{Sequence} F{Frame} T{ThreadId} [{Level}][{Channel}] {Message}";
+            string Text = $"[{TimeUtc.ToString("O", CultureInfo.InvariantCulture)}] #{Sequence} F{Frame} T{ThreadId} [{Level}][{Channel}][{Color}] {Message}";
             if (!string.IsNullOrEmpty(FilePath))
                 Text += $"\n(at {FilePath}:{LineNumber}) {MemberName}";
             if (!string.IsNullOrEmpty(StackTrace))

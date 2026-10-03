@@ -25,6 +25,7 @@ namespace MieMieFrameWork
 
         /// <summary>
         /// 注入当前阶段的时间 固定阶段使用固定步长
+        /// 这个由Unitask自行更新 外部无需调用 上层由PlayerLoopHelper.AddAction(Update, TimerPlayerLoopDriver)添加
         /// </summary>
         public bool MoveNext()
         {

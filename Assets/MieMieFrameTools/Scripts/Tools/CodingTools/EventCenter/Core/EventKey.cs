@@ -3,10 +3,9 @@
     using System;
     using System.Diagnostics;
 
-    /// 事件 Key 类
+    /// 此类为事件 Key 类
     /// 用于标识事件的唯一性
     /// 以名称与消息类型共同标识事件槽位
-
 
 
     /// <summary>

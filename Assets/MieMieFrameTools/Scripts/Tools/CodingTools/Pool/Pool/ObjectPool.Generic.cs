@@ -3,6 +3,9 @@ namespace MieMieFrameWork.Pool
     using System;
     using UnityEngine.Pool;
 
+    /// <summary>
+    /// 此类为 泛型 对象池版本
+    /// <summary>
     public sealed class ObjectPool<T> : ObjectPool, IObjectPool<T> where T : class
     {
         #region 构造与获取

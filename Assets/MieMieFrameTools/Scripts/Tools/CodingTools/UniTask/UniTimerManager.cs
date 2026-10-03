@@ -38,13 +38,17 @@ namespace MieMieFrameWork
             if (isInitialized)
                 throw new InvalidOperationException("[UniTimerManager] 禁止重复初始化");
 
+            // 获取所有玩家循环阶段
             var TimingList = (PlayerLoopTiming[])Enum.GetValues(typeof(PlayerLoopTiming));
             try
             {
+                // 遍历所有玩家循环阶段 创建驱动器并添加到驱动器列表
                 foreach (var eTiming in TimingList)
                 {
                     var Driver = new TimerPlayerLoopDriver(scheduler, eTiming);
                     driverList.Add(Driver);
+                    // 添加到玩家循环阶段  把Driver 加入 UniTask 对应阶段的执行队列 
+                    // 这行是Unitask针对Unity循环做的自定义生命周期 在Update里面更新 UniTask.PlayerLoopRunner.RunCore()
                     PlayerLoopHelper.AddAction(eTiming, Driver);
                 }
                 isInitialized = true;

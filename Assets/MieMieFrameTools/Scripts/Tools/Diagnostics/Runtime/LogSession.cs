@@ -120,7 +120,7 @@ namespace MieMieFrameWork.Diagnostics
         /// 过滤后按序记录日志 返回接受的记录或被过滤时的空值
         /// </summary>
         public LogRecord Write(ELogLevel level, string channel, string message, string stackTrace = "",
-            int frame = -1, string memberName = "", string filePath = "", int lineNumber = 0)
+            int frame = -1, string memberName = "", string filePath = "", int lineNumber = 0, ELogColor? color = null)
         {
             lock (syncRoot)
             {
@@ -128,7 +128,7 @@ namespace MieMieFrameWork.Diagnostics
                 if (!IsEnabled(level, channel))
                     return null;
                 var Record = new LogRecord(++sequence, frame, level, LimitText(channel), LimitText(message),
-                    LimitText(stackTrace), LimitText(memberName), LimitText(filePath), lineNumber);
+                    LimitText(stackTrace), LimitText(memberName), LimitText(filePath), lineNumber, color ?? LogColorUtility.GetDefault(level));
                 recentList[nextIndex] = Record;
                 nextIndex = (nextIndex + 1) % recentList.Length;
                 recentCount = Math.Min(recentCount + 1, recentList.Length);

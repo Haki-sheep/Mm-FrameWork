@@ -2,8 +2,17 @@
 
 ## 职责与依赖
 
-`MieMieFrameWork.Diagnostics` 提供游戏日志门面 `FrameLog` 与不调用 Unity API 的线程安全 `LogSession`
-只依赖 Unity 原生运行时 不依赖 ModuleHub YooAsset UI Firebase 小游戏 SDK 或服务器后端
+`MieMieFrameWork.Diagnostics` 提供双端日志门面 `FrameLog` 与不调用 Unity API 的线程安全 `LogSession`
+门面和核心只依赖 C# 标准库 输出通过 `Action<LogRecord, object, Exception>` 注入
+Unity 适配文件使用 `UNITY_5_3_OR_NEWER` 编译条件 不依赖 ModuleHub YooAsset UI Firebase 小游戏 SDK
+
+逻辑分为门面与核心两层
+- 门面 `FrameLog.cs` 负责唯一会话 生命周期 业务入口与输出委托
+- 核心 `LogSession` `LogRecord` `LogSettings` `ELogLevel` `FileLogWriter` 和 `Core` 中的颜色类型负责记录与存储
+- `FrameLog.Unity.cs` `FrameLogPump.cs` `LogProfile.cs` 为 Unity 适配 `ConsoleLogOutput` 为纯 C# 终端输出
+
+现有文件路径暂时保留 本机 Unity 6000.4.10f1 的 CLI 离线资产移动返回 `FUC_VERSION_UNSUPPORTED`
+未绕过版本限制搬动脚本或 meta 当前完成逻辑分离而非整个 Runtime 的两文件夹搬迁
 
 本阶段完成统一日志入口 过滤 有界近期记录 Unity 日志采集 可选文件轮转与导出
 对象池 FSM 动态图集 YooAsset 和 PerformanceTrace 保留原有诊断入口
@@ -12,14 +21,21 @@
 ## 启动与释放
 
 - `SubsystemRegistration` 只清理上一运行会话
-- `AfterAssembliesLoaded` 唯一启动入口 读取可选配置并创建会话 早于事件桥接的 BeforeSceneLoad 和场景 Awake
+- Unity 的 `AfterAssembliesLoaded` 唯一自动启动入口 读取可选配置并调用通用 Init 早于事件桥接的 BeforeSceneLoad 和场景 Awake
+- 后端由应用启动入口显式调用 `FrameLog.Init` 不执行 Unity 的启动钩子
+- 再次 Init 会报错 必须先停止日志生产并 Shutdown 不能覆盖活动会话
+- Init 与 Shutdown 必须由宿主同一生命周期线程串行调用 不支持并发初始化或并发重启
+- 初始化完成后才能启动日志生产 Shutdown 前须停止并等待所有业务日志线程结束
+- LogSession 的线程安全和并发日志写入验证不代表门面生命周期可以并发调用
 - 自动创建隐藏的 DontDestroyOnLoad 采样节点 Update 缓存帧号 后台采集不读取 Unity 对象或 Time
 - 帧号表示最近一次主线程采样值 不保证等于后台日志发生瞬间的帧号
 - 应用暂停刷新文件 Application.quitting 解除订阅并释放会话
 - Editor 在重新进入 Edit Mode 和程序集重载前清理 不保存或切换用户场景
 - 不在日志函数或属性访问器中初始化 未启动或已退出的业务调用立即抛错
 - 业务线程必须在应用退出前停止日志生产 退出期间迟到的 Unity 采集回调允许放弃
-- 近期记录只保存字符串与数值 不持有 Unity 对象 Object context 仅用于当次控制台输出
+- 近期记录只保存字符串与数值 不持有业务对象 object context 与 Exception 仅传入当次输出委托
+- Unity 的 context 仍须为 UnityEngine.Object 后端可传自己的对象 门面与缓存均不保留它
+- 输出委托在记录线程同步调用 输出异常原样传播 已存入核心的记录不撤销
 
 ## 默认配置
 
@@ -49,6 +65,8 @@
 ```csharp
 using MieMieFrameWork.Diagnostics;
 
+FrameLog.Log("普通日志");
+FrameLog.Log("资源就绪", ELogColor.Green, "Asset");
 FrameLog.Info("进入主菜单", "GameFlow");
 FrameLog.Warning("背景音乐未配置", "Audio");
 FrameLog.Error("页面加载失败", "UI", this);
@@ -58,12 +76,65 @@ FrameLog.SetChannelEnabled("Audio", false);
 FrameLog.SetMinimumLevel(ELogLevel.Warning);
 ```
 
+`Log(string message, ELogColor color = ELogColor.White, ...)` 是普通日志入口 与 Info 级别相同
+旧 Info Warning Error 渠道与 context 调用方式保留 需要改色时使用命名参数 `color`
+
+```csharp
+FrameLog.Warning("需要关注", color: ELogColor.Orange);
+FrameLog.Error("指定显示颜色", "UI", color: ELogColor.Violet);
+```
+
+### 颜色
+
+| 枚举 | 颜色 | RGB |
+| --- | --- | --- |
+| Red | 红 | FF0000 |
+| Orange | 橙 | FF8000 |
+| Yellow | 黄 | FFFF00 |
+| Green | 绿 | 00FF00 |
+| Blue | 蓝 | 0000FF |
+| Indigo | 靛 | 4B0082 |
+| Violet | 紫 | 8B00FF |
+| Black | 黑 | 000000 |
+| White | 白 | FFFFFF |
+
+Log Info Trace 默认白 Warning 默认黄 Error Exception 默认红
+颜色只影响显示 不改变级别 渠道或过滤结果 七彩指七种可选颜色 不自动循环或逐字渐变
+Unity 普通消息使用 color 富文本 原始异常保持 Debug.LogException 原对象与 Unity 原生异常显示
+LogRecord.Message 保持纯文本 Color 单独保存 文件与导出增加颜色枚举名称 不加入富文本或 ANSI
+黑色在深色背景以及白色在浅色背景上的可见性由使用者选择颜色时考虑
+
+### C# 后端
+
+将 Runtime 下所有 C# 源文件复制到后端项目 保持未定义 UNITY_5_3_OR_NEWER 即可直接编译
+不需要 Unity DLL 不复制 Unity asmdef 与 meta Unity 适配文件会被编译条件排除
+
+```csharp
+FrameLog.Init(new LogSettings(), ConsoleLogOutput.Write);
+try
+{
+    FrameLog.Log("服务启动");
+    FrameLog.Log("连接建立", ELogColor.Green, "Network");
+    FrameLog.Warning("请求超时", "Network");
+}
+finally
+{
+    FrameLog.Shutdown();
+}
+```
+
+ConsoleLogOutput 在支持 ANSI 真彩色的终端输出九种 RGB 颜色 输出重定向时仅输出纯文本
+也可在 Init 传入自己的 Action 连接已有后端日志库 空委托只保留缓存与可选文件
+EnableFile 开启时 Init 必须传入 fileDirectory 后端不使用 Unity persistentDataPath
+OutputToUnity 与 CaptureUnity 仅由 Unity 适配读取 后端输出由注入委托决定
+
 `Exception` 示例参数应传入实际捕获的异常对象 日志不替代 throw
 调用位置由 CallerMemberName CallerFilePath CallerLineNumber 自动记录
 原始异常对象原样传给 Unity 内层异常与原始堆栈通过 ToString 进入缓存
 缓存超过字符预算会明确截断 Unity 异常输出仍使用原始对象
 
 `Trace` 在普通 Player 编译时连调用参数一起裁剪 开发环境还需将最低级别设为 Debug 才会记录
+后端需要 Trace 时显式定义 FRAME_LOG_TRACE 并将最低级别设为 Debug 未定义时参数求值同样裁剪
 运行时关闭渠道不能撤销调用前已经发生的字符串插值 昂贵消息应先查询
 
 ```csharp
@@ -93,7 +164,7 @@ if (FrameLog.IsEnabled(ELogLevel.Debug, "UI"))
 - 可选实时文件目录为 `Application.persistentDataPath/MieMieLogs`
 - 仅覆盖 `runtime-0.log` 至 `runtime-N.log` 固定槽位 不枚举或批量删除用户文件
 - 新会话从槽位 0 开始 每个文件头包含会话 ID 轮转顺序不能只按槽位名称判断
-- 文件中的常规记录包含 UTC 序号 帧 线程 渠道 调用位置和异常文本 最新上下文通过手动导出获取
+- 文件中的常规记录包含 UTC 序号 帧 线程 级别 渠道 颜色 调用位置和异常文本 最新上下文通过手动导出获取
 - Error 与 Exception 立即刷新 应用暂停和退出也刷新 不承诺系统强制结束时零丢失
 - 配置减少槽位数或文件预算时 不自动删除或缩小旧会话遗留槽位 新写入文件遵守新预算
 - 不记录账号令牌等敏感数据 导出仅发生在明确调用或菜单操作时 不自动上传
