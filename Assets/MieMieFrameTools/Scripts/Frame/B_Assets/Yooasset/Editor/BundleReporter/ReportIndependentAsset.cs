@@ -29,7 +29,7 @@ namespace YooAsset.Editor
         /// 资源文件大小
         /// </summary>
         public long FileSize;
-
+ 
         public override string ToString()
         {
             return $"ReportIndependentAsset: {AssetPath} ({AssetType})";
