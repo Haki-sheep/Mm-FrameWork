@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c17c81c07f5ccd04d98a32efe0565d50, type: 3}
+  m_Name: LocalizationFonts
+  m_EditorClassIdentifier: MieMieFrameWork.Runtime::MieMieFrameWork.Localization.LocalizationFontCatalog
+  entryList:
+  - locale: zh-CN
+    style: Body
+    font: {fileID: 11400000, guid: e9600400c84f61848a267a1686c91d7b, type: 2}
+    address: 
+    material: {fileID: 0}
+    materialAddress: 
+  - locale: en
+    style: Body
+    font: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    address: 
+    material: {fileID: 0}
+    materialAddress: 

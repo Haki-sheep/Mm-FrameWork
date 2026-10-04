@@ -1,6 +1,7 @@
 namespace MieMieFrameWork.Effects
 {
     using System;
+    using Sirenix.OdinInspector;
     using UnityEngine;
 
     /// <summary>
@@ -10,27 +11,27 @@ namespace MieMieFrameWork.Effects
     public sealed class EffectDefinition
     {
         /// <summary> 业务特效标识 </summary>
-        [SerializeField]
+        [SerializeField, LabelText("业务特效 ID")]
         private string id;
 
         /// <summary> 默认资源包中的预制体地址 </summary>
-        [SerializeField]
+        [SerializeField, LabelText("YooAsset 预制体地址")]
         private string location;
 
         /// <summary> 循环特效必须显式停止 </summary>
-        [SerializeField]
+        [SerializeField, LabelText("包含循环粒子")]
         private bool looping;
 
         /// <summary> 同类请求上限 包括加载中请求 </summary>
-        [SerializeField]
+        [SerializeField, LabelText("同类并发与池容量上限")]
         private int maxConcurrent = 8;
 
         /// <summary> 闲置实例缓存上限 </summary>
-        [SerializeField]
+        [SerializeField, LabelText("闲置实例缓存上限")]
         private int maxInactive = 8;
 
         /// <summary> 显式预热的闲置实例目标数量 </summary>
-        [SerializeField]
+        [SerializeField, LabelText("预热闲置目标数量")]
         private int prewarmCount;
 
         public string Id => id;

@@ -2,6 +2,7 @@ namespace MieMieFrameWork.Effects
 {
     using System;
     using System.Collections.Generic;
+    using Sirenix.OdinInspector;
     using UnityEngine;
 
     public sealed partial class EffectManager
@@ -13,31 +14,31 @@ namespace MieMieFrameWork.Effects
         public sealed class EffectManagerConfig
         {
             /// <summary> 特效定义列表 同一资源地址只能定义一次 </summary>
-            [SerializeField]
+            [SerializeField, LabelText("特效定义列表")]
             private List<EffectDefinition> definitionList = new();
 
             /// <summary> 全局同时接受的播放请求上限 </summary>
-            [SerializeField]
+            [SerializeField, LabelText("全局并发请求上限")]
             private int maxConcurrent = 64;
 
             /// <summary> 每帧同时接受的新播放请求上限 </summary>
-            [SerializeField]
+            [SerializeField, LabelText("每帧请求与启动上限")]
             private int maxPerFrame = 16;
 
             /// <summary> 初始特效档位 </summary>
-            [SerializeField]
+            [SerializeField, LabelText("初始特效档位")]
             private EEffectQuality quality = EEffectQuality.High;
 
             /// <summary> 低档位粒子和发射预算 </summary>
-            [SerializeField]
+            [SerializeField, LabelText("低档位参数")]
             private EffectQualityProfile low = new(0.35f, 0.4f);
 
             /// <summary> 中档位粒子和发射预算 </summary>
-            [SerializeField]
+            [SerializeField, LabelText("中档位参数")]
             private EffectQualityProfile medium = new(0.65f, 0.7f);
 
             /// <summary> 高档位粒子和发射预算 </summary>
-            [SerializeField]
+            [SerializeField, LabelText("高档位参数")]
             private EffectQualityProfile high = new(1f, 1f);
 
             public IReadOnlyList<EffectDefinition> DefinitionList => definitionList;
@@ -81,12 +82,12 @@ namespace MieMieFrameWork.Effects
         public sealed class EffectQualityProfile
         {
             /// <summary> 原始最大粒子数缩放比例 </summary>
-            [SerializeField]
+            [SerializeField, LabelText("粒子容量倍率")]
             [Range(0.01f, 1f)]
             private float particleFactor = 1f;
 
             /// <summary> 原始发射曲线和 Burst 数量缩放比例 </summary>
-            [SerializeField]
+            [SerializeField, LabelText("发射数量倍率")]
             [Range(0f, 1f)]
             private float emissionFactor = 1f;
 

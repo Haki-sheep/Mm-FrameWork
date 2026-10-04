@@ -7,7 +7,7 @@ namespace MieMieUIFrameWork.UI.FloatingText
     /// <summary>
     /// 跳字字符到图集格子的烘焙查表
     /// </summary>
-    [CreateAssetMenu(menuName = "MieMieUIFrameWork/FloatingText CharMap", fileName = "FloatingTextCharMap")]
+    [CreateAssetMenu(menuName = "MieMieFramework/跳字字符映射", fileName = "FloatingTextCharMap")]
     public class FloatingTextCharMap : ScriptableObject
     {
         [LabelText("图集列数")]

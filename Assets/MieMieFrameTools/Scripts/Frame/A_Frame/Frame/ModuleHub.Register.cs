@@ -34,7 +34,8 @@ namespace MieMieFrameWork
             // Mono 相关组件
             var FrameDriver = this.GetOrAddComponent<MonoManager>();
             ManagerList.Add(FrameDriver);
-            ManagerList.Add(new EffectManager(effectManagerConfig, transform, FrameDriver, InstancePool));
+            var EffectConfig = effectProfile != null ? effectProfile.Config : effectManagerConfig;
+            ManagerList.Add(new EffectManager(EffectConfig, transform, FrameDriver, InstancePool));
             ManagerList.Add(this.GetOrAddComponent<MieMieFrameWork.M_InputSystem.InputManager>());
             ManagerList.Add(this.GetOrAddComponent<MieMieFrameWork.Interaction.InteractionManager>());
             ManagerList.Add(new GameFlowManager(FrameDriver, MmGlobalEventBus.GlobalBus));

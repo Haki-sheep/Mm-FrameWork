@@ -19,6 +19,11 @@ namespace MieMieFrameWork.Editor.ToolsCenter
                 new MieMieToolsHomePage(),
 
                 new MieMieLogToolsPage(),
+                new DynamicAtlasToolsPage(),
+                CreateEmbedded<MieMieFrameWork.Editor.StaticAtlas.StaticAtlasWindow>(
+                    "资源/静态图集",
+                    "静态图集",
+                    "按目录维护 SpriteAtlas 并检查重复收录与平台设置"),
                 CreateEmbedded<MieMieFrameWork.Effects.Editor.EffectMonitorWindow>(
                     "运行监控/视觉特效",
                     "视觉特效运行监控",

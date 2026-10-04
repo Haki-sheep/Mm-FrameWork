@@ -49,7 +49,6 @@ namespace MieMieFrameWork.Asset.DynamicAtlas.Editor
         /// <summary>
         /// 打开图集调试窗口
         /// </summary>
-        [MenuItem("Tools/咩咩框架/资源/动态图集调试")]
         public static void Open()
         {
             GetWindow<DynamicAtlasWindow>("动态图集");
@@ -103,6 +102,19 @@ namespace MieMieFrameWork.Asset.DynamicAtlas.Editor
         /// </summary>
         private void OnGUI()
         {
+            DrawEmbeddedGUI();
+        }
+
+        /// <summary>
+        /// 绘制中枢嵌入内容并按间隔更新快照
+        /// </summary>
+        public void DrawEmbeddedGUI()
+        {
+            if (EditorApplication.timeSinceStartup >= nextRefresh)
+            {
+                nextRefresh = EditorApplication.timeSinceStartup + RefreshInterval;
+                RefreshSnapshot();
+            }
             EditorGUI.BeginChangeCheck();
             var Selected = (DynamicAtlasHost)EditorGUILayout.ObjectField("观察图集组", host, typeof(DynamicAtlasHost), true);
             if (EditorGUI.EndChangeCheck())
@@ -119,7 +131,7 @@ namespace MieMieFrameWork.Asset.DynamicAtlas.Editor
             }
             if (!EditorApplication.isPlaying || host == null || !host.IsInitialized)
             {
-                EditorGUILayout.HelpBox("进入 Play Mode 后选择已完成 Start 的 DynamicAtlasHost\n配置资产通过 Create → 咩咩框架 → 资源 → 动态图集配置创建", MessageType.Info);
+                EditorGUILayout.HelpBox("进入 Play Mode 后选择已完成 Start 的 DynamicAtlasHost\n配置资产通过 Create → MieMieFramework → 资源 → 动态图集配置创建", MessageType.Info);
                 return;
             }
 

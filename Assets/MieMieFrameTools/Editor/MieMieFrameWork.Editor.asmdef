@@ -4,6 +4,7 @@
     "references": [
         "MieMieFrameWork.Runtime",
         "MieMieFrameWork.Diagnostics.Editor",
+        "MieMieFrameWork.DynamicAtlas.Editor",
         "MieMieFrameWork.FontManager.Editor",
         "YooAsset.Editor",
         "UniTask",

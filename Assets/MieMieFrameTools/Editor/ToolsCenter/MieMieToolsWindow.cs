@@ -406,6 +406,7 @@ namespace MieMieFrameWork.Editor.ToolsCenter
 
             SelectedPage?.OnClose();
             SelectedPage = page;
+            SelectedPage.OnOpen();
             PageScroll = Vector2.zero;
 
             for (int i = 0; i < NavigationGroupList.Count; i++)

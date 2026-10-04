@@ -5,7 +5,7 @@ namespace MieMieFrameWork.Asset.DynamicAtlas
     /// <summary>
     /// 配置图集尺寸 预算与 GPU 写入 Shader
     /// </summary>
-    [CreateAssetMenu(menuName = "咩咩框架/资源/动态图集配置", fileName = "DynamicAtlasConfig")]
+    [CreateAssetMenu(menuName = "MieMieFramework/资源/动态图集配置", fileName = "DynamicAtlasConfig")]
     public sealed class DynamicAtlasConfig : ScriptableObject
     {
         /// <summary>

@@ -53,9 +53,11 @@ Unity 适配文件使用 `UNITY_5_3_OR_NEWER` 编译条件 不依赖 ModuleHub Y
 | OutputToUnity | true | 门面日志是否同步输出 Unity 控制台 |
 | CaptureUnity | true | 是否采集 Unity 与第三方原始日志 |
 
-需要自定义时用 Create / MieMie / 日志配置 创建 `LogProfile`
+需要自定义时用 Create / MieMieFramework / 日志配置 创建 `LogProfile`
 将资产放到任一 Resources 目录下并命名为 `MieMieLogProfile`
 资源路径以 `FrameLog.ProfileResourcePath` 为准 配置仅在会话启动时读取一次
+工程已提供 `ADefaultRes/Resources/MieMieLogProfile.asset` 显式最低级别为 Info 包括普通 Player
+默认资产位置见 [默认资源](../../../ADefaultRes/README.md) 无配置时才采用上表的普通 Player Warning 策略
 非法配置或文件权限错误直接暴露 不静默关闭文件 不初始化第三方 SDK
 
 本模块使用 Resources 只加载这个启动配置 不承担业务资源加载 也不需要等待 YooAsset 就绪

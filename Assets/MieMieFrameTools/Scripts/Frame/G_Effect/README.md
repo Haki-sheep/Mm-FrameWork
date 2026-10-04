@@ -6,13 +6,27 @@
 
 - 首版支持 ParticleSystem 预制体 不管理音频 Animator Timeline 或 VFX Graph
 - EffectManager 由 ModuleHub 创建并唯一 Init 不创建静态游戏实例 不自动加载资源
-- FrameRoot 的视觉特效配置中填写 DefinitionList 每项包含业务 Id 与 YooAsset Location
+- FrameRoot 的视觉特效配置引用 EffectProfile 在该 SO 中填写 DefinitionList 每项包含业务 Id 与 YooAsset Location
 - 同一 Id 和地址不能重复 同一预制体池由本模块独占 不与其他业务共用 PoolHandle
 - 预制体根节点必须挂 EffectInstance 子发射器必须位于该预制体内
 - Looping 必须与整组粒子是否存在循环系统一致 非循环特效整组粒子结束后自动归还
 - EffectInstance 组件由池首次取出回调唯一 InitComponents 不依赖尚未执行的 Awake
 - 实例始终位于全局 FrameRoot 下 Owner 只是姿态锚点 不是实例父节点
 - 所有接口在 Unity 主线程调用 不允许在池回调中递归获取归还清理或销毁同一池
+
+## 配置资产
+
+1. Project 右键 Create → MieMieFramework → 视觉特效配置 创建 EffectProfile
+2. 在 SO 中编辑特效定义列表 全局预算 初始档位与低中高档位参数 字段使用中文标签
+3. 将 SO 指定给 FrameRoot 的视觉特效配置 引用后旧版内嵌配置自动隐藏
+4. 本工程默认 FrameRoot 已绑定 `ADefaultRes/Effects/Profiles/EffectProfile.asset` 默认特效列表为空 按实际资源填写 不创建虚构资源地址
+
+只在 ModuleHub 注册管理器时选取配置 EffectManager.Init 生成独立运行时快照
+运行中修改 SO 不会热更新已有管理器 重新启动框架后生效
+未绑定 SO 的旧根节点继续读取原 effectManagerConfig 保留序列化字段和构造接口以兼容已有场景
+绑定 SO 后只以 SO 为配置来源 不合并旧列表 SO 配置非法时直接报错 不退回旧配置
+迁移其他旧根节点时先把原列表和预算复制到对应 SO 再绑定 不自动覆盖已有配置
+默认资产目录与其他配置入口见 [默认资源](../../../ADefaultRes/README.md)
 
 ## 使用
 

@@ -39,8 +39,12 @@ namespace MieMieFrameWork
         [SerializeField, LabelText("音频管理器配置")]
         private AudioManager.AudioManagerConfig audioManagerConfig = new AudioManager.AudioManagerConfig();
 
-        /// <summary> 视觉特效管理器配置 默认不加载任何特效资源 </summary>
-        [SerializeField, LabelText("视觉特效管理器配置")]
+        /// <summary> 视觉特效配置资产 启动时读取 不自动加载特效资源 </summary>
+        [SerializeField, LabelText("视觉特效配置")]
+        private EffectProfile effectProfile;
+
+        /// <summary> 未绑定配置资产的旧根节点继续使用原内嵌配置 </summary>
+        [SerializeField, LabelText("旧版视觉特效配置"), HideIf("@effectProfile != null")]
         private EffectManager.EffectManagerConfig effectManagerConfig = new EffectManager.EffectManagerConfig();
 
         /// <summary> 画质档位映射与本机帧率偏好策略 </summary>

@@ -38,6 +38,57 @@ YooAssetMgr 是薄门面 负责默认资源包绑定和启动就绪校验 加载
 
 资源工具中枢直接打开 YooAsset 原生 Collector Builder 和 Debugger 旧 MmAsset 构建器 配置资产和对象池资源池页已移除 普通对象池预热与监控保留
 
+## 资源对象与集合引用结构
+
+以下以通过 LRU 成功加载 Monster 怪物预制体为例 加载类型为 GameObject 仅有一份业务句柄和一份缓存句柄
+
+缩进表示成员或集合条目 箭头表示对象引用 相同编号始终表示同一个对象 不是每层复制一份资源 以下只展示相关成员
+
+### YooAsset 底层管理结构
+
+```text
+ResourcePackage "DefaultPackage"
+└── ResourceManager
+    ├── _providerDict
+    │   └── [怪物资源的加载标识] → AssetProvider①
+    │       ├── AssetObject → 怪物预制体 GameObject①
+    │       ├── _handles = HashSet<HandleBase>
+    │       │   ├── AssetHandle①  业务持有
+    │       │   └── AssetHandle②  缓存持有
+    │       └── RefCount = 2
+    │
+    └── _bundleLoaderDict
+        └── 对应 Bundle 及依赖的加载对象
+```
+
+同包内同一资源身份与加载方式可复用 Provider 每次取得独立的 AssetHandle Provider 记录有效句柄并维护引用计数 ResourceManager 管理 Provider 和 Bundle 加载对象
+
+### 业务与缓存的引用结构
+
+```text
+怪物业务对象
+└── 持有字段 → AssetHandle①
+                  └── Provider → AssetProvider①
+
+YooAssetLruCache
+├── cacheEntryDict
+│   └── Key = (怪物预制体路径, typeof(GameObject))
+│       Value → LinkedListNode①
+│
+└── leastRecentList
+    └── … ↔ LinkedListNode① ↔ …
+             └── Value = CacheEntry①
+                 ├── Key = 同一个资源身份
+                 └── Handle → AssetHandle②
+                                  └── Provider → AssetProvider①
+```
+
+- 业务句柄和缓存句柄都是原生 AssetHandle 不同实例由不同持有者负责释放 业务持有字段只是示例 也可按业务需要使用集合
+- 字典与双向链表引用同一个节点 字典负责定位 链表负责从最久未使用到最近使用排序 CacheEntry 保存资源身份和缓存自己的句柄
+- 两个句柄引用同一个 Provider 访问同一份预制体资源 不代表复制或加载两份预制体
+- 实例化后得到的场景怪物是独立 GameObject 实例 不属于上述缓存条目 业务仍须持有对应资源直到所有实例销毁 不能依赖 LRU 暂时保留来代替实例生命周期
+- RefCount 为零不等于所有依赖立即卸载 实际卸载仍受 Bundle 和其他资源持有影响 清理 取消与释放的详细协议见 [LRU 资源缓存](LRU.md)
+
 ## 验证步骤
 
 1. 有 FrameRoot 的场景进入 Play 等待 ReadyTask 确认默认包清单加载成功且管理器只初始化一次

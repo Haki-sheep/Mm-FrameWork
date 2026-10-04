@@ -5,7 +5,7 @@
 
 ## 接入
 
-1. 修改 `DataTables/Data/localization_texts.json` 的 Locale Key Text 并运行 `DataTables/gen.bat`
+1. 修改 `DataTables/Data/localization_texts.xlsx` 的 `Texts` 工作表 一行一个 Key 一列一种语言 并运行 `DataTables/gen.bat` Excel 是唯一文案源 JSON 为生成产物 [填写与生成约定](../../../../../../DataTables/README.md#多语言文本)
 2. Unity 菜单 `Tools/MieMieFrameWork/工具中枢` 选择 `多语言与字体/创建默认字体映射` 并执行操作 创建简中与英文的 Body 字体映射
 3. 在场景选择 ModuleHub 根节点 在中枢选择 `多语言与字体/接入选中的框架根节点` 并执行操作
 4. 选择 TextMeshProUGUI 文本 在中枢选择 `多语言与字体/绑定选中的 TMP 文本` 并执行操作 修改组件的文本 Key 与字体样式
@@ -33,6 +33,10 @@
 - 通知失败时语言已经提交 未更新的文本仍持有旧租约 不会因此提前卸载旧字体 请修正错误后显式刷新这些文本
 
 ## 语言数据
+
+策划维护 Excel 的 Key 与各语言译文 生成脚本先校验并转为 Locale Key Text 中间 JSON 再交给 Luban 生成运行时表
+不手改中间 JSON 或 StreamingAssets 生成文件 `LocalizationFonts` 只配置字体与材质 不保存译文
+新增语言列并补齐译文后仍须在字体映射中补齐该语言的全部 Style 再为语言按钮设置对应 Locale
 
 语言标识使用 CultureInfo 名称 文本 Key 区分大小写
 同一 Locale 与 Key 不允许重复 每个语言必须覆盖全部 Key 翻译不能为空

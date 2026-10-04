@@ -6,7 +6,7 @@ using UnityEngine.TextCore.LowLevel;
 
 namespace MieMieFrameWork.Localization.FontManagement
 {
-    [CreateAssetMenu(menuName = "MieMie/Fonts/字体烘焙配置", fileName = "FontProfile")]
+    [CreateAssetMenu(menuName = "MieMieFramework/字体/字体烘焙配置", fileName = "FontProfile")]
     public sealed class FontBakeProfile : ScriptableObject
     {
         public Font sourceFont;

@@ -10,6 +10,16 @@
     "Text": "Start Game"
   },
   {
+    "Locale": "ja",
+    "Key": "common.start",
+    "Text": "ゲーム開始"
+  },
+  {
+    "Locale": "ko",
+    "Key": "common.start",
+    "Text": "게임 시작"
+  },
+  {
     "Locale": "zh-CN",
     "Key": "common.settings",
     "Text": "设置"
@@ -18,6 +28,16 @@
     "Locale": "en",
     "Key": "common.settings",
     "Text": "Settings"
+  },
+  {
+    "Locale": "ja",
+    "Key": "common.settings",
+    "Text": "設定"
+  },
+  {
+    "Locale": "ko",
+    "Key": "common.settings",
+    "Text": "설정"
   },
   {
     "Locale": "zh-CN",
@@ -30,6 +50,16 @@
     "Text": "Language"
   },
   {
+    "Locale": "ja",
+    "Key": "common.language",
+    "Text": "言語"
+  },
+  {
+    "Locale": "ko",
+    "Key": "common.language",
+    "Text": "언어"
+  },
+  {
     "Locale": "zh-CN",
     "Key": "common.back",
     "Text": "返回"
@@ -40,6 +70,16 @@
     "Text": "Back"
   },
   {
+    "Locale": "ja",
+    "Key": "common.back",
+    "Text": "戻る"
+  },
+  {
+    "Locale": "ko",
+    "Key": "common.back",
+    "Text": "뒤로"
+  },
+  {
     "Locale": "zh-CN",
     "Key": "common.coins",
     "Text": "金币 {0:N0}"
@@ -48,5 +88,15 @@
     "Locale": "en",
     "Key": "common.coins",
     "Text": "Coins {0:N0}"
+  },
+  {
+    "Locale": "ja",
+    "Key": "common.coins",
+    "Text": "コイン {0:N0}"
+  },
+  {
+    "Locale": "ko",
+    "Key": "common.coins",
+    "Text": "코인 {0:N0}"
   }
 ]

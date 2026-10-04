@@ -8,7 +8,7 @@ namespace MieMieFrameWork.Localization
     /// <summary>
     /// 显式配置语言与样式的主字体 不按文件名推断路径
     /// </summary>
-    [CreateAssetMenu(menuName = "MieMie/Localization/字体映射", fileName = "LocalizationFonts")]
+    [CreateAssetMenu(menuName = "MieMieFramework/本地化/字体映射", fileName = "LocalizationFonts")]
     public sealed class LocalizationFontCatalog : ScriptableObject
     {
         /// <summary> 语言与字体样式配置 </summary>

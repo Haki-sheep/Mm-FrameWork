@@ -6,7 +6,7 @@ namespace MieMieFrameWork.Diagnostics
     /// <summary>
     /// 可选启动配置 放到 Resources 下并命名为 MieMieLogProfile
     /// </summary>
-    [CreateAssetMenu(menuName = "MieMie/日志配置", fileName = FrameLog.ProfileResourcePath)]
+    [CreateAssetMenu(menuName = "MieMieFramework/日志配置", fileName = FrameLog.ProfileResourcePath)]
     public sealed class LogProfile : ScriptableObject
     {
         /// <summary> 会话设置 </summary>

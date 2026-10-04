@@ -360,6 +360,7 @@ MonoBehaviour:
     maxEffectsPerFrame: 10
     maxSameClipEffects: 4
     effectPrewarmCount: 8
+  effectProfile: {fileID: 11400000, guid: 5ea9e596705ed3b4b89de8378dccf166, type: 2}
   effectManagerConfig:
     definitionList: []
     maxConcurrent: 64
