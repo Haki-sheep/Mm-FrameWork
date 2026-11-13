@@ -20,6 +20,7 @@ namespace MieMieFrameWork.Editor.ToolsCenter
 
                 new MieMieLogToolsPage(),
                 new DynamicAtlasToolsPage(),
+                new HotUpdateToolsPage(),
                 CreateEmbedded<MieMieFrameWork.Editor.StaticAtlas.StaticAtlasWindow>(
                     "资源/静态图集",
                     "静态图集",

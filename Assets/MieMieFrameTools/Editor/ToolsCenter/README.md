@@ -20,6 +20,15 @@
 - `资源 / 静态图集` 按目录创建或更新原生 SpriteAtlas 检查重复归属与原生打包预览 详见 [静态图集说明](../StaticAtlas/README.md)
 - 中枢 Editor 程序集单向引用动态图集 Editor 程序集 图集核心不依赖工具中枢
 
+## 热更新
+
+选择 `资源 / 热更新` 在中枢内选择发布配置 完成 HybridCLR 配置 首包基线准备 代码导出 资源构建与本机发布
+点击 `创建发布配置 SO` 选择保存位置后自动选中并显示新配置 同名路径生成新文件 不覆盖已有配置
+Project 创建菜单统一为 `Create / MieMieFramework / 资源 / 热更新发布配置`
+与独立窗口 `Tools / MmFramework / 热更新` 共用界面和构建任务 切页保留表单并释放临时窗口 不自动安装运行库或发布资源
+中枢 Editor 程序集单向引用热更新 Editor 程序集 热更新模块不依赖工具中枢
+发布规则与验证步骤见 [资源与热更说明](../../Scripts/Frame/B_Assets/Yooasset/RuntimeAdapter/README.md#启动与代码热更)
+
 ## 运行监控
 
 选择 `运行监控 / 视觉特效` 直接在中枢查看特效监控

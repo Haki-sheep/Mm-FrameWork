@@ -4,6 +4,8 @@ namespace MieMieFrameWork
     using MieMieFrameWork.Business.Quality;
     using MieMieFrameWork.Data;
     using MieMieFrameWork.Effects;
+    using MieMieFrameWork.Asset;
+    using MieMieFrameWork.HotUpdate;
     using MieMieFrameWork.Pool;
     using Sirenix.OdinInspector;
     using UnityEngine;
@@ -20,6 +22,14 @@ namespace MieMieFrameWork
         /// <summary> 资源版本和清单请求超时秒数 </summary>
         [SerializeField, LabelText("资源清单超时秒数")]
         private int resourceManifestTimeout = 60;
+
+        /// <summary> 资源联网更新配置 默认保留原离线启动 </summary>
+        [SerializeField]
+        private ResourceUpdateConfig resourceUpdateConfig = new ResourceUpdateConfig();
+
+        /// <summary> 代码热更新配置 随 Player 固定基线标识 </summary>
+        [SerializeField]
+        private HotUpdateConfig hotUpdateConfig = new HotUpdateConfig();
 
         /// <summary>
         /// 存档子目录名

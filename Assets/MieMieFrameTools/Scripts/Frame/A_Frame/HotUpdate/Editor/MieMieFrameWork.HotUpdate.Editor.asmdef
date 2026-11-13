@@ -1,0 +1,7 @@
+{
+  "name": "MieMieFrameWork.HotUpdate.Editor",
+  "rootNamespace": "MieMieFrameWork.HotUpdate.Editor",
+  "references": ["MieMieFrameWork.HotUpdate", "HybridCLR.Editor", "YooAsset.Editor", "YooAsset", "UniTask"],
+  "includePlatforms": ["Editor"],
+  "autoReferenced": true
+}

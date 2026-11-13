@@ -12,7 +12,7 @@ namespace MieMieFrameWork.Asset
     /// YooAsset 运行时门面
     /// 负责初始化全局系统和访问资源包
     /// </summary>
-    public static class YooAssetMgr
+    public static partial class YooAssetMgr
     {
         public static ResourcePackage DefaultPackage { get; private set; }
 
@@ -49,59 +49,9 @@ namespace MieMieFrameWork.Asset
         /// <summary>
         /// 启动入口配置文件系统 读取版本和清单 成功后开放业务加载
         /// </summary>
-        public static async UniTask InitializeAsync(string packageName, int manifestTimeout, CancellationToken cancellationToken)
+        public static UniTask InitializeAsync(string packageName, int manifestTimeout, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            var Package = Initialize(packageName);
-            if (IsReady)
-                return;
-
-            FrameLog.Info($"初始化资源包 {packageName}", "Asset");
-
-            if (Package.InitializeStatus == EOperationStatus.None)
-            {
-                InitializePackageOptions Options;
-#if UNITY_EDITOR
-                var BuildResult = EditorSimulateBuildInvoker.Build(packageName, (int)EBundleType.VirtualAssetBundle);
-                Options = new EditorSimulateModeOptions
-                {
-                    EditorFileSystemParameters = FileSystemParameters.CreateDefaultEditorFileSystemParameters(BuildResult.PackageRootDirectory),
-                    AutoUnloadBundleWhenUnused = true
-                };
-#else
-                Options = new OfflinePlayModeOptions
-                {
-                    BuiltinFileSystemParameters = FileSystemParameters.CreateDefaultBuiltinFileSystemParameters(),
-                    AutoUnloadBundleWhenUnused = true
-                };
-#endif
-                var InitializeOperation = Package.InitializePackageAsync(Options);
-                await UniTask.WaitUntil(() => InitializeOperation.IsDone);
-                cancellationToken.ThrowIfCancellationRequested();
-                if (InitializeOperation.Status != EOperationStatus.Succeeded)
-                    throw new InvalidOperationException($"YooAsset 初始化失败 包 {packageName} 错误 {InitializeOperation.Error}");
-            }
-            else if (Package.InitializeStatus != EOperationStatus.Succeeded)
-            {
-                throw new InvalidOperationException($"YooAsset 包 {packageName} 当前不能启动 状态 {Package.InitializeStatus}");
-            }
-
-            var VersionOperation = Package.RequestPackageVersionAsync(new RequestPackageVersionOptions(false, manifestTimeout));
-            await UniTask.WaitUntil(() => VersionOperation.IsDone);
-            cancellationToken.ThrowIfCancellationRequested();
-            if (VersionOperation.Status != EOperationStatus.Succeeded)
-                throw new InvalidOperationException($"YooAsset 版本读取失败 包 {packageName} 错误 {VersionOperation.Error}");
-
-            var ManifestOperation = Package.LoadPackageManifestAsync(new LoadPackageManifestOptions(VersionOperation.PackageVersion, manifestTimeout));
-            await UniTask.WaitUntil(() => ManifestOperation.IsDone);
-            cancellationToken.ThrowIfCancellationRequested();
-            if (ManifestOperation.Status != EOperationStatus.Succeeded)
-                throw new InvalidOperationException($"YooAsset 清单加载失败 包 {packageName} 版本 {VersionOperation.PackageVersion} 错误 {ManifestOperation.Error}");
-
-            IsReady = true;
-            FrameLog.SetContext("ResourcePackage", packageName);
-            FrameLog.SetContext("ResourceVersion", VersionOperation.PackageVersion);
-            FrameLog.Info($"资源包就绪 {packageName} 版本 {VersionOperation.PackageVersion}", "Asset");
+            return InitializeAsync(packageName, manifestTimeout, new ResourceUpdateConfig(), cancellationToken);
         }
 
         /// <summary>

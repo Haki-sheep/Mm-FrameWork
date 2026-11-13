@@ -46,7 +46,8 @@ namespace MieMieFrameWork
                 return;
 
             bootManager = new BootManager(this);
-            bootManager.InitComponents(resourcePackageName, resourceManifestTimeout, this.GetCancellationTokenOnDestroy()).Forget();
+            bootManager.InitComponents(resourcePackageName, resourceManifestTimeout, resourceUpdateConfig, hotUpdateConfig,
+                this.GetCancellationTokenOnDestroy()).Forget();
         }
 
         protected override void OnDestroy()
@@ -134,8 +135,16 @@ namespace MieMieFrameWork
         /// </summary>
         private void CleanupFramework()
         {
-            GameHub.Clear();
             var FailureList = new List<Exception>();
+            try
+            {
+                bootManager.Dispose();
+            }
+            catch (Exception Error)
+            {
+                FailureList.Add(Error);
+            }
+            GameHub.Clear();
             for (int Index = managerOrderList.Count - 1; Index >= 0; Index--)
             {
                 var Manager = managerOrderList[Index];

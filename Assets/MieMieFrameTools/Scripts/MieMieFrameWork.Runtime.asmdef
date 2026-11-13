@@ -5,6 +5,7 @@
   "PrimeTween.Runtime",
   "UniTask",
         "MieMieFrameWork.Diagnostics",
+        "MieMieFrameWork.HotUpdate",
         "MessagePack.Unity",
         "MessagePack",
         "MessagePack.Annotations",

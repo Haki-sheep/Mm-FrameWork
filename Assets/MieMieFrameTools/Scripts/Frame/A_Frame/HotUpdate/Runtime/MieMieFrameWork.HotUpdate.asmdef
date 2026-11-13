@@ -1,0 +1,6 @@
+{
+  "name": "MieMieFrameWork.HotUpdate",
+  "rootNamespace": "MieMieFrameWork.HotUpdate",
+  "references": ["HybridCLR.Runtime", "YooAsset", "UniTask", "MieMieFrameWork.Diagnostics"],
+  "autoReferenced": true
+}

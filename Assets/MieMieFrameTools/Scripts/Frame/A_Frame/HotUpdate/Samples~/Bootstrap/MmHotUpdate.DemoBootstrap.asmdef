@@ -1,0 +1,5 @@
+{
+  "name": "MmHotUpdate.DemoBootstrap",
+  "references": ["MieMieFrameWork.HotUpdate", "YooAsset.RuntimeAdapter", "YooAsset", "UniTask"],
+  "autoReferenced": true
+}

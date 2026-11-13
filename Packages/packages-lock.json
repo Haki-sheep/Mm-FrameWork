@@ -9,6 +9,13 @@
       },
       "hash": "fd8ff1fb700caf062eb5cce364c1d0a85f99ebe6"
     },
+    "com.code-philosophy.hybridclr": {
+      "version": "https://gitee.com/focus-creative-games/hybridclr_unity.git#v9.0.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "86e6407a35d7da0b7697f055c7488ef859c51ea4"
+    },
     "com.code-philosophy.luban": {
       "version": "https://github.com/focus-creative-games/luban_unity.git#v1.2.0",
       "depth": 0,
