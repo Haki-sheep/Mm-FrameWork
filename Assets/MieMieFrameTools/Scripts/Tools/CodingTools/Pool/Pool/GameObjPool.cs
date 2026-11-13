@@ -120,6 +120,8 @@ namespace MieMieFrameWork.Pool
             else
             {
                 if (MaxTotal > 0 && TotalCreated >= MaxTotal)
+                    PruneDestroyedActive();
+                if (MaxTotal > 0 && TotalCreated >= MaxTotal)
                     return null;
                 Value = CreateInstance();
             }
@@ -333,6 +335,30 @@ namespace MieMieFrameWork.Pool
         #endregion
 
         #region 私有方法
+
+        /// <summary>
+        /// 回收被外部销毁的借出实例名额 仅在达到总量上限时调用
+        /// </summary>
+        private void PruneDestroyedActive()
+        {
+            List<EntityId> DestroyedIdList = null;
+            foreach (var Pair in activeInstanceDict)
+            {
+                if (Pair.Value != null)
+                    continue;
+                DestroyedIdList ??= new List<EntityId>();
+                DestroyedIdList.Add(Pair.Key);
+            }
+
+            if (DestroyedIdList == null)
+                return;
+
+            foreach (var InstanceId in DestroyedIdList)
+            {
+                activeInstanceDict.Remove(InstanceId);
+                leaseVersionDict.Remove(InstanceId);
+            }
+        }
 
         /// <summary>
         /// 获取失败时销毁半配置实例 保留原始异常与清理异常
