@@ -25,12 +25,19 @@ namespace MieMieFrameWork.M_InputSystem
 
             CancelRebind();
 
+            // Input System 禁止对启用中的 action 改键 结束后恢复原启用状态
+            bool WasEnabled = action.enabled;
+            if (WasEnabled)
+                action.Disable();
+
             // 这个是Unity提供的核心方法
             rebindingOperation = action.PerformInteractiveRebinding(bindingIndex)
                 .OnComplete(op =>
                 {
                     op.Dispose();
                     rebindingOperation = null;
+                    if (WasEnabled)
+                        action.Enable();
                     SaveRebinds();
                     onComplete?.Invoke();
                 })
@@ -38,22 +45,19 @@ namespace MieMieFrameWork.M_InputSystem
                 {
                     op.Dispose();
                     rebindingOperation = null;
+                    if (WasEnabled)
+                        action.Enable();
                     onCancel?.Invoke();
                 })
                 .Start();
         }
 
         /// <summary>
-        /// 取消当前改键流程
+        /// 取消当前改键流程 Cancel 会同步触发 OnCancel 回调完成释放与置空
         /// </summary>
         public void CancelRebind()
         {
-            if (rebindingOperation != null)
-            {
-                rebindingOperation.Cancel();
-                rebindingOperation.Dispose();
-                rebindingOperation = null;
-            }
+            rebindingOperation?.Cancel();
         }
 
         /// <summary>
