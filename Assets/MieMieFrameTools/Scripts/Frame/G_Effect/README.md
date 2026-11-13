@@ -102,5 +102,4 @@ if (Result.Status == EEffectPlayStatus.Accepted)
 
 - 菜单 Tools/MieMieFrameWork/工具中枢 选择运行监控/视觉特效 显示请求数 资源持有 拒绝次数 借出与闲置数量
 - CopyDiagnostics 填充调用方复用的列表 不在运行时 Tick 自动分配诊断快照
-- 实际验证证据及未验证项见 [特效管理验收记录](../../../../../AIPlan/特效管理-验收记录.md)
 - 真机 GPU 粒子成本 透明过绘制 IL2CPP 与长期 GC 预算须由目标平台 Profiler 验证
