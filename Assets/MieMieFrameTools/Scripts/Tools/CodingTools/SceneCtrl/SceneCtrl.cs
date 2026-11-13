@@ -94,6 +94,7 @@ namespace MieMieFrameWork
         /// </summary>
         private static async UniTask DoLoadSceneAsyncUniTask(string sceneName, System.Threading.CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             IsLoading = true;
 
             try
@@ -121,7 +122,9 @@ namespace MieMieFrameWork
                         MmGlobalEventBus.GlobalBus.Publish(MmGameEvents.LoadingSceneProgress, normalizedProgress);
                         lastProgress = normalizedProgress;
                     }
-                }), cancellationToken: cancellationToken);
+                })); // Unity 场景加载开始后无法取消 等待真正完成以保持 IsLoading 准确
+
+                cancellationToken.ThrowIfCancellationRequested();
 
                 // 确保最终进度为100%
                 MmGlobalEventBus.GlobalBus.Publish(MmGameEvents.LoadingSceneProgress, 1.0f);
