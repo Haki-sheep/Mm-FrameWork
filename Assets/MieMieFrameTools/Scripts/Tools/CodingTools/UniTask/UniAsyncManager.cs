@@ -17,6 +17,11 @@ public class AsyncTaskManager : IManagerBase, IDisposable
     private TaskStatistics statistics = new();
     private Dictionary<string, CancellationTokenSource> taskCancellationTokens = new();
 
+    /// <summary>
+    /// 全部运行中任务的令牌 含未命名任务 供整体取消
+    /// </summary>
+    private readonly HashSet<CancellationTokenSource> activeTokenHashList = new();
+
     public void Init()
     {
         
@@ -55,7 +60,8 @@ public class AsyncTaskManager : IManagerBase, IDisposable
             TResult result = backgroundWork.Invoke();
 
             // 切换回主线程处理结果
-            await UniTask.SwitchToMainThread();
+            await UniTask.SwitchToMainThread(cts.Token);
+            cts.Token.ThrowIfCancellationRequested();
 
             onComplete?.Invoke(result);
 
@@ -78,7 +84,7 @@ public class AsyncTaskManager : IManagerBase, IDisposable
         }
         finally
         {
-            RemoveTaskToken(taskName);
+            ReleaseTaskToken(taskName, cts);
         }
     }
 
@@ -103,7 +109,8 @@ public class AsyncTaskManager : IManagerBase, IDisposable
             TResult result = await asyncWork.Invoke();
 
             // 切换回主线程处理结果
-            await UniTask.SwitchToMainThread();
+            await UniTask.SwitchToMainThread(cts.Token);
+            cts.Token.ThrowIfCancellationRequested();
 
             onComplete?.Invoke(result);
 
@@ -125,7 +132,7 @@ public class AsyncTaskManager : IManagerBase, IDisposable
         }
         finally
         {
-            RemoveTaskToken(taskName);
+            ReleaseTaskToken(taskName, cts);
         }
     }
 
@@ -274,24 +281,24 @@ public class AsyncTaskManager : IManagerBase, IDisposable
     /// </summary>
     private CancellationTokenSource CreateTaskToken(string taskName)
     {
-        if (string.IsNullOrEmpty(taskName))
-            return new CancellationTokenSource();
-
         var cts = new CancellationTokenSource();
-        taskCancellationTokens[taskName] = cts;
+        activeTokenHashList.Add(cts);
+        if (!string.IsNullOrEmpty(taskName))
+            taskCancellationTokens[taskName] = cts;
         return cts;
     }
 
     /// <summary>
-    /// 移除任务并取消令牌
+    /// 任务结束时释放本任务令牌 同名后续任务的令牌不受影响
     /// </summary>
-    private void RemoveTaskToken(string taskName)
+    private void ReleaseTaskToken(string taskName, CancellationTokenSource cts)
     {
-        if (!string.IsNullOrEmpty(taskName) && taskCancellationTokens.ContainsKey(taskName))
-        {
-            taskCancellationTokens[taskName]?.Dispose();
+        activeTokenHashList.Remove(cts);
+        if (!string.IsNullOrEmpty(taskName)
+            && taskCancellationTokens.TryGetValue(taskName, out var CurrentCts)
+            && CurrentCts == cts)
             taskCancellationTokens.Remove(taskName);
-        }
+        cts.Dispose();
     }
 
     /// <summary>
@@ -311,14 +318,10 @@ public class AsyncTaskManager : IManagerBase, IDisposable
     /// </summary>
     public void CancelAllTasks()
     {
-        //取消所有任务
-        foreach (var cts in taskCancellationTokens.Values)
-        {
+        // 只取消不释放 令牌由各任务结束时释放 取消回调可能同步结束任务故先复制
+        var ActiveTokenList = new List<CancellationTokenSource>(activeTokenHashList);
+        foreach (var cts in ActiveTokenList)
             cts.Cancel();
-            cts.Dispose();
-        }
-
-        taskCancellationTokens.Clear();
         Debug.Log("已取消所有任务");
     }
 
