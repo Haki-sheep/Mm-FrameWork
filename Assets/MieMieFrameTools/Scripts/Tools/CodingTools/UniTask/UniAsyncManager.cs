@@ -158,7 +158,8 @@ public class AsyncTaskManager : IManagerBase, IDisposable
         if (maxConcurrency > 0)
         {
             // 创建信号灯类
-            using (var semaphore = new SemaphoreSlim(maxConcurrency))
+            // 不随方法退出释放 WhenAll 首个异常提前返回后其余任务仍会 Release 信号量
+            var semaphore = new SemaphoreSlim(maxConcurrency);
             {
                 //创建任务列表
                 var tasks = new List<UniTask<TResult>>();
