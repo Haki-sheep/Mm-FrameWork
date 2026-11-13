@@ -124,14 +124,15 @@ namespace MiMieSaver
             var slot = slotIndex.CurrentSlot;
             if (slot is null) return;
 
+            string path = slotIndex.GetSlotPath(slot.SlotId);
             SaveData saveData;
             try
             {
                 saveData = GetArchive() ?? new SaveData();
             }
-            catch
+            catch (Exception exception)
             {
-                saveData = new SaveData();
+                throw new InvalidDataException($"存档 {path} 读取失败 已中止保存以免覆盖原存档", exception);
             }
 
             saveData.Meta ??= new MetaSave();
@@ -140,8 +141,7 @@ namespace MiMieSaver
             foreach (var module in moduleOrderList)
                 module.ToArchive(saveData);
 
-            string path = slotIndex.GetSlotPath(slot.SlotId);
-            File.WriteAllBytes(path, MessagePackSerializer.Serialize(saveData));
+            AtomicFileWriter.WriteAllBytes(path, MessagePackSerializer.Serialize(saveData));
 
             slotIndex.UpdateLastSaveTime(slot.SlotId);
         }

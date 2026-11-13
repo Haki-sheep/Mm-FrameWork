@@ -217,7 +217,15 @@ namespace MiMieSaver
             if (File.Exists(path))
             {
                 byte[] bytes = File.ReadAllBytes(path);
-                var loaded = MessagePackSerializer.Deserialize<SlotsIndexData>(bytes);
+                SlotsIndexData loaded;
+                try
+                {
+                    loaded = MessagePackSerializer.Deserialize<SlotsIndexData>(bytes);
+                }
+                catch (Exception exception)
+                {
+                    throw new InvalidDataException($"存档槽索引 {path} 读取失败", exception);
+                }
                 data = loaded ?? new SlotsIndexData();
             }
             else
@@ -236,7 +244,7 @@ namespace MiMieSaver
         /// </summary>
         private void Save()
         {
-            File.WriteAllBytes(path, MessagePackSerializer.Serialize(data));
+            AtomicFileWriter.WriteAllBytes(path, MessagePackSerializer.Serialize(data));
         }
 
         #endregion
