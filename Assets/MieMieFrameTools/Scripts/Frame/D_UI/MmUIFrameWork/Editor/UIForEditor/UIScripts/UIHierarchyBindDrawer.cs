@@ -54,6 +54,8 @@ namespace MieMieUITools.Editor
             { "TMPro.TMP_Dropdown", "TmpDrop" }
         };
 
+        // 6000.4 起 Hierarchy 回调改为 EntityId 版本 6000.3 只有 instanceID 版本
+#if UNITY_6000_4_OR_NEWER
         static UIHierarchyBindDrawer()
         {
             EditorApplication.hierarchyWindowItemByEntityIdOnGUI += OnHierarchyWindowItemGUI;
@@ -61,7 +63,22 @@ namespace MieMieUITools.Editor
 
         private static void OnHierarchyWindowItemGUI(EntityId entityId, Rect selectionRect)
         {
-            var gameObject = EditorUtility.EntityIdToObject(entityId) as GameObject;
+            DrawHierarchyItem(EditorUtility.EntityIdToObject(entityId) as GameObject, selectionRect);
+        }
+#else
+        static UIHierarchyBindDrawer()
+        {
+            EditorApplication.hierarchyWindowItemOnGUI += OnHierarchyWindowItemGUI;
+        }
+
+        private static void OnHierarchyWindowItemGUI(int instanceId, Rect selectionRect)
+        {
+            DrawHierarchyItem(EditorUtility.InstanceIDToObject(instanceId) as GameObject, selectionRect);
+        }
+#endif
+
+        private static void DrawHierarchyItem(GameObject gameObject, Rect selectionRect)
+        {
             if (gameObject == null) return;
 
             if (!TryGetUIRoot(gameObject.transform, out Transform uiRoot, out Transform uiContent)) return;
