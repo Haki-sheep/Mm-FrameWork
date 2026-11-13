@@ -53,6 +53,7 @@ namespace MieMieFrameWork.M_InputSystem
 
             inputActions.UI.Disable();
             inputActions.Player.Enable();
+            uiCommandMap?.Enable();
             CurrentMapMode = E_InputMapMode.Player;
             uiPointerOverlayEnabled = false;
         }
@@ -67,6 +68,7 @@ namespace MieMieFrameWork.M_InputSystem
 
             inputActions.Player.Disable();
             inputActions.UI.Enable();
+            uiCommandMap?.Enable();
             CurrentMapMode = E_InputMapMode.UI;
             uiPointerOverlayEnabled = true;
         }
@@ -107,6 +109,7 @@ namespace MieMieFrameWork.M_InputSystem
 
             inputActions.Player.Disable();
             inputActions.UI.Disable();
+            uiCommandMap?.Disable();
             CurrentMapMode = E_InputMapMode.None;
             uiPointerOverlayEnabled = false;
         }
