@@ -11,7 +11,7 @@ namespace FakeUnityCLI.EditorBridge
     [InitializeOnLoad]
     internal static class BridgeBootstrap
     {
-        internal const string BridgeVersion = "1.20.0";
+        internal const string BridgeVersion = "1.22.0";
         private static readonly string Root = Path.Combine("Library", "FakeUnityCLI");
         private static readonly string OwnerPath = Path.Combine(Root, "bridge-owner.json");
         private static FileStream _owner;

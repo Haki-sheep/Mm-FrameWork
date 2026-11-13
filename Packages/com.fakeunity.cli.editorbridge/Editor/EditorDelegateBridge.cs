@@ -13,12 +13,13 @@ namespace FakeUnity.EditorBridge
 {
     internal static class Core
     {
-        internal const string Version = "1.20.0";
+        internal const string Version = "1.22.0";
 
         [Serializable]
         internal sealed class Args
         {
             public string path;
+            public string code;
             public string[] paths;
             public string[] scenes;
             public string output_path;
@@ -48,6 +49,7 @@ namespace FakeUnity.EditorBridge
             public bool success;
             public string operation;
             public string message;
+            public string result_json;
             public string[] artifacts = new string[0];
             public string[] warnings = new string[0];
             public string[] errors = new string[0];
@@ -128,6 +130,21 @@ namespace FakeUnity.EditorBridge
 
     public static class Assets
     {
+        public static void ExecuteCode()
+        {
+            Core.Run((Plan, Result) =>
+            {
+                var Execution = FakeUnityCLI.EditorBridge.RoslynExecutor.Execute(Plan.arguments.code);
+                Result.warnings = Execution.Diagnostics.Where(Item => Item.severity == "Warning")
+                    .Select(Item => Item.code + " " + Item.message).ToArray();
+                if (!Execution.Success)
+                    throw new InvalidOperationException(Execution.ErrorMessage + " " +
+                        string.Join("\n", Execution.Diagnostics.Select(Item => Item.code + " " + Item.message)));
+                Result.result_json = Execution.ResultJson;
+                Result.message = Execution.ResultText;
+            });
+        }
+
         public static void Import()
         {
             Core.Run((p, r) =>

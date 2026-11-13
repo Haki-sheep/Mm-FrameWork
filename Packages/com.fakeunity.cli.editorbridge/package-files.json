@@ -30,6 +30,8 @@
     "Editor/EditorTestRunContract.cs",
     "Editor/OnlineProviderRegistry.cs",
     "Editor/LiveBridgeUpdate.cs",
-    "Editor/RoslynRequestBridge.cs"
+    "Editor/RoslynRequestBridge.cs",
+    "Editor/AssetDeleteContract.cs",
+    "Editor/AssetDeleteBridge.cs"
   ]
 }

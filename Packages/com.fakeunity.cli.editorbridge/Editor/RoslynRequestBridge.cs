@@ -228,7 +228,7 @@ namespace FakeUnityCLI.EditorBridge
             if (request.operation == "roslyn-exec" && String.IsNullOrWhiteSpace(request.code))
                 throw new InvalidDataException("code is required for roslyn-exec.");
             if (request.operation != "roslyn-exec" && request.operation != EditorOnlineOperations.RefreshOperation &&
-                request.operation != EditorOnlineOperations.ImportOperation &&
+                request.operation != EditorOnlineOperations.ImportOperation && request.operation != AssetDeleteBridge.Operation &&
                 request.operation != EditorOnlineOperations.CompileRequestOperation &&
                 request.operation != EditorOnlineOperations.ContextOperation &&
                 request.operation != EditorOnlineOperations.SceneHierarchyOperation &&
@@ -254,7 +254,7 @@ namespace FakeUnityCLI.EditorBridge
                 !EditorUiOperations.Handles(request.operation) && !LiveBridgeUpdate.IsOperation(request.operation) &&
                 !EditorDevelopmentOperations.Handles(request.operation))
                 throw new InvalidDataException("Unsupported online operation: " + request.operation);
-            if (EditorDevelopmentOperations.Handles(request.operation))
+            if (EditorDevelopmentOperations.Handles(request.operation) || request.operation == AssetDeleteBridge.Operation)
             {
                 if (String.IsNullOrWhiteSpace(request.payload_json)) throw new InvalidDataException("Development operations require payload_json.");
                 if (String.IsNullOrWhiteSpace(request.editor_instance_id) || String.IsNullOrWhiteSpace(request.submitted_session_id) ||
@@ -385,6 +385,7 @@ namespace FakeUnityCLI.EditorBridge
                         return new RoslynExecutionResult { Success = false, State = "execution_mode_required",
                             ErrorType = "EditorExecutionModeRequired", ErrorMessage = "Operation requires " + requiredMode + " mode; no Editor API was invoked." };
                     return request.operation == "roslyn-exec" ? RoslynExecutor.Execute(request.code) :
+                        request.operation == AssetDeleteBridge.Operation ? AssetDeleteBridge.Execute(request) :
                         EditorDevelopmentOperations.Handles(request.operation) ? EditorDevelopmentOperations.Execute(request) :
                         EditorOnlineOperations.Execute(request.operation, request.paths, request.payload_json, request.request_id);
                 }
@@ -398,6 +399,7 @@ namespace FakeUnityCLI.EditorBridge
 
         private static string RequiredExecutionMode(OnlineRequest request)
         {
+            if (request.operation == AssetDeleteBridge.Operation) return "edit";
             if (request.operation == EditorUiOperations.ClickOperation) return "play";
             if (request.operation == EditorDevelopmentOperations.RuntimeSetOperation) return "play";
             if (request.operation == EditorDevelopmentOperations.StopPlayOperation) return "any";
