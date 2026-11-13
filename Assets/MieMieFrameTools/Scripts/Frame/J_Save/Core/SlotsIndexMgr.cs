@@ -87,6 +87,8 @@ namespace MiMieSaver
         public void SwitchSlot(string slotId)
         {
             if (data.SlotList == null) return;
+            if (!data.SlotList.Exists(s => s.SlotId == slotId))
+                throw new ArgumentException($"存档槽 {slotId} 不存在", nameof(slotId));
             data.CurrentSlotId = slotId;
             Save();
         }
