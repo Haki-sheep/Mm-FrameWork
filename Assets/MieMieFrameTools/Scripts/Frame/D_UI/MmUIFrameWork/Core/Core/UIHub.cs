@@ -215,7 +215,8 @@ namespace MmUIFrameWork.Core
         {
             Type type = typeof(T);
             string uiName = type.Name;
-            uiDic[uiName]?.OnHide();
+            if (uiDic.TryGetValue(uiName, out var uiWindow))
+                uiWindow.OnHide();
             action?.Invoke();
         }
 
