@@ -29,6 +29,11 @@ namespace MiMieFSM.UpdateFsm
         private StateBase currentStateBase;
 
         /// <summary>
+        /// 已向调度器注册帧回调的状态 防止嵌套切换或重复恢复导致重复注册
+        /// </summary>
+        private StateBase tickingStateBase;
+
+        /// <summary>
         /// 当前状态类型
         /// </summary>
         public Type CurrentStateType => currentStateBase?.GetType();
@@ -153,22 +158,25 @@ namespace MiMieFSM.UpdateFsm
 
         private void AddUpdateListeners()
         {
-            if (currentStateBase is null || tickScheduler is null)
+            if (currentStateBase is null || tickScheduler is null || tickingStateBase == currentStateBase)
                 return;
 
+            RemoveUpdateListeners();
             tickScheduler.AddUpdateListener(currentStateBase.OnUpdate);
             tickScheduler.AddLateUpdateListener(currentStateBase.OnLateUpdate);
             tickScheduler.AddFixedUpdateListener(currentStateBase.OnFixedUpdate);
+            tickingStateBase = currentStateBase;
         }
 
         private void RemoveUpdateListeners()
         {
-            if (currentStateBase is null || tickScheduler is null)
+            if (tickingStateBase is null || tickScheduler is null)
                 return;
 
-            tickScheduler.RemoveUpdateListener(currentStateBase.OnUpdate);
-            tickScheduler.RemoveLateUpdateListener(currentStateBase.OnLateUpdate);
-            tickScheduler.RemoveFixedUpdateListener(currentStateBase.OnFixedUpdate);
+            tickScheduler.RemoveUpdateListener(tickingStateBase.OnUpdate);
+            tickScheduler.RemoveLateUpdateListener(tickingStateBase.OnLateUpdate);
+            tickScheduler.RemoveFixedUpdateListener(tickingStateBase.OnFixedUpdate);
+            tickingStateBase = null;
         }
     }
 }
