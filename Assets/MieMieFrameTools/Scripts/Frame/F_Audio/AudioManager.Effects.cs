@@ -58,6 +58,8 @@ namespace MieMieFrameWork
             public AudioClipLease Lease { get; set; }
             public CancellationTokenSource Cancellation { get; set; }
             public Component FollowTarget { get; set; }
+            /// <summary> 播放时绑定过跟随目标 用于区分未绑定与目标已销毁 </summary>
+            public bool HasFollowTarget { get; set; }
             public bool Started { get; set; }
             public bool Paused { get; set; }
             public UnityAction Complete { get; set; }
@@ -130,6 +132,7 @@ namespace MieMieFrameWork
                 return false;
             }
             playback.FollowTarget = component;
+            playback.HasFollowTarget = component != null;
             // 激活前登记租借 激活回调可能停止请求或销毁管理器
             Source.gameObject.SetActive(true);
             if (disposed || !effectPlaybackDict.ContainsKey(playback.Id) ||
@@ -169,6 +172,12 @@ namespace MieMieFrameWork
             {
                 var Playback = effectPlaybackList[Index];
                 if (Playback.Started && !effectPoolHandle.IsLeaseValid(Playback.Source, Playback.LeaseVersion))
+                {
+                    ReleaseEffect(Playback);
+                    continue;
+                }
+                // 绑定目标已销毁 停止播放且不触发完成回调 避免回调访问已销毁对象
+                if (Playback.Started && Playback.HasFollowTarget && Playback.FollowTarget == null)
                 {
                     ReleaseEffect(Playback);
                     continue;
