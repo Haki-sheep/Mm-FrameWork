@@ -230,6 +230,7 @@ namespace MmUIFrameWork.Core
 
             if (uiDic.TryGetValue(uiName, out var uiWindow))
             {
+                uiStack.RemoveUI(uiWindow);
                 uiWindow.OnDestroy();
                 UILoad.Release(uiWindow.UIGameObject);
                 uiDic.Remove(uiName);
@@ -291,10 +292,15 @@ namespace MmUIFrameWork.Core
         public T ShowWindowWithStack<T>(Action action = null) where T : UIDataBase, new()
         {
             var currentTop = uiStack.GetTopUI();
-            currentTop?.OnHide();
             var newWindow = ShowWindow<T>();
+            if (currentTop != null && currentTop != newWindow)
+                currentTop.OnHide();
             if (newWindow != null)
+            {
+                // 已在栈中的窗口移到栈顶 避免重复入栈
+                uiStack.RemoveUI(newWindow);
                 uiStack.PushUI(newWindow);
+            }
             action?.Invoke();
             return newWindow;
         }
@@ -316,7 +322,6 @@ namespace MmUIFrameWork.Core
         /// </summary>
         public void CloseWindowFromStack<T>(Action action = null) where T : UIDataBase, new()
         {
-            uiStack.RemoveUI<T>();
             CloseWindow<T>();
             action?.Invoke();
         }

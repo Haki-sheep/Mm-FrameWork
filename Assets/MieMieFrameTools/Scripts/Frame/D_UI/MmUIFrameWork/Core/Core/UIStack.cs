@@ -66,6 +66,23 @@ namespace MmUIFrameWork.Core
         }
 
         /// <summary>
+        /// 移除指定实例的全部入栈记录 保持其余顺序
+        /// </summary>
+        public bool RemoveUI(UIDataBase ui)
+        {
+            if (ui == null || !stack.Contains(ui))
+                return false;
+
+            var KeepList = new List<UIDataBase>(stack);
+            KeepList.RemoveAll(item => item == ui);
+            stack.Clear();
+            // Stack 枚举顺序为栈顶到栈底 需逆序压回
+            for (int Index = KeepList.Count - 1; Index >= 0; Index--)
+                stack.Push(KeepList[Index]);
+            return true;
+        }
+
+        /// <summary>
         /// 获取栈顶UI
         /// </summary>
         public UIDataBase GetTopUI()
