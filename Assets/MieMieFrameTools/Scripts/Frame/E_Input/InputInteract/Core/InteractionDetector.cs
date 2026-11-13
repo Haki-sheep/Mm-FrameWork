@@ -34,9 +34,14 @@ namespace MieMieFrameWork.Interaction
         private readonly RaycastHit[] castHitBuffer = new RaycastHit[1];
 
         /// <summary>
-        /// Collider 实体 ID 到 IInteractable 缓存
+        /// 上一次解析的 Collider
         /// </summary>
-        private readonly Dictionary<EntityId, IInteractable> interactableCacheDict = new();
+        private Collider cachedCollider;
+
+        /// <summary>
+        /// 上一次解析的可交互物 仅在 Collider 不变且组件存活时复用
+        /// </summary>
+        private IInteractable cachedInteractable;
 
         /// <summary>
         /// 射线起点 Transform
@@ -106,12 +111,13 @@ namespace MieMieFrameWork.Interaction
             if (collider == null)
                 return null;
 
-            var entityId = collider.GetEntityId();
-            if (interactableCacheDict.TryGetValue(entityId, out IInteractable cached))
-                return cached;
+            // 接口引用绕过 Unity 假空判断 需转回 Object 检查组件是否已销毁
+            if (collider == cachedCollider && cachedInteractable is Object cachedObject && cachedObject != null)
+                return cachedInteractable;
 
             var interactable = collider.GetComponentInParent<IInteractable>();
-            interactableCacheDict[entityId] = interactable;
+            cachedCollider = collider;
+            cachedInteractable = interactable;
             return interactable;
         }
 
@@ -120,7 +126,8 @@ namespace MieMieFrameWork.Interaction
         /// </summary>
         public void ClearCache()
         {
-            interactableCacheDict.Clear();
+            cachedCollider = null;
+            cachedInteractable = null;
         }
     }
 }
