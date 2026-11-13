@@ -44,20 +44,26 @@ namespace MieMieFrameWork
             if (!ValidateScene(sceneName,needRepeatLoad))
                 return;
 
+            // LoadScene 延迟到下一帧才真正切换 完成工作挂到 sceneLoaded 上执行
+            UnityEngine.Events.UnityAction<Scene, LoadSceneMode> OnLoaded = null;
+            OnLoaded = (scene, mode) =>
+            {
+                SceneManager.sceneLoaded -= OnLoaded;
+                IsLoading = false;
+                OptimizeMemoryAfterLoad();
+                callback?.Invoke();
+                Debug.Log($"[SceneManager] 场景 {sceneName} 同步加载完成");
+            };
+
             try
             {
                 IsLoading = true;
+                SceneManager.sceneLoaded += OnLoaded;
                 SceneManager.LoadScene(sceneName);
-                IsLoading = false;
-                
-                // 场景加载完成后进行内存优化
-                OptimizeMemoryAfterLoad();
-                callback?.Invoke();
-                
-                Debug.Log($"[SceneManager] 场景 {sceneName} 同步加载完成");
             }
             catch (System.Exception ex)
             {
+                SceneManager.sceneLoaded -= OnLoaded;
                 IsLoading = false;
                 Debug.LogError($"[SceneManager] 加载场景失败: {sceneName}, 错误: {ex.Message}");
             }
