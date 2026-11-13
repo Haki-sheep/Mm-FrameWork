@@ -125,7 +125,9 @@ namespace MieMieFrameWork.M_InputSystem
                 }
 
                 float bufferTime = customBufferTime > 0 ? customBufferTime : defaultBufferTime;
-                queue.Enqueue(new BufferSlot(bufferTime));
+                var Slot = new BufferSlot(bufferTime);
+                Slot.Activate();
+                queue.Enqueue(Slot);
             }
         }
 
