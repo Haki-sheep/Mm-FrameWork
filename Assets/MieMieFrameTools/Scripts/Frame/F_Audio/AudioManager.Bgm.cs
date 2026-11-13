@@ -33,7 +33,7 @@ namespace MieMieFrameWork
         /// <summary>
         /// 播放外部提供的片段 外部资源不由音频管理器释放
         /// </summary>
-        public void PlayerBgAudio(AudioClip audioClip, BgAudioType type = BgAudioType.BGM, bool needLoop = true, float volume = 1)
+        public void PlayerBgAudio(AudioClip audioClip, BgAudioType type = BgAudioType.BGM, bool needLoop = true, float volume = -1)
         {
             RequireActive();
             var Channel = GetBgChannel(type);
@@ -65,7 +65,7 @@ namespace MieMieFrameWork
         /// <summary>
         /// 异步加载并播放背景音乐 后发请求覆盖先发请求
         /// </summary>
-        public async UniTask PlayerBgAudioAsync(string path, BgAudioType type = BgAudioType.BGM, bool needLoop = true, float volume = 1)
+        public async UniTask PlayerBgAudioAsync(string path, BgAudioType type = BgAudioType.BGM, bool needLoop = true, float volume = -1)
         {
             RequireActive();
             var Channel = GetBgChannel(type);
