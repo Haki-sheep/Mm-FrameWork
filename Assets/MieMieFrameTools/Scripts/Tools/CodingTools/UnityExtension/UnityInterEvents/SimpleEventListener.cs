@@ -127,6 +127,18 @@ namespace MieMieFrameWork
                 triggerEvents[eventType] -= callback;
         }
 
+        public void RemoveListener(SimpleEventType eventType, Action<Collision2D> callback)
+        {
+            if (collision2DEvents.ContainsKey(eventType))
+                collision2DEvents[eventType] -= callback;
+        }
+
+        public void RemoveListener(SimpleEventType eventType, Action<Collider2D> callback)
+        {
+            if (trigger2DEvents.ContainsKey(eventType))
+                trigger2DEvents[eventType] -= callback;
+        }
+
         public void RemoveAllListeners()
         {
             simpleEvents.Clear();
