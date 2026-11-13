@@ -236,7 +236,7 @@ namespace MiMieSaver
             if (data.SlotList == null)
                 data.SlotList = new List<SlotData>();
 
-            CleanupOrphanedSlots();
+            // 不在加载时自动清理孤立槽位 新建后尚未首次保存的槽位没有 dat 文件
         }
 
         /// <summary>
