@@ -257,11 +257,23 @@ namespace MmUIFrameWork.Core
             if (uiPrefab == null)
                 return null;
 
+            // 等待期间窗口可能已由其他入口创建 复用已有实例并释放本次加载
+            if (uiDic.TryGetValue(uiName, out var createdWindow))
+            {
+                UILoad.Release(uiPrefab);
+                var existingWindow = createdWindow as T;
+                existingWindow.OnShow();
+                onComplete?.Invoke(existingWindow);
+                return existingWindow;
+            }
+
             T uiWindow = new T();
-            
+
             uiPrefab.transform.SetParent(PanelRoot, false);
             uiWindow.BindGameObject(uiPrefab, UICamera);
             uiDic.Add(uiName, uiWindow);
+            if (uiWindow.UIMask != null)
+                uiWindow.UIMask.gameObject.SetActive(false);
             uiWindow.OnAwake();
             uiWindow.OnShow();
             onComplete?.Invoke(uiWindow);
