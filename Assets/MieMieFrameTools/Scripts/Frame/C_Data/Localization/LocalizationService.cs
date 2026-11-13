@@ -62,7 +62,9 @@ namespace MieMieFrameWork.Localization
                 try
                 {
                     await textSource.InitAsync(LinkedSource.Token);
-                    await SwitchLocaleAsync(preferences.GetLocale(DefaultLocale), LinkedSource.Token);
+                    // 本机记录的语言可能已从新版本语言表移除 此时回退默认语言 默认语言无效仍直接报错
+                    string PreferredLocale = preferences.GetLocale(DefaultLocale);
+                    await SwitchLocaleAsync(IsConfiguredLocale(PreferredLocale) ? PreferredLocale : DefaultLocale, LinkedSource.Token);
                     IsReady = true;
                     readySource.TrySetResult();
                 }
@@ -128,6 +130,23 @@ namespace MieMieFrameWork.Localization
         #endregion
 
         #region 切换与生命周期
+
+        /// <summary>
+        /// 判断语言名是否合法且在当前语言表中
+        /// </summary>
+        private bool IsConfiguredLocale(string Locale)
+        {
+            if (string.IsNullOrEmpty(Locale))
+                return false;
+            try
+            {
+                return LocaleList.Contains(CultureInfo.GetCultureInfo(Locale).Name);
+            }
+            catch (CultureNotFoundException)
+            {
+                return false;
+            }
+        }
 
         /// <summary>
         /// 先准备目标资源 再提交语言 通知后释放旧字体
