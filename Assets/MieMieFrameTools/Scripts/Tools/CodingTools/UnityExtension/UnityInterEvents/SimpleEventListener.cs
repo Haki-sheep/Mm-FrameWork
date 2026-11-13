@@ -29,7 +29,7 @@ namespace MieMieFrameWork
     public class SimpleEventListener : MonoBehaviour, 
         IPointerClickHandler, IPointerDownHandler, IPointerUpHandler,
         IPointerEnterHandler, IPointerExitHandler,
-        IDragHandler, IBeginDragHandler, IEndDragHandler
+        IDragHandler, IBeginDragHandler, IEndDragHandler, IInitializePotentialDragHandler
     {
         // 简单事件（无参数）
         private Dictionary<SimpleEventType, Action> simpleEvents = new();
@@ -209,8 +209,43 @@ namespace MieMieFrameWork
             pointerAction?.Invoke(eventData);
         }
 
+        /// <summary>
+        /// 是否注册了任意拖拽监听 未注册时拖拽交给父级 避免挡住 ScrollRect
+        /// </summary>
+        private bool HasDragListener()
+        {
+            return HasListener(SimpleEventType.BeginDrag) || HasListener(SimpleEventType.Drag) || HasListener(SimpleEventType.EndDrag);
+        }
+
+        private bool HasListener(SimpleEventType eventType)
+        {
+            return simpleEvents.TryGetValue(eventType, out var simpleAction) && simpleAction != null
+                || pointerEvents.TryGetValue(eventType, out var pointerAction) && pointerAction != null;
+        }
+
+        /// <summary>
+        /// 向父级层级转发拖拽事件 由最近的对应处理器接收
+        /// </summary>
+        private void ForwardToParent<T>(PointerEventData eventData, ExecuteEvents.EventFunction<T> handler) where T : IEventSystemHandler
+        {
+            if (transform.parent != null)
+                ExecuteEvents.ExecuteHierarchy(transform.parent.gameObject, eventData, handler);
+        }
+
+        public void OnInitializePotentialDrag(PointerEventData eventData)
+        {
+            if (!HasDragListener())
+                ForwardToParent(eventData, ExecuteEvents.initializePotentialDrag);
+        }
+
         public void OnBeginDrag(PointerEventData eventData)
         {
+            if (!HasDragListener())
+            {
+                ForwardToParent(eventData, ExecuteEvents.beginDragHandler);
+                return;
+            }
+
             simpleEvents.TryGetValue(SimpleEventType.BeginDrag, out var simpleAction);
             simpleAction?.Invoke();
             
@@ -220,6 +255,12 @@ namespace MieMieFrameWork
 
         public void OnDrag(PointerEventData eventData)
         {
+            if (!HasDragListener())
+            {
+                ForwardToParent(eventData, ExecuteEvents.dragHandler);
+                return;
+            }
+
             simpleEvents.TryGetValue(SimpleEventType.Drag, out var simpleAction);
             simpleAction?.Invoke();
             
@@ -229,6 +270,12 @@ namespace MieMieFrameWork
 
         public void OnEndDrag(PointerEventData eventData)
         {
+            if (!HasDragListener())
+            {
+                ForwardToParent(eventData, ExecuteEvents.endDragHandler);
+                return;
+            }
+
             simpleEvents.TryGetValue(SimpleEventType.EndDrag, out var simpleAction);
             simpleAction?.Invoke();
             
