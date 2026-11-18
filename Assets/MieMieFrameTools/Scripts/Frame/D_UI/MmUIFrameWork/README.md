@@ -39,10 +39,10 @@ UI 调用方引用 UI 程序集后可使用 `ModuleHub.GetManager<UIHub>` 原 `G
 
 UIHub 实现 IDisposable 进入初始化后由 ModuleHub 逆序释放 Unity OnDestroy 也可触发同一幂等清理 释放已登记的窗口及预热根节点并作废在途请求 外置 UIRoot 由其持有者释放
 
-完整启动顺序与失败语义见 [框架启动与生命周期](../../A_Frame/Boot/README.md)
+完整启动顺序与失败语义见 [框架启动与生命周期](../../../../../../README.md#框架启动与生命周期)
 
 ## 画质设置功能组件
 
 `QualitySettingsView` 通过 IQualityService 与类型化通知接入 不在 Show 或 Refresh 初始化 不修改 Gen 局部控件由组件自身持有
 
-面板壳一次调用 InitComponents 显示与隐藏分别调用 BindEvents 和 UnbindEvents 生命周期 偏好及失败语义以 [画质模块说明](../../A_Frame/Business/Quality/README.md) 为准
+面板壳一次调用 InitComponents 显示与隐藏分别调用 BindEvents 和 UnbindEvents 生命周期 偏好及失败语义以 [画质模块说明](../../../../../../README.md#画质设置) 为准
