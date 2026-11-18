@@ -13,7 +13,7 @@ namespace MmUIFrameWork.Core
     /// </summary>
     [Serializable]
     [ManagerAttribute(Priority)]
-    public class UIHub : SingletonMono<UIHub>, IManagerBase
+    public class UIHub : SingletonMono<UIHub>, IManagerBase, IDisposable
     {
         /// <summary> UI 管理器顺序 位于输入管理器之后与交互管理器之前 </summary>
         public const int Priority = 10;
@@ -26,7 +26,10 @@ namespace MmUIFrameWork.Core
         /// <summary>
         /// 所有窗口字典
         /// </summary>
-        private Dictionary<string, UIDataBase> uiDic = new();
+        private readonly Dictionary<string, UIDataBase> uiDic = new();
+
+        /// <summary> 仍可提交结果的同名窗口加载批次 </summary>
+        private readonly Dictionary<string, PendingWindowLoad> pendingWindowLoadDict = new();
 
         [SerializeField]
         private Transform UIRoot;
@@ -40,6 +43,9 @@ namespace MmUIFrameWork.Core
         /// </summary>
         private Transform warmUpRoot;
 
+        /// <summary> 管理器释放后拒绝新的窗口加载 </summary>
+        private bool isDisposed;
+
         protected override bool DontDestroyOnLoadEnabled => true;
 
         #region 初始化与查询
@@ -49,6 +55,7 @@ namespace MmUIFrameWork.Core
         /// </summary>
         public void Init()
         {
+            ThrowIfDisposed();
             InitComponents();
         }
 
@@ -95,24 +102,14 @@ namespace MmUIFrameWork.Core
         /// </summary>
         public T ShowWindow<T>(Action action = null) where T : UIDataBase, new()
         {
-            Type type = typeof(T);
-            string uiName = type.Name;
-
-            if (uiDic.ContainsKey(uiName))
-            {
-                var existingWindow = uiDic[uiName];
-                existingWindow.OnShow();
+            ThrowIfDisposed();
+            string UiName = typeof(T).Name;
+            T Window = uiDic.TryGetValue(UiName, out var ExistingWindow)
+                ? UseExistingWindow<T>(UiName, ExistingWindow, false)
+                : LoadWindow<T>(UiName, false);
+            if (Window != null)
                 action?.Invoke();
-                return existingWindow as T;
-            }
-
-            T uiWindow = CreateWindowInstance<T>(uiName);
-            if (uiWindow == null)
-                return null;
-
-            uiWindow.OnShow();
-            action?.Invoke();
-            return uiWindow;
+            return Window;
         }
 
         /// <summary>
@@ -120,52 +117,237 @@ namespace MmUIFrameWork.Core
         /// </summary>
         public T WarmUpWindow<T>() where T : UIDataBase, new()
         {
-            Type type = typeof(T);
-            string uiName = type.Name;
-
-            if (uiDic.TryGetValue(uiName, out var existingWindow))
-                return existingWindow as T;
-
-            T uiWindow = CreateWindowInstance<T>(uiName);
-            if (uiWindow == null)
-                return null;
-
-            uiWindow.OnHide();
-            return uiWindow;
+            ThrowIfDisposed();
+            string UiName = typeof(T).Name;
+            return uiDic.TryGetValue(UiName, out var ExistingWindow)
+                ? ExistingWindow as T
+                : LoadWindow<T>(UiName, true);
         }
 
         /// <summary>
         /// 异步预热窗口 只创建实例 不打开显示
         /// </summary>
-        public async UniTask<T> WarmUpWindowAsync<T>() where T : UIDataBase, new()
+        public UniTask<T> WarmUpWindowAsync<T>() where T : UIDataBase, new()
         {
-            Type windowType = typeof(T);
-            string uiName = windowType.Name;
-            if (uiDic.TryGetValue(uiName, out var existingWindow))
-                return existingWindow as T;
+            return LoadWindowAsync<T>(true);
+        }
 
-            Transform warmUpParent = GetWarmUpRoot();
-            GameObject uiPrefab = await UILoad.LoadAsync(uiName, warmUpParent);
-            if (uiPrefab == null)
-                return null;
+        /// <summary>
+        /// 隐藏窗口
+        /// </summary>
+        public void HideWindow<T>(Action action = null) where T : UIDataBase, new()
+        {
+            string UiName = typeof(T).Name;
+            if (pendingWindowLoadDict.TryGetValue(UiName, out var PendingLoad))
+                PendingLoad.HideVersion++;
 
-            // 等待期间窗口可能已由其他入口创建
-            if (uiDic.TryGetValue(uiName, out existingWindow))
+            if (uiDic.TryGetValue(UiName, out var Window))
+                Window.OnHide();
+            action?.Invoke();
+        }
+
+        /// <summary>
+        /// 关闭窗口
+        /// </summary>
+        public void CloseWindow<T>(Action action = null) where T : UIDataBase, new()
+        {
+            string UiName = typeof(T).Name;
+            pendingWindowLoadDict.Remove(UiName);
+            if (uiDic.TryGetValue(UiName, out var Window))
+                DestroyWindow(UiName, Window, Window.UIGameObject);
+
+            action?.Invoke();
+        }
+
+        /// <summary>
+        /// 异步加载面板
+        /// </summary>
+        public async UniTask<T> ShowWindowAsync<T>(Action<T> onComplete = null) where T : UIDataBase, new()
+        {
+            T Window = await LoadWindowAsync<T>(false);
+            if (Window != null)
+                onComplete?.Invoke(Window);
+            return Window;
+        }
+
+        #endregion
+
+        #region 窗口加载
+
+        /// <summary>
+        /// 同步加载并绑定窗口
+        /// </summary>
+        private T LoadWindow<T>(string uiName, bool isWarmUp) where T : UIDataBase, new()
+        {
+            var PendingLoad = BeginWindowLoad(uiName);
+            int HideVersion = PendingLoad.HideVersion;
+            try
             {
-                UILoad.Release(uiPrefab);
-                return existingWindow as T;
+                var Instance = UILoad.Load(uiName);
+                if (Instance == null)
+                {
+                    FrameLog.Error($"[{uiName}] 加载失败", "UI", this);
+                    return null;
+                }
+
+                return CompleteWindowLoad<T>(uiName, Instance, PendingLoad, HideVersion, isWarmUp, false);
             }
+            finally
+            {
+                EndWindowLoad(uiName, PendingLoad);
+            }
+        }
 
-            T uiWindow = new T();
-            uiWindow.BindGameObject(uiPrefab, UICamera);
-            uiDic.Add(uiName, uiWindow);
-            if (uiWindow.UIMask != null)
-                uiWindow.UIMask.gameObject.SetActive(false);
+        private async UniTask<T> LoadWindowAsync<T>(bool isWarmUp) where T : UIDataBase, new()
+        {
+            ThrowIfDisposed();
+            string UiName = typeof(T).Name;
+            if (uiDic.TryGetValue(UiName, out var ExistingWindow))
+                return UseExistingWindow<T>(UiName, ExistingWindow, isWarmUp);
 
-            uiWindow.OnAwake();
-            uiWindow.OnHide();
-            uiPrefab.transform.SetParent(PanelRoot, false);
-            return uiWindow;
+            var PendingLoad = BeginWindowLoad(UiName);
+            int HideVersion = PendingLoad.HideVersion;
+            try
+            {
+                var Instance = await UILoad.LoadAsync(UiName, isWarmUp ? GetWarmUpRoot() : null);
+                if (Instance == null)
+                    return null;
+
+                return CompleteWindowLoad<T>(UiName, Instance, PendingLoad, HideVersion, isWarmUp, isWarmUp);
+            }
+            finally
+            {
+                EndWindowLoad(UiName, PendingLoad);
+            }
+        }
+
+        private T CompleteWindowLoad<T>(string uiName, GameObject instance, PendingWindowLoad pendingLoad,
+            int hideVersion, bool isWarmUp, bool underWarmUpRoot) where T : UIDataBase, new()
+        {
+            T Window = null;
+            bool OwnsInstance = true;
+            Exception Failure = null;
+            try
+            {
+                if (!CanCompleteLoad(uiName, pendingLoad, hideVersion, isWarmUp))
+                    return null;
+
+                // 等待期间窗口可能已由其他入口创建
+                if (uiDic.TryGetValue(uiName, out var ExistingWindow))
+                {
+                    T Existing = UseExistingWindow<T>(uiName, ExistingWindow, isWarmUp);
+                    return CanCompleteLoad(uiName, pendingLoad, hideVersion, isWarmUp) ? Existing : null;
+                }
+
+                if (!underWarmUpRoot)
+                    instance.transform.SetParent(PanelRoot, false);
+
+                Window = new T();
+                Window.BindGameObject(instance, UICamera);
+                if (!CanCompleteLoad(uiName, pendingLoad, hideVersion, isWarmUp))
+                    return null;
+                if (uiDic.TryGetValue(uiName, out ExistingWindow))
+                {
+                    T Existing = UseExistingWindow<T>(uiName, ExistingWindow, isWarmUp);
+                    return CanCompleteLoad(uiName, pendingLoad, hideVersion, isWarmUp) ? Existing : null;
+                }
+
+                uiDic.Add(uiName, Window);
+                OwnsInstance = false;
+                if (Window.UIMask != null)
+                    Window.UIMask.gameObject.SetActive(false);
+                if (!IsCurrentWindow(uiName, Window))
+                    return null;
+
+                Window.OnAwake();
+                if (!CanCompleteLoad(uiName, pendingLoad, hideVersion, isWarmUp) || !IsCurrentWindow(uiName, Window))
+                    return null;
+
+                if (isWarmUp)
+                    Window.OnHide();
+                else
+                    Window.OnShow();
+
+                if (underWarmUpRoot && IsCurrentWindow(uiName, Window))
+                    instance.transform.SetParent(PanelRoot, false);
+
+                return CanCompleteLoad(uiName, pendingLoad, hideVersion, isWarmUp) && IsCurrentWindow(uiName, Window)
+                    ? Window
+                    : null;
+            }
+            catch (Exception Exception)
+            {
+                Failure = Exception;
+                if (!OwnsInstance && IsCurrentWindow(uiName, Window))
+                {
+                    try
+                    {
+                        DestroyWindow(uiName, Window, instance);
+                    }
+                    catch (Exception CleanupFailure)
+                    {
+                        throw new AggregateException($"[{uiName}] 创建窗口及清理失败", Exception, CleanupFailure);
+                    }
+                }
+                throw;
+            }
+            finally
+            {
+                if (OwnsInstance)
+                    ReleaseWindowInstance(instance, Failure);
+            }
+        }
+
+        private T UseExistingWindow<T>(string uiName, UIDataBase window, bool isWarmUp) where T : UIDataBase
+        {
+            if (!isWarmUp)
+                window.OnShow();
+            return IsCurrentWindow(uiName, window) ? window as T : null;
+        }
+
+        private bool IsCurrentWindow(string uiName, UIDataBase window)
+        {
+            return uiDic.TryGetValue(uiName, out var CurrentWindow) && ReferenceEquals(CurrentWindow, window);
+        }
+
+        private void DestroyWindow(string uiName, UIDataBase window, GameObject instance)
+        {
+            uiDic.Remove(uiName);
+            uiStack.RemoveUI(window);
+            ReleaseOwnedWindow(window, instance);
+        }
+
+        private static void ReleaseOwnedWindow(UIDataBase window, GameObject instance)
+        {
+            Exception Failure = null;
+            try
+            {
+                window.OnDestroy();
+            }
+            catch (Exception Exception)
+            {
+                Failure = Exception;
+                throw;
+            }
+            finally
+            {
+                ReleaseWindowInstance(instance, Failure);
+            }
+        }
+
+        private static void ReleaseWindowInstance(GameObject instance, Exception failure)
+        {
+            if (instance == null)
+                return;
+
+            try
+            {
+                UILoad.Release(instance);
+            }
+            catch (Exception CleanupFailure) when (failure != null)
+            {
+                throw new AggregateException("窗口操作及实例释放失败", failure, CleanupFailure);
+            }
         }
 
         /// <summary>
@@ -186,100 +368,106 @@ namespace MmUIFrameWork.Core
             return warmUpRoot;
         }
 
-        /// <summary>
-        /// 加载并绑定窗口 只走 Awake 不 Show
-        /// </summary>
-        private T CreateWindowInstance<T>(string uiName) where T : UIDataBase, new()
-        {
-            T uiWindow = new T();
-            GameObject uiPrefab = UILoad.Load(uiName);
-            if (uiPrefab == null)
-            {
-                FrameLog.Error($"[{uiName}] 加载失败", "UI", this);
-                return null;
-            }
+        #endregion
 
-            uiPrefab.transform.SetParent(PanelRoot, false);
-            uiWindow.BindGameObject(uiPrefab, UICamera);
-            uiDic.Add(uiName, uiWindow);
-            if (uiWindow.UIMask != null)
-                uiWindow.UIMask.gameObject.SetActive(false);
-            uiWindow.OnAwake();
-            return uiWindow;
+        #region 在途加载
+
+        private sealed class PendingWindowLoad
+        {
+            public int Count { get; set; }
+            public int HideVersion { get; set; }
         }
 
-        /// <summary>
-        /// 隐藏窗口
-        /// </summary>
-        public void HideWindow<T>(Action action = null) where T : UIDataBase, new()
+        private PendingWindowLoad BeginWindowLoad(string uiName)
         {
-            Type type = typeof(T);
-            string uiName = type.Name;
-            if (uiDic.TryGetValue(uiName, out var uiWindow))
-                uiWindow.OnHide();
-            action?.Invoke();
+            if (!pendingWindowLoadDict.TryGetValue(uiName, out var PendingLoad))
+            {
+                PendingLoad = new PendingWindowLoad();
+                pendingWindowLoadDict.Add(uiName, PendingLoad);
+            }
+
+            PendingLoad.Count++;
+            return PendingLoad;
         }
 
-        /// <summary>
-        /// 关闭窗口
-        /// </summary>
-        public void CloseWindow<T>(Action action = null) where T : UIDataBase, new()
+        private void EndWindowLoad(string uiName, PendingWindowLoad pendingLoad)
         {
-            Type type = typeof(T);
-            string uiName = type.Name;
-
-            if (uiDic.TryGetValue(uiName, out var uiWindow))
-            {
-                uiStack.RemoveUI(uiWindow);
-                uiWindow.OnDestroy();
-                UILoad.Release(uiWindow.UIGameObject);
-                uiDic.Remove(uiName);
-            }
-
-            action?.Invoke();
+            pendingLoad.Count--;
+            if (pendingLoad.Count == 0 && pendingWindowLoadDict.TryGetValue(uiName, out var CurrentLoad) &&
+                ReferenceEquals(CurrentLoad, pendingLoad))
+                pendingWindowLoadDict.Remove(uiName);
         }
 
-        /// <summary>
-        /// 异步加载面板
-        /// </summary>
-        public async UniTask<T> ShowWindowAsync<T>(Action<T> onComplete = null) where T : UIDataBase, new()
+        private bool CanCompleteLoad(string uiName, PendingWindowLoad pendingLoad, int hideVersion, bool isWarmUp)
         {
-            Type type = typeof(T);
-            string uiName = type.Name;
+            return pendingWindowLoadDict.TryGetValue(uiName, out var CurrentLoad) &&
+                ReferenceEquals(CurrentLoad, pendingLoad) && (isWarmUp || hideVersion == pendingLoad.HideVersion);
+        }
 
-            if (uiDic.ContainsKey(uiName))
+        #endregion
+
+        #region 释放
+
+        public void Dispose()
+        {
+            if (isDisposed)
+                return;
+
+            isDisposed = true;
+            pendingWindowLoadDict.Clear();
+            var WindowList = new List<KeyValuePair<string, UIDataBase>>(uiDic);
+            uiDic.Clear();
+            uiStack?.ClearStack();
+
+            var FailureList = new List<Exception>();
+            foreach (var Entry in WindowList)
             {
-                var existingWindow = uiDic[uiName] as T;
-                existingWindow.OnShow();
-                onComplete?.Invoke(existingWindow);
-                return existingWindow;
+                try
+                {
+                    ReleaseOwnedWindow(Entry.Value, Entry.Value.UIGameObject);
+                }
+                catch (Exception Exception)
+                {
+                    FailureList.Add(new InvalidOperationException($"[{Entry.Key}] 释放窗口失败", Exception));
+                }
             }
 
-            GameObject uiPrefab = await UILoad.LoadAsync(uiName);
-            if (uiPrefab == null)
-                return null;
-
-            // 等待期间窗口可能已由其他入口创建 复用已有实例并释放本次加载
-            if (uiDic.TryGetValue(uiName, out var createdWindow))
+            if (warmUpRoot != null)
             {
-                UILoad.Release(uiPrefab);
-                var existingWindow = createdWindow as T;
-                existingWindow.OnShow();
-                onComplete?.Invoke(existingWindow);
-                return existingWindow;
+                try
+                {
+                    UnityEngine.Object.Destroy(warmUpRoot.gameObject);
+                }
+                catch (Exception Exception)
+                {
+                    FailureList.Add(new InvalidOperationException("释放 UI 预热根节点失败", Exception));
+                }
+                finally
+                {
+                    warmUpRoot = null;
+                }
             }
 
-            T uiWindow = new T();
+            if (FailureList.Count > 0)
+                throw new AggregateException("释放 UI 管理器失败", FailureList);
+        }
 
-            uiPrefab.transform.SetParent(PanelRoot, false);
-            uiWindow.BindGameObject(uiPrefab, UICamera);
-            uiDic.Add(uiName, uiWindow);
-            if (uiWindow.UIMask != null)
-                uiWindow.UIMask.gameObject.SetActive(false);
-            uiWindow.OnAwake();
-            uiWindow.OnShow();
-            onComplete?.Invoke(uiWindow);
-            return uiWindow;
+        protected override void OnDestroy()
+        {
+            try
+            {
+                Dispose();
+            }
+            finally
+            {
+                base.OnDestroy();
+            }
+        }
+
+        private void ThrowIfDisposed()
+        {
+            if (isDisposed)
+                throw new ObjectDisposedException(nameof(UIHub));
         }
 
         #endregion
@@ -291,18 +479,21 @@ namespace MmUIFrameWork.Core
         /// </summary>
         public T ShowWindowWithStack<T>(Action action = null) where T : UIDataBase, new()
         {
-            var currentTop = uiStack.GetTopUI();
-            var newWindow = ShowWindow<T>();
-            if (currentTop != null && currentTop != newWindow)
-                currentTop.OnHide();
-            if (newWindow != null)
+            var NewWindow = ShowWindow<T>();
+            if (NewWindow != null)
             {
+                var CurrentTop = uiStack.GetTopUI();
                 // 已在栈中的窗口移到栈顶 避免重复入栈
-                uiStack.RemoveUI(newWindow);
-                uiStack.PushUI(newWindow);
+                uiStack.RemoveUI(NewWindow);
+                uiStack.PushUI(NewWindow);
+
+                if (CurrentTop != null && !ReferenceEquals(CurrentTop, NewWindow))
+                    CurrentTop.OnHide();
+                if (!IsCurrentWindow(typeof(T).Name, NewWindow))
+                    NewWindow = null;
             }
             action?.Invoke();
-            return newWindow;
+            return NewWindow;
         }
 
         /// <summary>

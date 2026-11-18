@@ -23,9 +23,17 @@ UI 调用方引用 UI 程序集后可使用 `ModuleHub.GetManager<UIHub>` 原 `G
 
 业务打开窗口前等待 `ModuleHub.ReadyTask` UI 类型未安装或场景没有 UIHub 时不可请求必需 UI 管理器
 
+## 窗口生命周期
+
+- HideWindow 隐藏当前窗口并作废在途 Show 加载 异步预热仍可创建隐藏实例
+- CloseWindow 关闭窗口并作废在途 Show 和 WarmUp 加载 后续同类型请求可重新创建
+- 作废的加载在返回实例时释放实例 返回空且不调用 Show 完成回调
+- 新窗口绑定或初始化失败时释放实例并撤销登记
+- CloseWindowFromStack 移除并关闭指定窗口 PopWindowFromStack 隐藏栈顶并重新显示上一页
+
 ## 释放责任
 
-UIHub 仍是 Unity 场景组件 未新增 IDisposable 也不改变现有窗口及资源句柄的释放流程 FrameRoot 清理时只解除 UI 注册和缓存引用 不强制销毁独立 UIRoot
+UIHub 实现 IDisposable 进入初始化后由 ModuleHub 逆序释放 Unity OnDestroy 也可触发同一幂等清理 释放已登记的窗口及预热根节点并作废在途请求 外置 UIRoot 由其持有者释放
 
 完整启动顺序与失败语义见 [框架启动与生命周期](../../A_Frame/Boot/README.md)
 
