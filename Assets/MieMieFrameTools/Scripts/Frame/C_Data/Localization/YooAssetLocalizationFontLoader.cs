@@ -13,7 +13,7 @@ namespace MieMieFrameWork.Localization
     /// <summary>
     /// 复用现有 YooAsset 门面加载语言字体 租约负责释放全部句柄
     /// </summary>
-    public sealed class YooAssetLocalizationFontLoader : ILocalizationFontLoader
+    public sealed class YooAssetLocalizationFontLoader : ILocalizationFontLoader, ILocalizationFontCoverage
     {
         /// <summary> 语言与字体配置索引 </summary>
         private readonly Dictionary<string, Dictionary<string, LocaleFontEntry>> localeDict =
@@ -53,6 +53,8 @@ namespace MieMieFrameWork.Localization
                     throw new ArgumentException($"语言 {Pair.Key} 缺少字体样式 {string.Join(" ", MissingList)}");
             }
         }
+
+        public bool SupportsLocale(string Locale) => localeDict.ContainsKey(Locale);
 
         /// <summary>
         /// 准备整个语言的字体 任一失败释放本次全部资源

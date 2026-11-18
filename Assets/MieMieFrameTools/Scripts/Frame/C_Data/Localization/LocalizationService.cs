@@ -33,7 +33,7 @@ namespace MieMieFrameWork.Localization
         public bool IsReady { get; private set; }
         public bool IsSwitching { get; private set; }
         public UniTask ReadyTask => readySource.Task;
-        public IReadOnlyList<string> LocaleList => textSource.LocaleList;
+        public IReadOnlyList<string> LocaleList { get; private set; } = Array.Empty<string>();
 
         #region 文本与初始化
 
@@ -62,6 +62,9 @@ namespace MieMieFrameWork.Localization
                 try
                 {
                     await textSource.InitAsync(LinkedSource.Token);
+                    LocaleList = fontLoader is ILocalizationFontCoverage Coverage
+                        ? Array.AsReadOnly(textSource.LocaleList.Where(Coverage.SupportsLocale).ToArray())
+                        : textSource.LocaleList;
                     // 本机记录的语言可能已从新版本语言表移除 此时回退默认语言 默认语言无效仍直接报错
                     string PreferredLocale = preferences.GetLocale(DefaultLocale);
                     await SwitchLocaleAsync(IsConfiguredLocale(PreferredLocale) ? PreferredLocale : DefaultLocale, LinkedSource.Token);
@@ -155,7 +158,7 @@ namespace MieMieFrameWork.Localization
         {
             string CanonicalLocale = CultureInfo.GetCultureInfo(Locale).Name;
             if (!LocaleList.Contains(CanonicalLocale))
-                throw new ArgumentException($"语言表没有配置语言 {CanonicalLocale}", nameof(Locale));
+                throw new ArgumentException($"语言缺少可用文案或字体映射 {CanonicalLocale}", nameof(Locale));
             CancellationToken.ThrowIfCancellationRequested();
             if (CurrentLocale == CanonicalLocale)
                 return;

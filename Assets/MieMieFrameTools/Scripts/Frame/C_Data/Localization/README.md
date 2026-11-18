@@ -13,6 +13,7 @@
 
 游戏内按钮可绑定 `LubanLocalizationHost.SetLocale(string)` 参数为 `zh-CN` 或 `en`
 代码通过 `GameHub.Get<ILocalizationService>()` 获取服务 先等待 `ReadyTask` 再调用 `SetLocaleAsync`
+语言菜单读取服务的 `LocaleList`。使用内置字体加载器时，只列出同时具备译文和字体映射的语言。自定义加载器可实现 `ILocalizationFontCoverage` 声明支持范围。
 业务按钮应在 `IsSwitching` 时禁用 重复并发请求明确报错 不排队或静默覆盖
 动态文案调用 `LocalizedTMPText.SetArguments` 原始查询使用 `GetText` 参数格式化使用 `FormatText`
 

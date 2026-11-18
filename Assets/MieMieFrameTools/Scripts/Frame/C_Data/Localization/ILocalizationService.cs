@@ -67,6 +67,14 @@ namespace MieMieFrameWork.Localization
     }
 
     /// <summary>
+    /// 提供字体目录实际支持的语言 供服务筛选可切换项
+    /// </summary>
+    public interface ILocalizationFontCoverage
+    {
+        public bool SupportsLocale(string Locale);
+    }
+
+    /// <summary>
     /// 用户语言选择的持久化接口
     /// </summary>
     public interface ILocalizationPreferences
