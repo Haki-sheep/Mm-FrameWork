@@ -5,18 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/_Scripts/AnimacerLearn/01 PlayOneState/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/MieMieFrameTools/Sample/SceneMgr/SceneA.unity
-    guid: 257b55cc19f72624285e581c463bf1fb
-  - enabled: 1
-    path: Assets/MieMieFrameTools/Sample/SceneMgr/SceneB.unity
-    guid: 931026c916c601342a5aa4a460b2b470
-  - enabled: 1
-    path: Assets/MieMieFrameTools/Sample/SceneMgr/SceneC.unity
-    guid: d8c73b4c5f8d10744a5224d519af74ad
+    path: Assets/Scenes/TestScene.unity
+    guid: 65dad9a3a651a024ab487bd42a6bd4bd
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
