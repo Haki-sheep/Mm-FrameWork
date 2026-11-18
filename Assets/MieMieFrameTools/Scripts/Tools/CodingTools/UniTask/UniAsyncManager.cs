@@ -3,6 +3,7 @@ using MieMieFrameWork;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 using static MieMieFrameWork.ModuleHub;
 
@@ -13,23 +14,43 @@ using static MieMieFrameWork.ModuleHub;
 [ManagerAttribute(5)]
 public class AsyncTaskManager : IManagerBase, IDisposable
 {
+    private readonly object taskLock = new();
+    private readonly CancellationToken ownerCancellationToken;
+
     //任务统计信息
     private TaskStatistics statistics = new();
-    private Dictionary<string, CancellationTokenSource> taskCancellationTokens = new();
+    private readonly Dictionary<string, CancellationTokenSource> taskCancellationTokens = new();
 
     /// <summary>
     /// 全部运行中任务的令牌 含未命名任务 供整体取消
     /// </summary>
     private readonly HashSet<CancellationTokenSource> activeTokenHashList = new();
 
+    private bool isDisposed;
+
+    public AsyncTaskManager()
+    {
+    }
+
+    internal AsyncTaskManager(CancellationToken ownerCancellationToken)
+    {
+        this.ownerCancellationToken = ownerCancellationToken;
+    }
+
     public void Init()
     {
-        
     }
 
     public void Dispose()
     {
-        CancelAllTasks();
+        lock (taskLock)
+        {
+            if (isDisposed)
+                return;
+
+            isDisposed = true;
+            CancelActiveTasks();
+        }
     }
 
     #region 基础任务执行
@@ -42,98 +63,37 @@ public class AsyncTaskManager : IManagerBase, IDisposable
     /// <param name="onComplete">完成回调（在主线程执行）</param>
     /// <param name="onError">错误回调（在主线程执行）</param>
     /// <param name="taskName">任务名称，用于取消和统计</param>
-    public async UniTaskVoid ExecuteAsync<TResult>(
+    public UniTaskVoid ExecuteAsync<TResult>(
         Func<TResult> backgroundWork,
         Action<TResult> onComplete = null,
         Action<Exception> onError = null,
         string taskName = null)
     {
-        CancellationTokenSource cts = CreateTaskToken(taskName);
-
-        try
+        return RunTaskAsync(async Token =>
         {
-            statistics.taskStarted++;
-
             // 切换到线程池执行CPU密集型任务
             await UniTask.SwitchToThreadPool();
-         
-            TResult result = backgroundWork.Invoke();
-
-            // 切换回主线程处理结果
-            await UniTask.SwitchToMainThread(cts.Token);
-            cts.Token.ThrowIfCancellationRequested();
-
-            onComplete?.Invoke(result);
-
-            statistics.taskCompleted++;
-        }
-        catch (OperationCanceledException)
-        {
-            Debug.Log($"任务被取消: {taskName ?? "未命名任务"}");
-            statistics.taskCancelled++;
-        }
-        catch (Exception ex)
-        {
-            // 确保错误回调在主线程执行
-            await UniTask.SwitchToMainThread();
-
-            Debug.LogError($"任务执行失败: {ex.Message}");
-            onError?.Invoke(ex);
-
-            statistics.taskFailed++;
-        }
-        finally
-        {
-            ReleaseTaskToken(taskName, cts);
-        }
+            Token.ThrowIfCancellationRequested();
+            return backgroundWork.Invoke();
+        }, onComplete, onError, taskName);
     }
 
     /// <summary>
     /// 在线程池执行异步任务
     /// </summary>
-    public async UniTaskVoid ExecuteAsync<TResult>(
+    public UniTaskVoid ExecuteAsync<TResult>(
         Func<UniTask<TResult>> asyncWork,
         Action<TResult> onComplete = null,
         Action<Exception> onError = null,
         string taskName = null)
     {
-        CancellationTokenSource cts = CreateTaskToken(taskName);
-
-        try
+        return RunTaskAsync(async Token =>
         {
-            statistics.taskStarted++;
-
             // 切换到线程池
             await UniTask.SwitchToThreadPool();
-
-            TResult result = await asyncWork.Invoke();
-
-            // 切换回主线程处理结果
-            await UniTask.SwitchToMainThread(cts.Token);
-            cts.Token.ThrowIfCancellationRequested();
-
-            onComplete?.Invoke(result);
-
-            statistics.taskCompleted++;
-        }
-        catch (OperationCanceledException)
-        {
-            Debug.Log($"任务被取消: {taskName ?? "未命名任务"}");
-            statistics.taskCancelled++;
-        }
-        catch (Exception ex)
-        {
-            await UniTask.SwitchToMainThread();
-
-            Debug.LogError($"任务执行失败: {ex.Message}");
-            onError?.Invoke(ex);
-
-            statistics.taskFailed++;
-        }
-        finally
-        {
-            ReleaseTaskToken(taskName, cts);
-        }
+            Token.ThrowIfCancellationRequested();
+            return await asyncWork.Invoke();
+        }, onComplete, onError, taskName);
     }
 
     #endregion
@@ -149,156 +109,184 @@ public class AsyncTaskManager : IManagerBase, IDisposable
     /// <param name="processor">处理器函数</param>
     /// <param name="onComplete">所有任务完成回调</param>
     /// <param name="maxConcurrency">最大并发数，0表示不限制</param>
-    public async UniTaskVoid ExecuteBatch<T, TResult>(
+    public UniTaskVoid ExecuteBatch<T, TResult>(
         IEnumerable<T> items,
         Func<T, TResult> processor,
         Action<List<TResult>> onComplete = null,
         Action<Exception> onError = null,
         int maxConcurrency = 0)
     {
+        return RunTaskAsync(Token => RunBatchAsync(items, processor, maxConcurrency, Token), onComplete, onError);
+    }
+
+    private static async UniTask<List<TResult>> RunBatchAsync<T, TResult>(
+        IEnumerable<T> items, Func<T, TResult> processor, int maxConcurrency, CancellationToken cancellationToken)
+    {
+        var ItemList = new List<T>();
+        foreach (var Item in items)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ItemList.Add(Item);
+        }
+
+        // 创建信号灯类
+        // 等所有子任务退出再释放信号量 其中一个失败仍须等待其他处理器退出
+        using var Semaphore = maxConcurrency > 0 ? new SemaphoreSlim(maxConcurrency) : null;
+        var TaskList = new List<Task<TResult>>(ItemList.Count);
+        foreach (var Item in ItemList)
+            TaskList.Add(RunBatchItemAsync(Item, processor, Semaphore, cancellationToken));
+
+        // 创建结果列表
+        return new List<TResult>(await Task.WhenAll(TaskList).ConfigureAwait(false));
+    }
+
+    private static async Task<TResult> RunBatchItemAsync<T, TResult>(
+        T item, Func<T, TResult> processor, SemaphoreSlim semaphore, CancellationToken cancellationToken)
+    {
+        if (semaphore != null)
+            await semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+
         try
         {
-            statistics.taskStarted++;
-            //创建结果列表
-            List<TResult> results = new List<TResult>();
-
-        if (maxConcurrency > 0)
-        {
-            // 创建信号灯类
-            // 不随方法退出释放 WhenAll 首个异常提前返回后其余任务仍会 Release 信号量
-            var semaphore = new SemaphoreSlim(maxConcurrency);
+            return await Task.Run(() =>
             {
-                //创建任务列表
-                var tasks = new List<UniTask<TResult>>();
-
-                foreach (var item in items)
-                {
-                    //获取一个许可证 如果许可证不够用 则等待
-                    await semaphore.WaitAsync();
-
-                    var task = UniTask.RunOnThreadPool(async () =>
-                    {
-                        try
-                        {
-                            return processor(item);
-                        }
-                        finally
-                        {
-                            // 切换回主线程释放信号量
-                            await UniTask.SwitchToMainThread();
-                            semaphore.Release();
-                        }
-                    });
-
-                    tasks.Add(task);
-                }
-
-                var taskResults = await UniTask.WhenAll(tasks);
-                results.AddRange(taskResults);
-            }
+                cancellationToken.ThrowIfCancellationRequested();
+                return processor(item);
+            }, cancellationToken).ConfigureAwait(false);
         }
-            else   // 不限制并发数
-            {
-             
-                var tasks = new List<UniTask<TResult>>();
-
-                foreach (var item in items)
-                {
-                    var task = UniTask.RunOnThreadPool(() => processor(item));
-                    tasks.Add(task);
-                }
-
-                var taskResults = await UniTask.WhenAll(tasks);
-                results.AddRange(taskResults);
-            }
-
-            // 切换回主线程处理结果
-            await UniTask.SwitchToMainThread();
-
-            onComplete?.Invoke(results);
-
-            statistics.taskCompleted++;
-        }
-        catch (Exception ex)
+        finally
         {
-            await UniTask.SwitchToMainThread();
-
-            Debug.LogError($"批量任务执行失败: {ex.Message}");
-            onError?.Invoke(ex);
-
-            statistics.taskFailed++;
+            semaphore?.Release();
         }
     }
 
     /// <summary>
     /// 执行链式任务（前一个任务的结果作为下一个任务的输入）
     /// </summary>
-    public async UniTaskVoid ExecuteChain<T1, T2, T3>(
+    public UniTaskVoid ExecuteChain<T1, T2, T3>(
         Func<T1> task1,
         Func<T1, T2> task2,
         Func<T2, T3> task3,
         Action<T3> onComplete = null,
         Action<Exception> onError = null)
     {
-        try
+        return RunTaskAsync(async Token =>
         {
-            statistics.taskStarted++;
-
             // 第一个任务在线程池执行
             await UniTask.SwitchToThreadPool();
-            T1 result1 = task1();
+            Token.ThrowIfCancellationRequested();
+            T1 Result1 = task1();
 
             // 第二个任务继续在线程池执行
-            T2 result2 = task2(result1);
+            Token.ThrowIfCancellationRequested();
+            T2 Result2 = task2(Result1);
 
             // 第三个任务继续在线程池执行
-            T3 result3 = task3(result2);
-
-            // 切换回主线程处理最终结果
-            await UniTask.SwitchToMainThread();
-
-            onComplete?.Invoke(result3);
-
-            statistics.taskCompleted++;
-        }
-        catch (Exception ex)
-        {
-            await UniTask.SwitchToMainThread();
-
-            Debug.LogError($"链式任务执行失败: {ex.Message}");
-            onError?.Invoke(ex);
-
-            statistics.taskFailed++;
-        }
+            Token.ThrowIfCancellationRequested();
+            return task3(Result2);
+        }, onComplete, onError);
     }
 
     #endregion
 
     #region 任务管理
 
+    private async UniTaskVoid RunTaskAsync<TResult>(Func<CancellationToken, UniTask<TResult>> work,
+        Action<TResult> onComplete, Action<Exception> onError, string taskName = null)
+    {
+        var Source = CreateTaskToken(taskName);
+        if (Source == null)
+            return;
+
+        var Token = Source.Token;
+        try
+        {
+            TResult Result = await work(Token);
+
+            // 切换回主线程处理结果
+            await UniTask.SwitchToMainThread();
+            lock (taskLock)
+            {
+                Token.ThrowIfCancellationRequested();
+                onComplete?.Invoke(Result);
+                statistics.taskCompleted++;
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            lock (taskLock)
+                RecordCancellation(taskName);
+        }
+        catch (Exception Error)
+        {
+            // 确保错误回调在主线程执行
+            await UniTask.SwitchToMainThread();
+            lock (taskLock)
+            {
+                if (Token.IsCancellationRequested)
+                {
+                    RecordCancellation(taskName);
+                    return;
+                }
+
+                Debug.LogError($"任务执行失败 [{taskName ?? "未命名任务"}]: {Error}");
+                if (Token.IsCancellationRequested)
+                {
+                    RecordCancellation(taskName);
+                    return;
+                }
+
+                statistics.taskFailed++;
+                onError?.Invoke(Error);
+            }
+        }
+        finally
+        {
+            ReleaseTaskToken(taskName, Source);
+        }
+    }
+
+    private void RecordCancellation(string taskName)
+    {
+        Debug.Log($"任务被取消: {taskName ?? "未命名任务"}");
+        statistics.taskCancelled++;
+    }
+
     /// <summary>
     /// 创建任务取消令牌
     /// </summary>
     private CancellationTokenSource CreateTaskToken(string taskName)
     {
-        var cts = new CancellationTokenSource();
-        activeTokenHashList.Add(cts);
-        if (!string.IsNullOrEmpty(taskName))
-            taskCancellationTokens[taskName] = cts;
-        return cts;
+        lock (taskLock)
+        {
+            if (isDisposed || ownerCancellationToken.IsCancellationRequested)
+                return null;
+
+            var Source = ownerCancellationToken.CanBeCanceled
+                ? CancellationTokenSource.CreateLinkedTokenSource(ownerCancellationToken)
+                : new CancellationTokenSource();
+            activeTokenHashList.Add(Source);
+            if (!string.IsNullOrEmpty(taskName))
+                taskCancellationTokens[taskName] = Source;
+            statistics.taskStarted++;
+            return Source;
+        }
     }
 
     /// <summary>
     /// 任务结束时释放本任务令牌 同名后续任务的令牌不受影响
     /// </summary>
-    private void ReleaseTaskToken(string taskName, CancellationTokenSource cts)
+    private void ReleaseTaskToken(string taskName, CancellationTokenSource source)
     {
-        activeTokenHashList.Remove(cts);
-        if (!string.IsNullOrEmpty(taskName)
-            && taskCancellationTokens.TryGetValue(taskName, out var CurrentCts)
-            && CurrentCts == cts)
-            taskCancellationTokens.Remove(taskName);
-        cts.Dispose();
+        lock (taskLock)
+        {
+            activeTokenHashList.Remove(source);
+            if (!string.IsNullOrEmpty(taskName)
+                && taskCancellationTokens.TryGetValue(taskName, out var CurrentSource)
+                && CurrentSource == source)
+                taskCancellationTokens.Remove(taskName);
+            source.Dispose();
+        }
     }
 
     /// <summary>
@@ -306,10 +294,13 @@ public class AsyncTaskManager : IManagerBase, IDisposable
     /// </summary>
     public void CancelTask(string taskName)
     {
-        if (taskCancellationTokens.TryGetValue(taskName, out var cts))
+        lock (taskLock)
         {
-            cts.Cancel();
-            Debug.Log($"已取消任务: {taskName}");
+            if (taskCancellationTokens.TryGetValue(taskName, out var Source))
+            {
+                Source.Cancel();
+                Debug.Log($"已取消任务: {taskName}");
+            }
         }
     }
 
@@ -318,28 +309,48 @@ public class AsyncTaskManager : IManagerBase, IDisposable
     /// </summary>
     public void CancelAllTasks()
     {
+        lock (taskLock)
+        {
+            CancelActiveTasks();
+            Debug.Log("已取消所有任务");
+        }
+    }
+
+    private void CancelActiveTasks()
+    {
         // 只取消不释放 令牌由各任务结束时释放 取消回调可能同步结束任务故先复制
         var ActiveTokenList = new List<CancellationTokenSource>(activeTokenHashList);
-        foreach (var cts in ActiveTokenList)
-            cts.Cancel();
-        Debug.Log("已取消所有任务");
+        foreach (var Source in ActiveTokenList)
+        {
+            if (activeTokenHashList.Contains(Source))
+                Source.Cancel();
+        }
     }
 
     #endregion
-
 
     #region Debug
 
     //获取任务统计信息
     public TaskStatistics GetStatistics()
     {
-        return statistics;
+        lock (taskLock)
+        {
+            return new TaskStatistics
+            {
+                taskStarted = statistics.taskStarted,
+                taskCompleted = statistics.taskCompleted,
+                taskFailed = statistics.taskFailed,
+                taskCancelled = statistics.taskCancelled
+            };
+        }
     }
 
     // 重置统计信息
     public void ResetStatistics()
     {
-        statistics = new TaskStatistics();
+        lock (taskLock)
+            statistics = new TaskStatistics();
     }
     /// <summary>
     /// 任务信息
