@@ -71,14 +71,15 @@ namespace MiMieSaver
         /// </summary>
         public ISlot CreatSlot(string displayerName)
         {
-            if (data.SlotList == null)
-                data.SlotList = new List<SlotData>();
+            var Slot = new SlotData(displayerName);
+            var Candidate = CreateCandidate();
+            Candidate.SlotList.Add(Slot);
+            Candidate.CurrentSlotId = Slot.SlotId;
+            Save(Candidate);
 
-            var slot = new SlotData(displayerName);
-            data.SlotList.Add(slot);
-            data.CurrentSlotId = slot.SlotId;
-            Save();
-            return slot;
+            data.SlotList.Add(Slot);
+            data.CurrentSlotId = Slot.SlotId;
+            return Slot;
         }
 
         /// <summary>
@@ -86,11 +87,11 @@ namespace MiMieSaver
         /// </summary>
         public void SwitchSlot(string slotId)
         {
-            if (data.SlotList == null) return;
             if (!data.SlotList.Exists(s => s.SlotId == slotId))
                 throw new ArgumentException($"存档槽 {slotId} 不存在", nameof(slotId));
+
+            Save(new SlotsIndexData { CurrentSlotId = slotId, SlotList = data.SlotList });
             data.CurrentSlotId = slotId;
-            Save();
         }
 
         /// <summary>
@@ -98,20 +99,17 @@ namespace MiMieSaver
         /// </summary>
         public void DeleteSlot(string slotId)
         {
-            if (data.SlotList == null) return;
-            var slot = data.SlotList.Find(s => s.SlotId == slotId);
-            if (slot is null) return;
+            var Slot = data.SlotList.Find(s => s.SlotId == slotId);
+            if (Slot is null) return;
 
-            data.SlotList.Remove(slot);
+            var Candidate = CreateCandidate();
+            Candidate.SlotList.Remove(Slot);
+            if (Candidate.CurrentSlotId == slotId)
+                Candidate.CurrentSlotId = Candidate.SlotList.FirstOrDefault()?.SlotId;
+            Save(Candidate);
 
-            if (data.CurrentSlotId == slotId)
-            {
-                data.CurrentSlotId = data.SlotList.Count > 0
-                    ? data.SlotList[0].SlotId
-                    : null;
-            }
-
-            Save();
+            data.SlotList.Remove(Slot);
+            data.CurrentSlotId = Candidate.CurrentSlotId;
 
             string filePath = GetSlotPath(slotId);
             if (File.Exists(filePath))
@@ -123,13 +121,9 @@ namespace MiMieSaver
         /// </summary>
         public void RenameSlot(string slotId, string newName)
         {
-            if (data.SlotList == null) return;
-            var slot = data.SlotList.Find(s => s.SlotId == slotId);
-            if (slot != null)
-            {
-                slot.DisplayName = newName;
-                Save();
-            }
+            var Slot = data.SlotList.Find(s => s.SlotId == slotId);
+            if (Slot != null)
+                SaveSlotChange(Slot, newName, Slot.LastSaveTime);
         }
 
         /// <summary>
@@ -137,13 +131,14 @@ namespace MiMieSaver
         /// </summary>
         public void UpdateLastSaveTime(string slotId)
         {
-            if (data.SlotList == null) return;
-            var slot = data.SlotList.Find(s => s.SlotId == slotId);
-            if (slot != null)
-            {
-                slot.LastSaveTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                Save();
-            }
+            UpdateLastSaveTime(slotId, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+        }
+
+        internal void UpdateLastSaveTime(string slotId, long lastSaveTime)
+        {
+            var Slot = data.SlotList.Find(s => s.SlotId == slotId);
+            if (Slot != null)
+                SaveSlotChange(Slot, Slot.DisplayName, lastSaveTime);
         }
 
         #endregion
@@ -168,24 +163,19 @@ namespace MiMieSaver
         /// </summary>
         public void CleanupOrphanedSlots()
         {
-            if (data.SlotList == null) return;
-            var orphaned = data.SlotList.Where(s => !File.Exists(GetSlotPath(s.SlotId))).ToList();
-            if (orphaned.Count == 0) return;
+            var (OrphanedSlotHashList, _) = GetCleanupCandidates();
+            if (OrphanedSlotHashList.Count == 0) return;
 
-            for (int i = orphaned.Count - 1; i >= 0; i--)
-            {
-                var slot = orphaned[i];
-                data.SlotList.Remove(slot);
+            var PreviousSlot = data.SlotList.Find(s => s.SlotId == data.CurrentSlotId);
+            var Candidate = CreateCandidate();
+            Candidate.SlotList.RemoveAll(OrphanedSlotHashList.Contains);
+            if (OrphanedSlotHashList.Contains(PreviousSlot))
+                Candidate.CurrentSlotId = Candidate.SlotList.FirstOrDefault()?.SlotId;
+            Save(Candidate);
 
-                if (data.CurrentSlotId == slot.SlotId)
-                {
-                    data.CurrentSlotId = data.SlotList.Count > 0
-                        ? data.SlotList[0].SlotId
-                        : null;
-                }
-            }
-
-            Save();
+            data.SlotList.Clear();
+            data.SlotList.AddRange(Candidate.SlotList);
+            data.CurrentSlotId = Candidate.CurrentSlotId;
         }
 
         /// <summary>
@@ -193,18 +183,35 @@ namespace MiMieSaver
         /// </summary>
         public void CleanupOrphanedFiles()
         {
-            if (data.SlotList == null) return;
-            string dir = Path.GetDirectoryName(path);
-            if (!Directory.Exists(dir)) return;
+            var (_, OrphanedFileList) = GetCleanupCandidates();
+            foreach (string FilePath in OrphanedFileList)
+                File.Delete(FilePath);
+        }
 
-            string[] datFiles = Directory.GetFiles(dir, "*_SaveData.msgpack");
-            var validNames = data.SlotList.Select(s => $"{s.SlotId}_SaveData.msgpack").ToHashSet();
+        private (HashSet<SlotData> SlotHashList, List<string> FileList) GetCleanupCandidates()
+        {
+            string Dir = Path.GetDirectoryName(path);
+            if (!string.IsNullOrEmpty(data.CurrentSlotId) && CurrentSlot == null)
+                throw new InvalidDataException($"存档目录 {Dir} 的当前槽位 {data.CurrentSlotId} 在索引中不存在 已中止清理");
 
-            foreach (string file in datFiles)
+            var OrphanedSlotHashList = data.SlotList.Where(s => !File.Exists(GetSlotPath(s.SlotId))).ToHashSet();
+            var OrphanedFileList = new List<string>();
+            if (Directory.Exists(Dir))
             {
-                if (!validNames.Contains(Path.GetFileName(file)))
-                    File.Delete(file);
+                var KnownFileNameHashList = data.SlotList.Select(s => Path.GetFileName(GetSlotPath(s.SlotId))).ToHashSet();
+                foreach (string FilePath in Directory.EnumerateFiles(Dir, "*_SaveData.msgpack"))
+                {
+                    if (!KnownFileNameHashList.Contains(Path.GetFileName(FilePath)))
+                        OrphanedFileList.Add(FilePath);
+                }
             }
+
+            if (OrphanedFileList.Count > 0 && !File.Exists(path))
+                throw new InvalidDataException($"存档槽索引 {path} 已缺失 已中止清理");
+            if (OrphanedSlotHashList.Count > 0 && OrphanedFileList.Count > 0)
+                throw new InvalidDataException($"存档目录 {Dir} 同时存在 {OrphanedSlotHashList.Count} 个缺正文的槽位和 {OrphanedFileList.Count} 个无索引的正文 已中止清理");
+
+            return (OrphanedSlotHashList, OrphanedFileList);
         }
 
         #endregion
@@ -228,25 +235,54 @@ namespace MiMieSaver
                 {
                     throw new InvalidDataException($"存档槽索引 {path} 读取失败", exception);
                 }
-                data = loaded ?? new SlotsIndexData();
+                if (loaded?.SlotList == null)
+                    throw new InvalidDataException($"存档槽索引 {path} 缺少槽位列表");
+                data = loaded;
             }
             else
             {
+                if (Directory.EnumerateFiles(Path.GetDirectoryName(path), "*_SaveData.msgpack").Any())
+                    throw new InvalidDataException($"存档目录中已有正文但缺少索引 {path}");
                 data = new SlotsIndexData();
             }
 
-            if (data.SlotList == null)
-                data.SlotList = new List<SlotData>();
-
             // 不在加载时自动清理孤立槽位 新建后尚未首次保存的槽位没有 dat 文件
+        }
+
+        private SlotsIndexData CreateCandidate()
+        {
+            return new SlotsIndexData
+            {
+                CurrentSlotId = data.CurrentSlotId,
+                SlotList = new List<SlotData>(data.SlotList)
+            };
+        }
+
+        /// <summary>
+        /// 落盘后更新原槽位对象 使业务持有的 ISlot 继续反映最新值
+        /// </summary>
+        private void SaveSlotChange(SlotData slot, string displayName, long lastSaveTime)
+        {
+            var Candidate = CreateCandidate();
+            Candidate.SlotList[Candidate.SlotList.IndexOf(slot)] = new SlotData
+            {
+                SlotId = slot.SlotId,
+                DisplayName = displayName,
+                CreateTime = slot.CreateTime,
+                LastSaveTime = lastSaveTime
+            };
+            Save(Candidate);
+
+            slot.DisplayName = displayName;
+            slot.LastSaveTime = lastSaveTime;
         }
 
         /// <summary>
         /// 写入索引到磁盘
         /// </summary>
-        private void Save()
+        private void Save(SlotsIndexData candidate)
         {
-            AtomicFileWriter.WriteAllBytes(path, MessagePackSerializer.Serialize(data));
+            AtomicFileWriter.WriteAllBytes(path, MessagePackSerializer.Serialize(candidate));
         }
 
         #endregion

@@ -36,6 +36,7 @@ namespace MiMieSaver
         /// <summary>
         /// 默认构造
         /// </summary>
+        [SerializationConstructor]
         public SlotData()
         {
             SlotId = Guid.NewGuid().ToString();

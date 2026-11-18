@@ -135,15 +135,16 @@ namespace MiMieSaver
                 throw new InvalidDataException($"存档 {path} 读取失败 已中止保存以免覆盖原存档", exception);
             }
 
+            long LastSaveTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             saveData.Meta ??= new MetaSave();
-            saveData.Meta.LastSaveTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            saveData.Meta.LastSaveTime = LastSaveTime;
 
             foreach (var module in moduleOrderList)
                 module.ToArchive(saveData);
 
             AtomicFileWriter.WriteAllBytes(path, MessagePackSerializer.Serialize(saveData));
 
-            slotIndex.UpdateLastSaveTime(slot.SlotId);
+            slotIndex.UpdateLastSaveTime(slot.SlotId, LastSaveTime);
         }
 
         /// <summary>
