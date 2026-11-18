@@ -52,12 +52,4 @@ public class CenterCircleDraw : MaskableGraphic
         }
     }
 
-    /// <summary>
-    /// 验证中心圆的参数
-    /// </summary>
-    protected override void OnValidate()
-    {
-        base.OnValidate();
-        SetVerticesDirty();
-    }
 }
