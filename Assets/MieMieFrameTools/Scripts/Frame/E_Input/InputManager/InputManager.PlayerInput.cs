@@ -9,8 +9,8 @@ namespace MieMieFrameWork.M_InputSystem
     /// </summary>
     public partial class InputManager
     {
-        //任何输入
-        public bool IsAnyInput => Keyboard.current.anyKey.wasPressedThisFrame;
+        // 查询本帧是否按下任意键盘按键
+        public bool IsAnyInput => Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame;
         #region Player 连续输入
 
         public Vector2 MoveInput =>
