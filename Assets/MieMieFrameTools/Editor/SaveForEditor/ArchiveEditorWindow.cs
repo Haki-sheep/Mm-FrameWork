@@ -420,6 +420,12 @@ namespace MieMieFrameWork.Editor.SaveForEditor
         /// </summary>
         private void SaveCurrentArchive(ArchiveMgr archiveMgr)
         {
+            if (archiveMgr.GetAllSlotIndex().CurrentSlot == null)
+            {
+                RefreshWindow("当前没有选中的存档槽位");
+                return;
+            }
+
             try
             {
                 archiveMgr.Save();
@@ -436,6 +442,12 @@ namespace MieMieFrameWork.Editor.SaveForEditor
         /// </summary>
         private void LoadCurrentArchive(ArchiveMgr archiveMgr)
         {
+            if (!archiveMgr.HasSaveData())
+            {
+                RefreshWindow("当前槽位没有可加载的存档文件");
+                return;
+            }
+
             try
             {
                 archiveMgr.Load();
