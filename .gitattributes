@@ -1,2 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# FakeUnityCLI validates the installed bridge against byte-level hashes
+Packages/com.fakeunity.cli.editorbridge/** text eol=lf
+Packages/com.fakeunity.cli.editorbridge/package-files.json text eol=crlf
