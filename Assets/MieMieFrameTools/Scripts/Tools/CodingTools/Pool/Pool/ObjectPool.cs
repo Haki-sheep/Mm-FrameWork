@@ -49,9 +49,14 @@ namespace MieMieFrameWork.Pool
         /// 构造函数 将外部对象加入同类型池
         /// </summary>
         public ObjectPool(object obj)
-            : this(obj.GetType(), () => Activator.CreateInstance(obj.GetType()), null, null, null, DefaultMaxInactive, 0)
+            : this(obj.GetType())
         {
             ReturnObject(obj, false);
+        }
+
+        private ObjectPool(Type objectType)
+            : this(objectType, () => Activator.CreateInstance(objectType), null, null, null, DefaultMaxInactive, 0)
+        {
         }
 
         /// <summary>
