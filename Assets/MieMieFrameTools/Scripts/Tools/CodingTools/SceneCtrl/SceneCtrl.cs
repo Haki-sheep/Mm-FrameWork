@@ -77,15 +77,13 @@ namespace MieMieFrameWork
         /// <param name="cancellationToken">取消令牌</param>
         public static async UniTask LoadSceneAsync(string sceneName, System.Threading.CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             if (IsLoading)
-            {
-                Debug.LogWarning("[SceneManager] 正在加载场景中，请等待完成");
-                return;
-            }
-
-            if (!ValidateScene(sceneName))
-                return;
-
+                throw new InvalidOperationException($"已有场景正在加载 无法开始加载 {sceneName}");
+            if (string.IsNullOrEmpty(sceneName))
+                throw new ArgumentException("场景名称不能为空", nameof(sceneName));
+            if (sceneName == SceneManager.GetActiveScene().name)
+                throw new InvalidOperationException($"场景已经激活 {sceneName}");
             await DoLoadSceneAsyncUniTask(sceneName, cancellationToken);
         }
 
@@ -103,10 +101,7 @@ namespace MieMieFrameWork
                 var asyncOperation = SceneManager.LoadSceneAsync(sceneName);
 
                 if (asyncOperation == null)
-                {
-                    Debug.LogError($"[SceneManager] 无法创建场景 {sceneName} 的异步加载操作");
-                    return;
-                }
+                    throw new InvalidOperationException($"无法创建场景 {sceneName} 的异步加载操作");
 
                 float lastProgress = 0f;
 
@@ -150,12 +145,6 @@ namespace MieMieFrameWork
         /// <returns>是否有效</returns>
         private static bool ValidateScene(string sceneName,bool needRepeatLoad = false)
         {   
-            //如果当前场景正在加载，则不进行验证，因为加载场景时会自动验证
-            if (IsLoading && !needRepeatLoad)
-            {
-                return true;
-            }
-
             //如果场景名称不存在，则返回false
             if (string.IsNullOrEmpty(sceneName))
             {
