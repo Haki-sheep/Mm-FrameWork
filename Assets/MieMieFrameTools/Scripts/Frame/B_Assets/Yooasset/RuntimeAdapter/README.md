@@ -45,7 +45,7 @@ AOT 程序集只引用公共入口协议 不引用业务热更程序集 业务 a
 2. 通过 HotUpdateDemoTools.InstallSource 导入示例源码 等待编译后调用 CreateFixture 创建测试场景与 DemoProfile
 3. 打开 Tools/MieMieFrameWork/工具中枢 选择 资源/热更新 页面 点击 创建发布配置 SO 或选择已有 Profile 配置 HybridCLR 并安装本机原生运行库 Project 创建菜单统一为 Create/MieMieFramework/资源/热更新发布配置 独立入口 Tools/MmFramework/热更新 保留
 4. 准备首包基线 执行官方 GenerateAll 归档裁剪后的 AOT 元数据与 Unity 版本 基线目录禁止覆盖 失败的 staging 目录不作为有效基线
-5. 构建 YooAsset 版本 1 并复制内置资源 再构建 IL2CPP Player 构建后核对实际裁剪 DLL 与首包归档哈希 不一致时禁止发布
+5. 用未占用的首包资源版本（例如 0）构建 YooAsset 并复制内置资源 再构建 IL2CPP Player 构建后核对实际裁剪 DLL 与首包归档哈希 不一致时禁止发布 以下示例假定服务器资源版本 1、2、3 均未占用
 6. 在热更新窗口填写资源版本 1 点击 导出代码并发布资源到本机服务器 默认发布到 Builds/HotUpdateServer/当前平台/包名 先写入不可变 Bundle 与清单 最后原子切换 version 文件 同版本不同内容会拒绝发布 旧资源保留
 7. 示例 Player 目录双击 Start-Server.cmd 保持本机服务运行 再双击 MmHotUpdateDemo.exe 应显示 CODE_V1|RESOURCE_V1 默认地址 http://127.0.0.1:18780 也可用 Start-LocalDemo.cmd 同时启动服务与 Player 退出 Player 时自动停止它创建的服务 本机需安装 Python
 8. 只修改 Assets/MmHotUpdateValidation/Data/ResourceMarker.txt 为 RESOURCE_V2 导入后填写资源版本 2 发布到同一个服务器目录 关闭并重启同一个 EXE 应显示 CODE_V1|RESOURCE_V2
