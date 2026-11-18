@@ -1,15 +1,16 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace MieMieFrameWork.Asset.DynamicAtlas
 {
     /// <summary>
-    /// 持有一页 GPU 纹理与只追加分配器
+    /// 持有一页 GPU 纹理与对应的矩形分配器
     /// </summary>
     internal sealed class DynamicAtlasPage
     {
         /// <summary>
-        /// 只追加矩形分配器
+        /// 分配页内矩形并在发布失败时回收预留区域
         /// </summary>
         private readonly DynamicAtlasAllocator allocator;
         /// <summary>
@@ -60,6 +61,12 @@ namespace MieMieFrameWork.Asset.DynamicAtlas
                     return false;
             }
             return true;
+        }
+
+        internal void CancelAllocation(RectInt area)
+        {
+            allocator.Recover(entryList.Select(Entry => Entry.Area));
+            AllocatedPixels -= (long)area.width * area.height;
         }
 
         /// <summary>

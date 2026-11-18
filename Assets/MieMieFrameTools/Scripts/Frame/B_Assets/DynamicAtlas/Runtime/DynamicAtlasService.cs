@@ -296,6 +296,7 @@ namespace MieMieFrameWork.Asset.DynamicAtlas
                 if (entryDict.TryGetValue(Entry.Key, out var Current) && Current == Entry)
                     entryDict.Remove(Entry.Key);
                 Entry.Page.entryList.Remove(Entry);
+                Entry.Page.CancelAllocation(Entry.Area);
                 DynamicAtlasPage.DestroyObject(Entry.Sprite);
             }
             request.Entry = null;
@@ -313,14 +314,24 @@ namespace MieMieFrameWork.Asset.DynamicAtlas
             int Width = source.width + padding * 2;
             int Height = source.height + padding * 2;
             var Page = AllocatePage(key, Width, Height, out var Area);
-            writer.Write(source, Page.Texture, Area, padding);
-            var Sprite = UnityEngine.Sprite.Create(Page.Texture, new Rect(Area.x + padding, Area.y + padding, source.width, source.height),
-                pivot, pixelsPerUnit, 0, SpriteMeshType.FullRect);
-            Sprite.name = key;
-            Sprite.hideFlags = HideFlags.HideAndDontSave;
-            var Entry = new DynamicAtlasEntry { Key = key, Page = Page, Area = Area, Sprite = Sprite };
-            Page.entryList.Add(Entry);
-            return Entry;
+            Sprite Sprite = null;
+            try
+            {
+                writer.Write(source, Page.Texture, Area, padding);
+                Sprite = UnityEngine.Sprite.Create(Page.Texture, new Rect(Area.x + padding, Area.y + padding, source.width, source.height),
+                    pivot, pixelsPerUnit, 0, SpriteMeshType.FullRect);
+                Sprite.name = key;
+                Sprite.hideFlags = HideFlags.HideAndDontSave;
+                var Entry = new DynamicAtlasEntry { Key = key, Page = Page, Area = Area, Sprite = Sprite };
+                Page.entryList.Add(Entry);
+                return Entry;
+            }
+            catch
+            {
+                Page.CancelAllocation(Area);
+                DynamicAtlasPage.DestroyObject(Sprite);
+                throw;
+            }
         }
 
         /// <summary>
