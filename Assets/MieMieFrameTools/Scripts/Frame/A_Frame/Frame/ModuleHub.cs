@@ -2,10 +2,10 @@ namespace MieMieFrameWork
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading;
     using Cysharp.Threading.Tasks;
     using MiMieSaver;
     using MieMieFrameWork.Boot;
-    using MieMieFrameWork.Business;
     using MieMieFrameWork.Save;
     using MieMieFrameWork.Diagnostics;
     using UnityEngine;
@@ -28,6 +28,9 @@ namespace MieMieFrameWork
         /// </summary>
         private readonly List<IManagerBase> managerOrderList = new List<IManagerBase>();
 
+        private readonly List<IManagerBase> unstartedOwnedManagerList = new List<IManagerBase>();
+        private int startedManagerCount;
+
         /// <summary>
         /// 启动编排器 不参与普通管理器注册与优先级排序
         /// </summary>
@@ -46,8 +49,7 @@ namespace MieMieFrameWork
                 return;
 
             bootManager = new BootManager(this);
-            bootManager.InitComponents(resourcePackageName, resourceManifestTimeout, resourceUpdateConfig, hotUpdateConfig,
-                this.GetCancellationTokenOnDestroy()).Forget();
+            bootManager.InitComponents(resourcePackageName, resourceManifestTimeout, resourceUpdateConfig, hotUpdateConfig).Forget();
         }
 
         protected override void OnDestroy()
@@ -55,7 +57,7 @@ namespace MieMieFrameWork
             try
             {
                 if (Instance == this)
-                    CleanupFramework();
+                    bootManager?.Dispose();
             }
             finally
             {
@@ -86,10 +88,13 @@ namespace MieMieFrameWork
         /// <summary>
         /// 初始化已注册的运行时管理器 优先级只决定本阶段内部顺序
         /// </summary>
-        internal void InitManagers()
+        internal void InitManagers(CancellationToken cancellationToken)
         {
             foreach (var Manager in managerOrderList)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+                unstartedOwnedManagerList.Remove(Manager);
+                startedManagerCount++;
                 try
                 {
                     FrameLog.SetContext("InitializingManager", Manager.GetType().FullName);
@@ -102,6 +107,7 @@ namespace MieMieFrameWork
                     throw new InvalidOperationException($"[ModuleHub] 管理器 {ManagerType.FullName} 初始化失败", Exception);
                 }
             }
+            cancellationToken.ThrowIfCancellationRequested();
         }
 
         /// <summary>
@@ -131,53 +137,35 @@ namespace MieMieFrameWork
 
 
         /// <summary>
-        /// 清理框架资源
+        /// 先逆序退出已开始初始化的管理器 再释放只完成构造的自建对象
         /// </summary>
-        private void CleanupFramework()
+        internal void ReleaseManagers(List<Exception> failureList)
         {
-            var FailureList = new List<Exception>();
-            try
-            {
-                bootManager.Dispose();
-            }
-            catch (Exception Error)
-            {
-                FailureList.Add(Error);
-            }
-            GameHub.Clear();
-            for (int Index = managerOrderList.Count - 1; Index >= 0; Index--)
-            {
-                var Manager = managerOrderList[Index];
-                if (Manager is IDisposable DisposableManager)
-                {
-                    try
-                    {
-                        DisposableManager.Dispose();
-                    }
-                    catch (Exception Exception)
-                    {
-                        FailureList.Add(new InvalidOperationException($"[ModuleHub] 管理器 {Manager.GetType().FullName} 释放失败", Exception));
-                    }
-                }
-            }
+            while (startedManagerCount > 0)
+                ReleaseManager(managerOrderList[--startedManagerCount], failureList);
 
-            try
-            {
-                ReleaseConfigModule();
-            }
-            catch (Exception Exception)
-            {
-                FailureList.Add(Exception);
-            }
+            for (int Index = unstartedOwnedManagerList.Count - 1; Index >= 0; Index--)
+                ReleaseManager(unstartedOwnedManagerList[Index], failureList);
 
             managerDict.Clear();
             managerOrderList.Clear();
-            bootManager = null;
-            MmGlobalEventBus.GlobalBus.Clear();
+            unstartedOwnedManagerList.Clear();
             uiCoreMgr = null;
+        }
 
-            if (FailureList.Count > 0)
-                throw new AggregateException("[ModuleHub] 框架清理失败", FailureList);
+        private static void ReleaseManager(IManagerBase manager, List<Exception> failureList)
+        {
+            if (manager is not IDisposable DisposableManager)
+                return;
+
+            try
+            {
+                DisposableManager.Dispose();
+            }
+            catch (Exception Error)
+            {
+                failureList.Add(new InvalidOperationException($"[ModuleHub] 管理器 {manager.GetType().FullName} 释放失败", Error));
+            }
         }
 
         #endregion

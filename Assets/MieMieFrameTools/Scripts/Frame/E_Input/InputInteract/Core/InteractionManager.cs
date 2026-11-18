@@ -1,3 +1,4 @@
+using System;
 using MieMieFrameWork.M_InputSystem;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace MieMieFrameWork.Interaction
     /// 交互管理器 聚焦检测与 Hold 触发交互
     /// </summary>
     [ManagerAttribute(11)]
-    public class InteractionManager : MonoBehaviour, IManagerBase
+    public class InteractionManager : MonoBehaviour, IManagerBase, IDisposable
     {
         [SerializeField, LabelText("射线检测")]
         private InteractionDetector detector = new();
@@ -26,6 +27,7 @@ namespace MieMieFrameWork.Interaction
             CurrentFocus != null ? CurrentFocus.GetPromptText() : string.Empty;
 
         private InputManager inputManager;
+        private MonoManager frameDriver;
         private InteractionContext currentContext;
         private bool hasCurrentContext;
 
@@ -33,17 +35,18 @@ namespace MieMieFrameWork.Interaction
         {
             detector.EnsureRayOrigin();
             inputManager = ModuleHub.Instance.GetManager<InputManager>();
-            ModuleHub.Instance.GetManager<MonoManager>().AddUpdateListener(Tick);
+            frameDriver = ModuleHub.Instance.GetManager<MonoManager>();
+            frameDriver.AddUpdateListener(Tick);
         }
 
-        private void OnDestroy()
-        {
-            if (ModuleHub.Instance != null)
-            {
-                MonoManager monoManager = ModuleHub.Instance.GetManager<MonoManager>();
-                monoManager.RemoveUpdateListener(Tick);
-            }
+        private void OnDestroy() => Dispose();
 
+        public void Dispose()
+        {
+            var FrameDriver = frameDriver;
+            frameDriver = null;
+            inputManager = null;
+            FrameDriver?.RemoveUpdateListener(Tick);
             ClearFocus();
         }
 
@@ -119,14 +122,15 @@ namespace MieMieFrameWork.Interaction
         /// </summary>
         private void ClearFocus()
         {
-            if (CurrentFocus == null)
-                return;
-
-            if (hasCurrentContext)
-                CurrentFocus.OnFocusExit(currentContext);
-
+            var Focus = CurrentFocus;
+            var Context = currentContext;
+            bool HadContext = hasCurrentContext;
             CurrentFocus = null;
+            currentContext = default;
             hasCurrentContext = false;
+
+            if (HadContext)
+                Focus?.OnFocusExit(Context);
         }
     }
 }

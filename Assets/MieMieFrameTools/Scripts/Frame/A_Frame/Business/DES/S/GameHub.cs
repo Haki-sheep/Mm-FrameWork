@@ -96,7 +96,7 @@ namespace MieMieFrameWork.Business
 
         /// <summary>
         /// 清空全部业务服务
-        /// 框架销毁时由 ModuleHub 调用 普通场景切换不清空全局服务
+        /// 运行会话重置时调用 业务所有者退出时分别注销自己的服务
         /// </summary>
         public static void Clear()
         {

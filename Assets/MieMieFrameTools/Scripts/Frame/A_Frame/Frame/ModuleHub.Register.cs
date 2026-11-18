@@ -3,6 +3,7 @@ namespace MieMieFrameWork
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using MieMieFrameWork.Business.GameFlow;
     using MieMieFrameWork.Effects;
     using MieMieFrameWork.Business.Quality;
@@ -17,28 +18,28 @@ namespace MieMieFrameWork
         /// <summary>
         /// 按优先级顺序注册全部管理器 只入表不初始化
         /// </summary>
-        internal void RegisterAllManagers()
+        internal void RegisterAllManagers(CancellationToken cancellationToken)
         {
             BindUIHub();
 
             // 纯C#相关组件
             var ManagerList = new List<IManagerBase>();
-            ManagerList.Add(new ArchiveManager(archiveSubFolder));
-            ManagerList.Add(new QualityManager(qualityConfig, MmGlobalEventBus.GlobalBus));
-            var InstancePool = new PoolManager(poolManagerConfig, transform);
+            ManagerList.Add(OwnManager(new ArchiveManager(archiveSubFolder)));
+            ManagerList.Add(OwnManager(new QualityManager(qualityConfig, MmGlobalEventBus.GlobalBus)));
+            var InstancePool = OwnManager(new PoolManager(poolManagerConfig, transform));
             ManagerList.Add(InstancePool);
-            ManagerList.Add(new AudioManager(audioManagerConfig, transform));
-            ManagerList.Add(new AsyncTaskManager());
-            ManagerList.Add(new UniTimerManager());
+            ManagerList.Add(OwnManager(new AudioManager(audioManagerConfig, transform)));
+            ManagerList.Add(OwnManager(new AsyncTaskManager(cancellationToken)));
+            ManagerList.Add(OwnManager(new UniTimerManager()));
 
             // Mono 相关组件
             var FrameDriver = this.GetOrAddComponent<MonoManager>();
             ManagerList.Add(FrameDriver);
             var EffectConfig = effectProfile != null ? effectProfile.Config : effectManagerConfig;
-            ManagerList.Add(new EffectManager(EffectConfig, transform, FrameDriver, InstancePool));
+            ManagerList.Add(OwnManager(new EffectManager(EffectConfig, transform, FrameDriver, InstancePool)));
             ManagerList.Add(this.GetOrAddComponent<MieMieFrameWork.M_InputSystem.InputManager>());
             ManagerList.Add(this.GetOrAddComponent<MieMieFrameWork.Interaction.InteractionManager>());
-            ManagerList.Add(new GameFlowManager(FrameDriver, MmGlobalEventBus.GlobalBus));
+            ManagerList.Add(OwnManager(new GameFlowManager(FrameDriver, MmGlobalEventBus.GlobalBus)));
 
             // UI组件通过反射获取
             if (uiCoreMgr != null)
@@ -54,6 +55,12 @@ namespace MieMieFrameWork
                 managerDict.Add(ManagerType, Manager);
                 managerOrderList.Add(Manager);
             }
+        }
+
+        private T OwnManager<T>(T manager) where T : IManagerBase, IDisposable
+        {
+            unstartedOwnedManagerList.Add(manager);
+            return manager;
         }
 
         /// <summary>

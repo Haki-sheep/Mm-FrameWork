@@ -88,6 +88,7 @@ namespace MieMieFrameWork
         /// 是否已完成唯一初始化
         /// </summary>
         private bool initialized;
+        private bool ownsAudioSources;
 
         /// <summary>
         /// 是否已到达允许设置 Mixer 的首帧
@@ -238,6 +239,7 @@ namespace MieMieFrameWork
 
             effectPoolHandle = PoolManager.Instance.GetPool(config.EfPlayerES, config.MaxConcurrentEffects, config.MaxConcurrentEffects);
             effectPoolHandle.Prewarm(config.EffectPrewarmCount);
+            ownsAudioSources = true;
             bgmChannel.SetVolume(1f);
             ambienceChannel.SetVolume(1f);
             config.BgmSource.mute = false;
@@ -260,8 +262,11 @@ namespace MieMieFrameWork
             var FailureList = new System.Collections.Generic.List<Exception>();
             try { lifetimeCancellation.Cancel(); }
             catch (Exception Failure) { FailureList.Add(Failure); }
-            DisposeAudioResource(bgmChannel, FailureList);
-            DisposeAudioResource(ambienceChannel, FailureList);
+            if (ownsAudioSources)
+            {
+                DisposeAudioResource(bgmChannel, FailureList);
+                DisposeAudioResource(ambienceChannel, FailureList);
+            }
             while (effectPlaybackList.Count > 0)
             {
                 try { ReleaseEffect(effectPlaybackList[effectPlaybackList.Count - 1]); }

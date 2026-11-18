@@ -19,7 +19,7 @@ namespace MieMieFrameWork.M_InputSystem
                                 Action onComplete = null,
                                 Action onCancel = null)
         {
-            if (inputActions == null || inputActions.asset == null) return;
+            if (isDisposed || inputActions == null || inputActions.asset == null) return;
             var action = inputActions.asset.FindAction(actionName, throwIfNotFound: false);
             if (action == null) return;
 

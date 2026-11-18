@@ -85,6 +85,9 @@ namespace MieMieFrameWork.Business.GameFlow
         /// </summary>
         private void InitComponents()
         {
+            if (GameHub.TryGet<IGameFlowService>(out _))
+                throw new InvalidOperationException("[GameFlow] 公共服务已注册");
+
             stateMachine.Init(this);
             GameHub.Register<IGameFlowService>(this);
         }

@@ -1,6 +1,7 @@
 namespace MieMieFrameWork.Boot
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
     using Cysharp.Threading.Tasks;
     using MieMieFrameWork.Asset;
@@ -17,12 +18,23 @@ namespace MieMieFrameWork.Boot
         /// <summary> 启动结果 支持多个业务入口等待同一次启动 </summary>
         private readonly UniTaskCompletionSource readySource = new UniTaskCompletionSource();
 
+        private readonly CancellationTokenSource lifetimeCancellation = new CancellationTokenSource();
+        private readonly YooAssetMgr.StartupResources startupResources = new YooAssetMgr.StartupResources();
+        /// <summary> 取消回调可能重入启动路径 回调全部退出后才释放管理器 </summary>
+        private UniTaskCompletionSource requestingCancellation;
+        private Exception cancellationFailure;
+        private bool startupActive;
+        private bool shutdownRequested;
+        private bool cleanupStarted;
+
         /// <summary> 本次启动的热更入口所有者 </summary>
         private HotUpdateRuntime hotUpdateRuntime;
 
         public bool IsReady { get; private set; }
 
         public UniTask ReadyTask => readySource.Task;
+
+        #region 启动
 
         /// <summary>
         /// 接收框架根节点 不在构造阶段启动管理器
@@ -36,83 +48,172 @@ namespace MieMieFrameWork.Boot
         /// 由 ModuleHub Awake 调用一次 任一阶段失败立即中断
         /// </summary>
         internal async UniTask InitComponents(string packageName, int manifestTimeout, ResourceUpdateConfig resourceConfig,
-            HotUpdateConfig codeConfig, CancellationToken cancellationToken)
+            HotUpdateConfig codeConfig)
         {
+            startupActive = true;
+            var CancellationToken = lifetimeCancellation.Token;
             try
             {
                 // 启动资源包
                 FrameLog.SetContext("BootStage", "Resources");
                 FrameLog.Info("开始初始化默认资源包", "Boot");
-                await YooAssetMgr.InitializeAsync(packageName, manifestTimeout, resourceConfig, cancellationToken);
-                cancellationToken.ThrowIfCancellationRequested();
+                await startupResources.InitializeAsync(packageName, manifestTimeout, resourceConfig, CancellationToken);
+                CancellationToken.ThrowIfCancellationRequested();
                 if (codeConfig.enabled)
                 {
                     FrameLog.SetContext("BootStage", "HotUpdate");
                     hotUpdateRuntime = new HotUpdateRuntime();
-                    await hotUpdateRuntime.LoadAsync(YooAssetMgr.DefaultPackage, codeConfig, cancellationToken);
+                    await hotUpdateRuntime.LoadAsync(YooAssetMgr.DefaultPackage, codeConfig, CancellationToken);
+                    CancellationToken.ThrowIfCancellationRequested();
                 }
                 // 初始化数据配置
                 FrameLog.SetContext("BootStage", "Config");
                 moduleHub.InitConfigModule();
+                CancellationToken.ThrowIfCancellationRequested();
                 // 注册管理器
                 FrameLog.SetContext("BootStage", "RegisterManagers");
-                moduleHub.RegisterAllManagers();
+                moduleHub.RegisterAllManagers(CancellationToken);
+                CancellationToken.ThrowIfCancellationRequested();
                 // 初始化管理器
                 FrameLog.SetContext("BootStage", "Managers");
-                moduleHub.InitManagers();
+                moduleHub.InitManagers(CancellationToken);
                 if (hotUpdateRuntime != null)
                 {
                     FrameLog.SetContext("BootStage", "HotUpdateEntry");
-                    await hotUpdateRuntime.StartAsync(cancellationToken);
+                    await hotUpdateRuntime.StartAsync(CancellationToken);
+                    await UniTask.SwitchToMainThread();
                 }
-                cancellationToken.ThrowIfCancellationRequested();
+                CancellationToken.ThrowIfCancellationRequested();
                 // 设置启动完成
                 FrameLog.SetContext("BootStage", "Ready");
                 FrameLog.Info("框架启动完成", "Boot");
+                CancellationToken.ThrowIfCancellationRequested();
+                startupActive = false;
                 IsReady = true;
                 // 设置启动完成
                 readySource.TrySetResult();
             }
             catch (Exception Error)
             {
-                Exception Failure = Error;
-                try
-                {
-                    Dispose();
-                }
-                catch (Exception CleanupError)
-                {
-                    Failure = new AggregateException("框架启动失败且热更入口清理失败", Failure, CleanupError);
-                }
-                try
-                {
-                    moduleHub.ReleaseConfigModule();
-                }
-                catch (Exception CleanupError)
-                {
-                    Failure = new AggregateException("框架启动失败且配置清理失败", Failure, CleanupError);
-                }
+                await UniTask.SwitchToMainThread();
+                RequestShutdown();
+                if (requestingCancellation != null)
+                    await requestingCancellation.Task;
 
-                if (Failure is OperationCanceledException)
-                    readySource.TrySetCanceled(cancellationToken);
-                else
+                try
+                {
+                    await CleanupAsync();
+                }
+                catch (Exception CleanupError)
+                {
+                    var Failure = new AggregateException("框架启动失败且清理失败", Error, CleanupError);
                     readySource.TrySetException(Failure);
+                    throw Failure;
+                }
+                finally
+                {
+                    startupActive = false;
+                }
 
-                if (ReferenceEquals(Failure, Error))
-                    throw;
+                if (Error is OperationCanceledException)
+                    readySource.TrySetCanceled(CancellationToken);
+                else
+                    readySource.TrySetException(Error);
 
-                throw Failure;
+                throw;
             }
         }
 
+        #endregion
+
+        #region 取消与释放
+
         /// <summary>
-        /// 释放热更业务持有 程序集由运行会话持有直到 Player 退出
+        /// 请求停止启动 进行中的阶段收尾后由启动路径统一清理
         /// </summary>
         public void Dispose()
         {
+            if (shutdownRequested)
+                return;
+
+            bool WasStarting = startupActive;
+            RequestShutdown();
+            if (!WasStarting)
+                CleanupAsync().Forget();
+        }
+
+        private void RequestShutdown()
+        {
+            if (shutdownRequested)
+                return;
+
+            shutdownRequested = true;
+            IsReady = false;
+            var Request = new UniTaskCompletionSource();
+            requestingCancellation = Request;
+            try
+            {
+                lifetimeCancellation.Cancel();
+            }
+            catch (Exception Error)
+            {
+                cancellationFailure = Error;
+            }
+            finally
+            {
+                requestingCancellation = null;
+                Request.TrySetResult();
+            }
+        }
+
+        private async UniTask CleanupAsync()
+        {
+            if (cleanupStarted)
+                return;
+
+            cleanupStarted = true;
+            var FailureList = new List<Exception>();
+            if (cancellationFailure != null)
+                FailureList.Add(cancellationFailure);
+
             var Runtime = hotUpdateRuntime;
             hotUpdateRuntime = null;
-            Runtime?.Dispose();
+            try
+            {
+                Runtime?.Dispose();
+            }
+            catch (Exception Error)
+            {
+                FailureList.Add(Error);
+            }
+
+            moduleHub.ReleaseManagers(FailureList);
+            try
+            {
+                moduleHub.ReleaseConfigModule();
+            }
+            catch (Exception Error)
+            {
+                FailureList.Add(Error);
+            }
+
+            try
+            {
+                await startupResources.ReleaseAsync();
+            }
+            catch (Exception Error)
+            {
+                FailureList.Add(Error);
+            }
+            finally
+            {
+                lifetimeCancellation.Dispose();
+            }
+
+            if (FailureList.Count > 0)
+                throw new AggregateException("[BootManager] 框架清理失败", FailureList);
         }
+
+        #endregion
     }
 }

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static MieMieFrameWork.ModuleHub;
@@ -18,9 +20,10 @@ namespace MieMieFrameWork.M_InputSystem
     /// 输入管理器 生命周期与 Map 切换
     /// </summary>
     [ManagerAttribute(9)]
-    public partial class InputManager : MonoBehaviour, IManagerBase
+    public partial class InputManager : MonoBehaviour, IManagerBase, IDisposable
     {
         private MmInputAciton inputActions;
+        private bool isDisposed;
         private InputActionRebindingExtensions.RebindingOperation rebindingOperation;
         private const string RebindsPlayerPrefsKey = "Input_Rebinds";
 
@@ -137,18 +140,40 @@ namespace MieMieFrameWork.M_InputSystem
         /// <summary>
         /// 销毁输入管理器
         /// </summary>
-        public void OnDestroy()
-        {
-            CancelRebind();
-            DisableAllInput();
-            TeardownUiCommandMap();
+        public void OnDestroy() => Dispose();
 
-            if (inputActions == null)
+        public void Dispose()
+        {
+            if (isDisposed || inputActions == null)
                 return;
 
-            UnsubscribePlayerEvents();
-            inputActions.Dispose();
+            isDisposed = true;
+            var FailureList = new List<Exception>();
+            ReleaseInput(CancelRebind, FailureList);
+            ReleaseInput(DisableAllInput, FailureList);
+            ReleaseInput(TeardownUiCommandMap, FailureList);
+            ReleaseInput(UnsubscribePlayerEvents, FailureList);
+
+            var InputActions = inputActions;
             inputActions = null;
+            CurrentMapMode = E_InputMapMode.None;
+            uiPointerOverlayEnabled = false;
+            ReleaseInput(InputActions.Dispose, FailureList);
+
+            if (FailureList.Count > 0)
+                throw new AggregateException("[InputManager] 输入清理失败", FailureList);
+        }
+
+        private static void ReleaseInput(Action release, List<Exception> failureList)
+        {
+            try
+            {
+                release();
+            }
+            catch (Exception Error)
+            {
+                failureList.Add(Error);
+            }
         }
 
         #endregion

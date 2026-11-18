@@ -8,6 +8,73 @@ namespace MieMieFrameWork.Asset
 {
     public static partial class YooAssetMgr
     {
+        private static StartupResources startupOwner;
+
+        /// <summary>
+        /// 持有根节点本轮建立的默认包绑定与资源包
+        /// </summary>
+        public sealed class StartupResources
+        {
+            private ResourcePackage acquiredPackage;
+            private bool ownsDefaultBinding;
+            private bool ownsPackage;
+
+            internal bool IsReleasing { get; private set; }
+
+            public async UniTask InitializeAsync(string packageName, int manifestTimeout,
+                ResourceUpdateConfig config, CancellationToken cancellationToken)
+            {
+                ValidateStartup(manifestTimeout, config, cancellationToken);
+                if (startupOwner != null)
+                    throw new InvalidOperationException("YooAsset 已有框架根节点持有启动资源");
+
+                startupOwner = this;
+                ownsDefaultBinding = DefaultPackage == null;
+                acquiredPackage = Initialize(packageName, out ownsPackage);
+                await InitializePackageAsync(acquiredPackage, manifestTimeout, config, cancellationToken, null);
+            }
+
+            public async UniTask ReleaseAsync()
+            {
+                if (!ReferenceEquals(startupOwner, this) || IsReleasing)
+                    return;
+
+                IsReleasing = true;
+                var Package = acquiredPackage;
+                acquiredPackage = null;
+                try
+                {
+                    if (ownsDefaultBinding && ReferenceEquals(DefaultPackage, Package))
+                    {
+                        DefaultPackage = null;
+                        IsReady = false;
+                    }
+
+                    if (!ownsPackage || !YooAssets.IsInitialized ||
+                        !YooAssets.TryGetPackage(Package.PackageName, out var RegisteredPackage) ||
+                        !ReferenceEquals(RegisteredPackage, Package))
+                        return;
+
+                    var Operation = Package.DestroyPackageAsync();
+                    await UniTask.WaitUntil(() => Operation.IsDone || !YooAssets.IsInitialized);
+                    if (!YooAssets.IsInitialized)
+                        return;
+
+                    if (Operation.Status != EOperationStatus.Succeeded)
+                        throw new InvalidOperationException($"YooAsset 释放资源包 {Package.PackageName} 失败 {Operation.Error}");
+
+                    if (YooAssets.TryGetPackage(Package.PackageName, out RegisteredPackage) &&
+                        ReferenceEquals(RegisteredPackage, Package))
+                        YooAssets.RemovePackage(Package.PackageName);
+                }
+                finally
+                {
+                    if (ReferenceEquals(startupOwner, this))
+                        startupOwner = null;
+                }
+            }
+        }
+
         /// <summary>
         /// 启动默认包 联机模式下载清单中的全部资源后开放业务加载
         /// </summary>
@@ -15,36 +82,48 @@ namespace MieMieFrameWork.Asset
             ResourceUpdateConfig config, CancellationToken cancellationToken,
             Action<DownloadProgressChangedEventArgs> downloadProgress = null)
         {
+            ValidateStartup(manifestTimeout, config, cancellationToken);
+            var Package = Initialize(packageName);
+            await InitializePackageAsync(Package, manifestTimeout, config, cancellationToken, downloadProgress);
+        }
+
+        private static void ValidateStartup(int manifestTimeout, ResourceUpdateConfig config, CancellationToken cancellationToken)
+        {
             config.Validate();
             if (manifestTimeout <= 0)
                 throw new ArgumentOutOfRangeException(nameof(manifestTimeout));
             cancellationToken.ThrowIfCancellationRequested();
-            var Package = Initialize(packageName);
+        }
+
+        private static async UniTask InitializePackageAsync(ResourcePackage package, int manifestTimeout,
+            ResourceUpdateConfig config, CancellationToken cancellationToken, Action<DownloadProgressChangedEventArgs> downloadProgress)
+        {
+            string PackageName = package.PackageName;
             if (IsReady)
                 return;
 
-            FrameLog.Info($"初始化资源包 {packageName} 模式 {config.playMode}", "Asset");
-            if (Package.InitializeStatus == EOperationStatus.None)
+            FrameLog.Info($"初始化资源包 {PackageName} 模式 {config.playMode}", "Asset");
+            if (package.InitializeStatus == EOperationStatus.None)
             {
-                var Options = CreateStartupOptions(packageName, config);
-                await WaitStartupOperation(Package.InitializePackageAsync(Options), "初始化", cancellationToken);
+                var Options = CreateStartupOptions(PackageName, config);
+                await WaitStartupOperation(package.InitializePackageAsync(Options), "初始化", cancellationToken);
             }
-            else if (Package.InitializeStatus != EOperationStatus.Succeeded)
+            else if (package.InitializeStatus != EOperationStatus.Succeeded)
             {
-                throw new InvalidOperationException($"资源包 {packageName} 不能启动 状态 {Package.InitializeStatus}");
+                throw new InvalidOperationException($"资源包 {PackageName} 不能启动 状态 {package.InitializeStatus}");
             }
 
             bool IsRemote = config.playMode == ResourcePlayMode.Host;
 #if UNITY_EDITOR
             IsRemote &= !config.simulateInEditor;
 #endif
-            var VersionOperation = Package.RequestPackageVersionAsync(new RequestPackageVersionOptions(IsRemote, manifestTimeout));
+            var VersionOperation = package.RequestPackageVersionAsync(new RequestPackageVersionOptions(IsRemote, manifestTimeout));
             await WaitStartupOperation(VersionOperation, "读取版本", cancellationToken);
-            var ManifestOperation = Package.LoadPackageManifestAsync(new LoadPackageManifestOptions(VersionOperation.PackageVersion, manifestTimeout));
+            var ManifestOperation = package.LoadPackageManifestAsync(new LoadPackageManifestOptions(VersionOperation.PackageVersion, manifestTimeout));
             await WaitStartupOperation(ManifestOperation, "加载清单", cancellationToken);
             if (IsRemote)
             {
-                var Downloader = Package.CreateResourceDownloader(new ResourceDownloaderOptions(config.downloadConcurrency, config.downloadRetryCount));
+                var Downloader = package.CreateResourceDownloader(new ResourceDownloaderOptions(config.downloadConcurrency, config.downloadRetryCount));
                 Downloader.DownloadProgressChanged += downloadProgress;
                 try
                 {
@@ -68,9 +147,9 @@ namespace MieMieFrameWork.Asset
             }
             cancellationToken.ThrowIfCancellationRequested();
             IsReady = true;
-            FrameLog.SetContext("ResourcePackage", packageName);
+            FrameLog.SetContext("ResourcePackage", PackageName);
             FrameLog.SetContext("ResourceVersion", VersionOperation.PackageVersion);
-            FrameLog.Info($"资源包就绪 {packageName} 版本 {VersionOperation.PackageVersion}", "Asset");
+            FrameLog.Info($"资源包就绪 {PackageName} 版本 {VersionOperation.PackageVersion}", "Asset");
         }
 
         private static InitializePackageOptions CreateStartupOptions(string packageName, ResourceUpdateConfig config)

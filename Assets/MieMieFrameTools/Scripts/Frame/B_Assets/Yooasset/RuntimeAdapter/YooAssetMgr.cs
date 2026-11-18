@@ -26,6 +26,7 @@ namespace MieMieFrameWork.Asset
         {
             DefaultPackage = null;
             IsReady = false;
+            startupOwner = null;
         }
 
         /// <summary>
@@ -33,14 +34,26 @@ namespace MieMieFrameWork.Asset
         /// </summary>
         public static ResourcePackage Initialize(string packageName)
         {
+            return Initialize(packageName, out _);
+        }
+
+        private static ResourcePackage Initialize(string packageName, out bool createdPackage)
+        {
+            if (startupOwner?.IsReleasing == true)
+                throw new InvalidOperationException("YooAsset 启动资源正在释放");
+
             if (DefaultPackage != null && DefaultPackage.PackageName != packageName)
                 throw new InvalidOperationException($"YooAsset 默认包已绑定 {DefaultPackage.PackageName} 不能切换为 {packageName}");
 
             if (!YooAssets.IsInitialized)
                 YooAssets.Initialize();
 
+            createdPackage = false;
             if (!YooAssets.TryGetPackage(packageName, out ResourcePackage package))
+            {
                 package = YooAssets.CreatePackage(packageName);
+                createdPackage = true;
+            }
 
             DefaultPackage = package;
             return package;

@@ -216,8 +216,8 @@ GameHub 不编排框架启动 普通业务服务由具体游戏的 Bootstrap 显
 查询与通知约定见 [游戏级流程编排](../GameFlow/README.md)
 
 业务入口在 Start 中先 await ModuleHub.Instance.ReadyTask 再组装服务
-有效 ModuleHub 销毁时清空 GameHub 注册表 普通场景切换不清空全局服务
-清空注册表不会释放业务服务的资源 业务入口仍负责注销服务并释放事件订阅
+ModuleHub 启动失败或销毁时释放本次启动持有的入口和管理器 各所有者注销自己注册的服务并释放订阅
+独立业务宿主沿用自己的销毁入口 全局 GameHub 注册表在运行会话重置时清空
 
 启动实现以 [BootManager](../../Boot/BootManager.cs) 为准
 根节点管理器与销毁实现以 [ModuleHub](../../Frame/ModuleHub.cs) 为准
