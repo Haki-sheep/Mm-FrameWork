@@ -53,6 +53,8 @@ AOT 程序集只引用公共入口协议 不引用业务热更程序集 业务 a
 
 serverOutputDirectory 是本机发布根目录 HTTP 服务须指向其平台与包名子目录 示例启动脚本按默认路径定位 改目录或端口时用 Start-LocalDemo.ps1 的 PackageDirectory 与 Port 参数 Player 地址可用 --hotupdate-url 显式覆盖 示例输出参数 --hotupdate-result=<结果文件> 与 --hotupdate-quit 用于自动化验证
 
+热更导出会将工具生成的旧 CollectAll 采集规则升级为清单过滤。输出目录顶层的 MmHot_ 与 MmAot_ 程序集字节文件按本次清单采集，移出清单的文件保留在磁盘，后续版本包会排除它们。自定义采集规则由规则所有者维护。
+
 代码与普通资源可以同一次修改并发布 codeVersion 只是代码发布标记 不直接决定 DemoEntry.CodeMarker 的显示值 资源发布版本标记包含 DLL 清单与普通资源的整包 每次构建须使用未占用的新版本 版本目录已存在时在编译前拒绝并显示本次未发布 服务器继续提供上一次成功版本 改完内容后不能重复使用旧资源版本 codeVersion 可保持不变 不需要清理客户端缓存
 
 独立工程 HotLoad 完成同一 IL2CPP Player 的 CODE_V1|RESOURCE_V1 → CODE_V1|RESOURCE_V2 → CODE_V2|RESOURCE_V2 验证 实际资源版本为 101 102 103 EXE 与 GameAssembly.dll 的 SHA256 保持不变 错误基线和损坏 DLL 均以退出码 1 拒绝且未执行业务入口 当前正常服务器版本为 103 后续发布使用未占用的新资源版本

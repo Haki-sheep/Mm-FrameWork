@@ -67,6 +67,8 @@ namespace MieMieFrameWork.HotUpdate.Editor
         {
             profile.Validate();
             ValidateResourceVersion(profile, packageVersion);
+            if (File.Exists(Path.Combine(profile.assetOutputDirectory, "MmHotUpdateManifest.json")))
+                RegisterCollector(profile);
             var Parameters = new LegacyBuildParameters
             {
                 BuildOutputRoot = profile.bundleOutputDirectory,
@@ -116,16 +118,42 @@ namespace MieMieFrameWork.HotUpdate.Editor
             var Group = Package.Groups.Find(Item => Item.GroupName == "MmHotUpdate");
             if (Group == null)
                 Group = BundleCollectorSettingData.CreateGroup(Package, "MmHotUpdate");
-            if (!Group.Collectors.Exists(Item => Item.CollectPath == profile.assetOutputDirectory))
+            var Collector = Group.Collectors.Find(Item => Item.CollectPath == profile.assetOutputDirectory);
+            if (Collector == null)
                 BundleCollectorSettingData.CreateCollector(Group, new BundleCollector
                 {
                     CollectPath = profile.assetOutputDirectory,
                     AddressRuleName = nameof(AddressByFileName),
                     PackRuleName = nameof(PackSeparately),
-                    FilterRuleName = nameof(CollectAll)
+                    FilterRuleName = nameof(CollectHotUpdateManifestFiles)
                 });
+            else if (Collector.FilterRuleName == nameof(CollectAll))
+                Collector.FilterRuleName = nameof(CollectHotUpdateManifestFiles);
             BundleCollectorSettingData.ModifyPackage(Package);
             BundleCollectorSettingData.SaveFile();
+        }
+    }
+
+    /// <summary>
+    /// 只采集当前清单使用的生成程序集 保留采集目录中的普通业务资源
+    /// </summary>
+    public sealed class CollectHotUpdateManifestFiles : IAssetFilterRule
+    {
+        public string FindAssetType => EAssetFilterType.All.ToString();
+
+        public bool IsCollectAsset(AssetFilterRuleData data)
+        {
+            string Name = Path.GetFileNameWithoutExtension(data.AssetPath);
+            bool Hot = Name.StartsWith("MmHot_", StringComparison.Ordinal);
+            bool Aot = Name.StartsWith("MmAot_", StringComparison.Ordinal);
+            if ((!Hot && !Aot) || !data.AssetPath.EndsWith(".bytes", StringComparison.Ordinal) ||
+                Path.GetDirectoryName(data.AssetPath).Replace('\\', '/') != data.CollectPath.TrimEnd('/'))
+                return true;
+
+            string ManifestPath = Path.Combine(data.CollectPath, "MmHotUpdateManifest.json");
+            var Manifest = JsonUtility.FromJson<HotUpdateManifest>(File.ReadAllText(ManifestPath));
+            HotUpdateValidation.ValidateManifest(Manifest, Manifest?.playerBuildId, Manifest?.platform);
+            return Array.Exists(Hot ? Manifest.hotAssemblyList : Manifest.aotAssemblyList, Item => Item.location == Name);
         }
     }
 }
