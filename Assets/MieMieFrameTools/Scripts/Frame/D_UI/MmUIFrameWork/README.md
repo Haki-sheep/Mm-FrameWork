@@ -31,6 +31,10 @@ UI 调用方引用 UI 程序集后可使用 `ModuleHub.GetManager<UIHub>` 原 `G
 - 新窗口绑定或初始化失败时释放实例并撤销登记
 - CloseWindowFromStack 移除并关闭指定窗口 PopWindowFromStack 隐藏栈顶并重新显示上一页
 
+## 编辑器绑定
+
+生成 UI 模板前校验全部勾选项 存在丢失节点或组件时先修正或取消勾选 才会创建或覆盖脚本
+
 ## 释放责任
 
 UIHub 实现 IDisposable 进入初始化后由 ModuleHub 逆序释放 Unity OnDestroy 也可触发同一幂等清理 释放已登记的窗口及预热根节点并作废在途请求 外置 UIRoot 由其持有者释放

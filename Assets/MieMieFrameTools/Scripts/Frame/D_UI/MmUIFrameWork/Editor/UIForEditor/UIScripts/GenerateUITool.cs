@@ -57,19 +57,18 @@ public class GenerateUITool
 
         try
         {
-            // 确保文件夹存在
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
-
             string genScriptPath = Path.Combine(folderPath, $"{className}Gen.cs");
             string genExtScriptPath = Path.Combine(folderPath, $"{className}GenPartial.cs");
             string mainScriptPath = Path.Combine(folderPath, $"{className}.cs");
 
             // 扫描预制体绑定配置
-            var uiComponents = ScanUIPrefabComponents(uiPrefab);
-            if (uiComponents.Count == 0)
+            if (!TryScanUIPrefabComponents(uiPrefab, out var UiComponents, out var InvalidBindingList))
+            {
+                ShowInvalidBindings(uiPrefab, InvalidBindingList);
+                return;
+            }
+
+            if (UiComponents.Count == 0)
             {
                 EditorUtility.DisplayDialog("错误", "没有找到任何勾选绑定项，请先在Hierarchy中勾选UIContent下的组件", "确定");
                 return;
@@ -90,8 +89,11 @@ public class GenerateUITool
                 // choice == 0 覆盖Gen文件，保留用户的.cs文件
             }
 
+            // 确保文件夹存在
+            Directory.CreateDirectory(folderPath);
+
             // 覆盖Gen文件，保留用户的.cs文件
-            GenerateGenScript(genScriptPath, uiComponents, className);
+            GenerateGenScript(genScriptPath, UiComponents, className);
 
             if (!genExtExists)
             {
@@ -100,7 +102,7 @@ public class GenerateUITool
 
             if (!mainExists)
             {
-                GenerateMainScriptTemplate(mainScriptPath, uiComponents, className);
+                GenerateMainScriptTemplate(mainScriptPath, UiComponents, className);
             }
 
             // 1 先写入待挂载 必须在任何 Refresh 之前
@@ -311,45 +313,52 @@ public class GenerateUITool
         PrefixToTypeMap = UIGenPathSettings.BuildPrefixToTypeDictionary();
     }
 
+    #region 预制体绑定扫描
+
     // 扫描UI预制体组件 - 支持多前缀解析规则
     [Obsolete]
 
-    private static List<UIComponentInfo> ScanUIPrefabComponents(GameObject uiPrefab)
+    private static bool TryScanUIPrefabComponents(GameObject uiPrefab,
+        out List<UIComponentInfo> components, out List<string> invalidBindingList)
     {
-        var components = new List<UIComponentInfo>();
+        components = new List<UIComponentInfo>();
+        invalidBindingList = new List<string>();
 
         Transform uiContent = uiPrefab.transform.Find("UIContent");
         if (uiContent == null)
         {
-            Debug.LogError("预制体中未找到UIContent");
-            return components;
+            invalidBindingList.Add("预制体中未找到 UIContent");
+            return false;
         }
 
         var bindConfig = uiPrefab.GetComponent<UIBindConfig>();
         if (bindConfig == null)
         {
             Debug.LogWarning("[GenerateUITool] 预制体未找到UIBindConfig，请先在Hierarchy中勾选绑定组件");
-            return components;
+            return true;
         }
 
         foreach (var bindItem in bindConfig.BindItemList)
         {
             if (bindItem == null)
+            {
+                invalidBindingList.Add("勾选项为空");
                 continue;
+            }
 
             Transform target = string.IsNullOrEmpty(bindItem.nodePath)
                 ? uiContent
                 : uiContent.Find(bindItem.nodePath);
             if (target == null)
             {
-                Debug.LogWarning($"[GenerateUITool] 绑定节点已丢失: {bindItem.nodePath}", uiPrefab);
+                invalidBindingList.Add($"绑定节点已丢失 {bindItem.nodePath}");
                 continue;
             }
 
             Type componentType = ResolveBindType(bindItem);
-            if (componentType == null)
+            if (componentType == null || !typeof(Component).IsAssignableFrom(componentType))
             {
-                Debug.LogWarning($"[GenerateUITool] 绑定组件类型已丢失: {bindItem.componentFullTypeName}", uiPrefab);
+                invalidBindingList.Add($"绑定组件类型无效 {bindItem.nodePath} / {bindItem.componentFullTypeName}");
                 continue;
             }
 
@@ -359,7 +368,7 @@ public class GenerateUITool
             Component componentRef = target.GetComponent(componentType);
             if (componentRef == null)
             {
-                Debug.LogWarning($"[GenerateUITool] 节点缺少绑定组件: {bindItem.nodePath} -> {componentType.Name}", target);
+                invalidBindingList.Add($"节点缺少绑定组件 {bindItem.nodePath} / {componentType.Name}");
                 continue;
             }
 
@@ -384,18 +393,32 @@ public class GenerateUITool
             });
         }
 
+        if (invalidBindingList.Count > 0)
+            return false;
+
         EnsureUniqueFieldNames(components);
         Debug.Log($"[GenerateUITool] 共扫描到 {components.Count} 个有效UI组件");
-        return components;
+        return true;
     }
+
+    private static void ShowInvalidBindings(GameObject prefab, List<string> invalidBindingList)
+    {
+        string Message = $"请修正或取消勾选以下绑定项后重新生成\n\n{string.Join("\n", invalidBindingList)}";
+        Debug.LogError($"[GenerateUITool] {Message}", prefab);
+        EditorUtility.DisplayDialog("UI 绑定无效", Message, "确定");
+    }
+
+    #endregion
 
     private static Type ResolveBindType(UIBindItem bindItem)
     {
+        if (string.IsNullOrEmpty(bindItem.componentFullTypeName))
+            return null;
+
         if (bindItem.componentFullTypeName == typeof(Transform).FullName)
             return typeof(Transform);
 
-        if (!string.IsNullOrEmpty(bindItem.componentFullTypeName) &&
-            !string.IsNullOrEmpty(bindItem.componentAssemblyName))
+        if (!string.IsNullOrEmpty(bindItem.componentAssemblyName))
         {
             var type = Type.GetType($"{bindItem.componentFullTypeName}, {bindItem.componentAssemblyName}");
             if (type != null) return type;
@@ -938,10 +961,23 @@ public class GenerateUITool
                 }
 
                 // 旧 Gen 仍在内存时会缺新字段 等重编译后再烤 避免 Pending 被提前清掉
-                List<UIComponentInfo> uiComponents = ScanUIPrefabComponents(prefabRoot);
-                for (int i = 0; i < uiComponents.Count; i++)
+                if (!TryScanUIPrefabComponents(prefabRoot, out var UiComponents, out var InvalidBindingList))
                 {
-                    if (genType.GetField(uiComponents[i].fieldName,
+                    Debug.LogError($"[GenerateUITool] 挂载失败 {prefabPath}\n{string.Join("\n", InvalidBindingList)}", prefabRoot);
+                    RemovePendingAttach(className);
+                    return false;
+                }
+
+                if (UiComponents.Count == 0)
+                {
+                    Debug.LogWarning($"[GenerateUITool] 绑定引用跳过 无有效勾选项: {prefabRoot.name}", prefabRoot);
+                    RemovePendingAttach(className);
+                    return false;
+                }
+
+                for (int i = 0; i < UiComponents.Count; i++)
+                {
+                    if (genType.GetField(UiComponents[i].fieldName,
                             System.Reflection.BindingFlags.Instance |
                             System.Reflection.BindingFlags.Public |
                             System.Reflection.BindingFlags.NonPublic) == null)
@@ -954,7 +990,12 @@ public class GenerateUITool
                     gen = uiContent.gameObject.AddComponent(genType);
                 }
 
-                BindGenSerializedReferences(prefabRoot, gen);
+                if (!BindGenSerializedReferences(gen, UiComponents))
+                {
+                    RemovePendingAttach(className);
+                    return false;
+                }
+
                 PrefabUtility.SaveAsPrefabAsset(prefabRoot, prefabPath);
                 Debug.Log($"[GenerateUITool] 已挂载并绑定引用 {className}Gen -> {prefabPath}/UIContent");
                 RemovePendingAttach(className);
@@ -995,41 +1036,24 @@ public class GenerateUITool
     /// <summary>
     /// 按 UIBindConfig 将组件引用写入 Gen 序列化字段 无运行时 Find
     /// </summary>
-    private static void BindGenSerializedReferences(GameObject prefabRoot, Component gen)
+    private static bool BindGenSerializedReferences(Component gen, List<UIComponentInfo> uiComponents)
     {
-        if (prefabRoot == null || gen == null) return;
-
-        List<UIComponentInfo> uiComponents = ScanUIPrefabComponents(prefabRoot);
-        if (uiComponents.Count == 0)
+        var SerializedGen = new SerializedObject(gen);
+        foreach (var ComponentInfo in uiComponents)
         {
-            Debug.LogWarning($"[GenerateUITool] 绑定引用跳过 无有效勾选项: {prefabRoot.name}", prefabRoot);
-            return;
-        }
-
-        SerializedObject so = new SerializedObject(gen);
-        int boundCount = 0;
-
-        foreach (var comp in uiComponents)
-        {
-            if (comp.componentRef == null)
+            var Property = SerializedGen.FindProperty(ComponentInfo.fieldName);
+            if (Property == null || Property.propertyType != SerializedPropertyType.ObjectReference)
             {
-                Debug.LogError($"[GenerateUITool] 引用为空 无法绑定字段 {comp.fieldName} path={comp.path}", prefabRoot);
-                continue;
+                Debug.LogError($"[GenerateUITool] Gen 缺少组件引用字段 {ComponentInfo.fieldName} 请重新生成脚本", gen);
+                return false;
             }
 
-            SerializedProperty prop = so.FindProperty(comp.fieldName);
-            if (prop == null)
-            {
-                Debug.LogError($"[GenerateUITool] Gen 缺少字段 {comp.fieldName} 请重新生成脚本", gen);
-                continue;
-            }
-
-            prop.objectReferenceValue = comp.componentRef;
-            boundCount++;
+            Property.objectReferenceValue = ComponentInfo.componentRef;
         }
 
-        so.ApplyModifiedPropertiesWithoutUndo();
-        Debug.Log($"[GenerateUITool] 已写入 {boundCount}/{uiComponents.Count} 个序列化引用 -> {gen.GetType().Name}");
+        SerializedGen.ApplyModifiedPropertiesWithoutUndo();
+        Debug.Log($"[GenerateUITool] 已写入 {uiComponents.Count} 个序列化引用 -> {gen.GetType().Name}");
+        return true;
     }
 
     /// <summary>
