@@ -25,6 +25,7 @@
 - 原有 MessagePack 键和文件名保持兼容 正文缺失版本时按版本 0 处理 `ArchiveMgr(rootPath)` 的最高可写版本为 0
 - 业务维护更高的版本时 启动阶段通过 `ModuleHub.GetArchive<ArchiveMgr>()` 取得核心 并在首次保存前调用 `ConfigureMaxWritableVersion(maxWritableVersion)` 声明已支持的最高版本 独立使用 `ArchiveMgr` 时按相同方式声明 迁移版本由业务模块处理
 - 保存前检查现有正文与模块回写后的版本 版本高于上限时报告失败并保留原始文件 `GetArchive` 和 `Load` 保持原有读取行为
+- 同一模块实例可以用多个类型注册 按首次注册顺序参与读写各一次 注销或替换最后一个类型后移出执行列表
 
 ## 释放责任
 

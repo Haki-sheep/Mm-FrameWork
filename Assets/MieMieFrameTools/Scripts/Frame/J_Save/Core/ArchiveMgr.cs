@@ -208,17 +208,14 @@ namespace MiMieSaver
         {
             if (module == null) throw new ArgumentNullException(nameof(module));
 
-            Type key = typeof(T);
-            if (modulesByTypeDict.TryGetValue(key, out var existing))
-            {
-                if (ReferenceEquals(existing, module))
-                    return;
+            var Key = typeof(T);
+            if (modulesByTypeDict.TryGetValue(Key, out var Existing) && ReferenceEquals(Existing, module))
+                return;
 
-                moduleOrderList.Remove(existing);
-            }
-
-            modulesByTypeDict[key] = module;
-            if (!moduleOrderList.Contains(module))
+            modulesByTypeDict[Key] = module;
+            if (Existing != null)
+                RemoveModuleIfUnregistered(Existing);
+            if (!moduleOrderList.Exists(registered => ReferenceEquals(registered, module)))
                 moduleOrderList.Add(module);
         }
 
@@ -227,13 +224,24 @@ namespace MiMieSaver
         /// </summary>
         public bool UnregisterModule<T>() where T : class, IArchiveModule
         {
-            Type key = typeof(T);
-            if (!modulesByTypeDict.TryGetValue(key, out var module))
+            var Key = typeof(T);
+            if (!modulesByTypeDict.TryGetValue(Key, out var Module))
                 return false;
 
-            modulesByTypeDict.Remove(key);
-            moduleOrderList.Remove(module);
+            modulesByTypeDict.Remove(Key);
+            RemoveModuleIfUnregistered(Module);
             return true;
+        }
+
+        private void RemoveModuleIfUnregistered(IArchiveModule module)
+        {
+            foreach (var Registered in modulesByTypeDict.Values)
+            {
+                if (ReferenceEquals(Registered, module))
+                    return;
+            }
+
+            moduleOrderList.RemoveAll(registered => ReferenceEquals(registered, module));
         }
 
         #endregion
