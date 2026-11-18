@@ -21,6 +21,7 @@ namespace MmUIFrameWork.Core
                 this.UIMask.color = new Color(0,0,0,maxAlpha);
                 //动态调整位置
                 this.UIMask.transform.SetAsLastSibling();
+                this.UIMask.gameObject.SetActive(true);
             }
             else
             {
