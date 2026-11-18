@@ -18,6 +18,9 @@ namespace MiMieSaver
         /// </summary>
         private readonly string rootPath;
 
+        /// <summary> 允许覆盖的最高存档版本 </summary>
+        private int maxWritableVersion;
+
         /// <summary>
         /// 存档槽管理器
         /// </summary>
@@ -56,6 +59,17 @@ namespace MiMieSaver
             this.rootPath = rootPath;
             Directory.CreateDirectory(rootPath);
             slotIndex = new SlotsIndexMgr(rootPath);
+        }
+
+        /// <summary>
+        /// 业务启动时按已安装模块支持的存档格式声明可写版本上限
+        /// </summary>
+        public void ConfigureMaxWritableVersion(int maxWritableVersion)
+        {
+            if (maxWritableVersion < 0)
+                throw new ArgumentOutOfRangeException(nameof(maxWritableVersion));
+
+            this.maxWritableVersion = maxWritableVersion;
         }
 
         #endregion
@@ -135,6 +149,7 @@ namespace MiMieSaver
                 throw new InvalidDataException($"存档 {path} 读取失败 已中止保存以免覆盖原存档", exception);
             }
 
+            EnsureWritableVersion(saveData, path);
             long LastSaveTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             saveData.Meta ??= new MetaSave();
             saveData.Meta.LastSaveTime = LastSaveTime;
@@ -142,6 +157,7 @@ namespace MiMieSaver
             foreach (var module in moduleOrderList)
                 module.ToArchive(saveData);
 
+            EnsureWritableVersion(saveData, path);
             AtomicFileWriter.WriteAllBytes(path, MessagePackSerializer.Serialize(saveData));
 
             slotIndex.UpdateLastSaveTime(slot.SlotId, LastSaveTime);
@@ -173,6 +189,12 @@ namespace MiMieSaver
             var slot = slotIndex.CurrentSlot;
             if (slot == null) return false;
             return File.Exists(slotIndex.GetSlotPath(slot.SlotId));
+        }
+
+        private void EnsureWritableVersion(SaveData saveData, string path)
+        {
+            if (saveData.Meta != null && saveData.Meta.Version > maxWritableVersion)
+                throw new InvalidDataException($"存档 {path} 的数据版本 {saveData.Meta.Version} 高于当前可写版本 {maxWritableVersion} 已中止保存");
         }
 
         #endregion
