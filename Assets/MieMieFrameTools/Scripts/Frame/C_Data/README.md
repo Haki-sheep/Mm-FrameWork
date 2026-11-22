@@ -63,7 +63,7 @@ var Tables = Config.Tables;
 
 同一业务对象的所有者同时负责部分组装失败后的清理 清理失败须保留初始异常 不发布就绪或成功通知
 
-GameHub 只定位服务 Clear 只解除引用 不负责 Dispose 跨模块命令与数据边界见 [DLS 架构与使用规范](../A_Frame/Business/DES/业务模块DLS架构与使用规范.md)
+GameHub 只定位服务 Clear 只解除引用 不负责 Dispose 跨模块命令与数据边界见 [DLS 架构与使用规范](../A_Frame/Business/DLS/业务模块DLS架构与使用规范.md)
 
 框架启动失败时立即解除并释放已持有的配置 不等到根节点销毁 若清理也失败则同时保留两项异常 ReadyTask 不会成功
 

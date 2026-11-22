@@ -67,4 +67,4 @@ OnInit仅创建实例时调用 OnEnter负责本轮进入 OnExit负责正常退�
 
 当前版本已通过 Unity 导入与编译检查 以及真实源码的外部行为验证 10组43项断言
 外部验证仅替换 ModuleHub 与 MonoManager 引擎适配 未执行真实 PlayMode 或 Player 构建
-业务模块约定见 [DLS架构与使用规范](../DES/业务模块DLS架构与使用规范.md)
+业务模块约定见 [DLS架构与使用规范](../DLS/业务模块DLS架构与使用规范.md)
