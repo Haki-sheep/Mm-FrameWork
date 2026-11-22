@@ -11,15 +11,15 @@ ModuleHub 创建 GameFlowManager 并在管理器初始化阶段注册 IGameFlowS
 ```csharp
 await ModuleHub.Instance.ReadyTask;
 var Flow = ModuleHub.Instance.GetManager<GameFlowManager>();
-Flow.RegisterState<MainMenuState>(EGameFlowState.MainMenu);
+Flow.RegisterState<MainMenuState>(EGameFlowState.GameMainMenu);
 Flow.RegisterState<GamingState>(EGameFlowState.Gaming);
-Flow.RegisterState<SettlementState>(EGameFlowState.Settlement);
+Flow.RegisterState<SettlementState>(EGameFlowState.GameOver);
 
 var Service = GameHub.Get<IGameFlowService>();
-Service.ChangeState(EGameFlowState.MainMenu);
+Service.ChangeState(EGameFlowState.GameMainMenu);
 ```
 
-三个默认状态只是业务扩展点 实际游戏可派生现有 StateBase 并用自己的类型注册
+示例将框架提供的三个状态类分别注册为主菜单、游玩中和游戏结束。游戏也可以派生 StateBase 并注册自己的状态类。
 一个枚举只注册一次 一个状态类型只对应一个枚举 None不作为切换目标
 注册时 FSM 创建并初始化实例 后续返回同一状态复用实例 每轮数据重置放 OnEnter
 
