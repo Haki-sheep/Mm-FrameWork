@@ -130,9 +130,9 @@ Service 是模块公共入口 实现公共接口并组装模块内部对象
 - 用 Action 回调向 Logic 注入跨模块通知出口
 - 在公共服务接口上堆 C# event 作为跨模块广播
 
-跨模块命令和查询通过 GameHub 获取 IXxxService
-跨模块状态通知由业务执行方法通过 MmGlobalEventBus.GlobalBus.Publish 发布
-消费者通过 MmGlobalEventBus.GlobalBus.Subscribe 订阅
+跨模块命令和查询通过公共服务接口调用
+业务执行方法发布状态通知 消费者在同一条事件总线上订阅
+服务实例的取得方式与事件总线的选择见[服务实例与事件范围](#服务实例与事件范围)
 
 Public/Interface 定义能做什么 Public/Event 定义会发生什么
 不要把跨模块通知做成构造函数里的 Action 委托
@@ -205,7 +205,7 @@ if (GameHub.TryGet(out IPhotoModeService PhotoModeService))
 }
 ```
 
-业务所有者释放模块时调用 GameHub.Unregister<IPlayerService>()
+业务所有者释放模块时 若 GameHub 仍指向自己注册的实例 则调用 GameHub.Unregister<IPlayerService>()
 注销顺序与资源所有权统一遵守数据模块生命周期约定
 
 GameHub 面向 Unity 主线程使用 不作为多线程依赖注入容器
@@ -222,6 +222,14 @@ ModuleHub 启动失败或销毁时释放本次启动持有的入口和管理器 
 启动实现以 [BootManager](../../Boot/BootManager.cs) 为准
 根节点管理器与销毁实现以 [ModuleHub](../../Frame/ModuleHub.cs) 为准
 数据所有权与失败清理统一见 [数据模块生命周期](../../../C_Data/README.md)
+
+### 服务实例与事件范围
+
+全游戏共享的服务按公共接口注册到 `GameHub`。同一接口需要多个实例并存时，由各自的业务所有者创建实例，传给本范围内的消费者，并在该范围结束时释放。
+
+例如当前战斗与回放重演可以各持有一份 `IBattleService`，分别维护血量和回合数。两边都通过同一接口查询各自的战斗。回放界面另外需要暂停、倍速或跳转时，再用 `IBattleReviewService` 提供这些回放控制能力。
+
+只在一场战斗内消费的事件，由该场战斗的发布者和订阅者共用一份局部 `EventBusCore`。这样回放重演一次扣血，只会通知回放的监听者。面向全游戏的通知（如当前语言变更）通过 `MmGlobalEventBus.GlobalBus` 发布和订阅。
 
 ## 6 跨模块依赖
 
@@ -333,7 +341,7 @@ DLS 的三类职责不要求每类恰好一个文件 也不要求每个模块创
 
 1. 游戏自己的 Bootstrap 在 Start 中等待框架 ReadyTask 完成
 2. 显式创建模块 Data Logic 和 Service 有独立计算需要时才组装 Calculator
-3. 需要读档时先按数据模块生命周期约定恢复 Runtime 全部就绪后按公共接口向 GameHub 注册 Service
+3. 需要读档时先按数据模块生命周期约定恢复 Runtime 就绪后将全游戏共享的 Service 按公共接口注册到 GameHub
 4. 服务消费者在业务组装完成后获取接口并订阅事件 不依赖不同组件的 Start 隐式顺序
 5. Bootstrap 退出时按所有权约定注销服务并释放资源 失败清理不发布就绪状态
 6. 消费者销毁时释放自己持有的事件订阅令牌
@@ -354,6 +362,6 @@ DLS 的三类职责不要求每类恰好一个文件 也不要求每个模块创
 - 保存策略与通知时机是否明确 失败阶段是否可观察
 - 是否将执行顺序误当作跨系统事务或自动回滚
 - Service 是否只负责组装 转发和稳定查询
-- 模块释放时是否 Unregister 对应服务 EventBus 订阅是否存在对应 Dispose
+- 模块退出时是否只注销仍指向自身实例的注册项 消费者是否释放对应的事件订阅
 - 高频路径是否缓存服务引用 跨模块流程是否只调用公共 Service
 - 是否创建了没有实际职责的空层或仅用于分类的空标记接口
