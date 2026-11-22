@@ -1,6 +1,6 @@
 namespace MieMieFrameWork.Pool
 {
-    using Sirenix.OdinInspector;
+    using MieMieFrameWork.Tools.Inspector;
     using System;
     using System.Collections.Generic;
     using UnityEngine;
@@ -19,7 +19,7 @@ namespace MieMieFrameWork.Pool
             /// 对象池根节点
             /// </summary>
             [SerializeField]
-            [LabelText("对象池根节点")]
+            [InspectorLabel("对象池根节点")]
             private Transform allGameObjectRoot;
 
             public Transform AllGameObjectRoot => allGameObjectRoot;

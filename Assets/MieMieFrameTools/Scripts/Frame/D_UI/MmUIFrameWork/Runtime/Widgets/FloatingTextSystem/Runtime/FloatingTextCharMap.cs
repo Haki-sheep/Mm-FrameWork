@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
+using MieMieFrameWork.Tools.Inspector;
 using UnityEngine;
 
 namespace MieMieUIFrameWork.UI.FloatingText
@@ -10,28 +10,28 @@ namespace MieMieUIFrameWork.UI.FloatingText
     [CreateAssetMenu(menuName = "MieMieFramework/跳字字符映射", fileName = "FloatingTextCharMap")]
     public class FloatingTextCharMap : ScriptableObject
     {
-        [LabelText("图集列数")]
+        [InspectorLabel("图集列数")]
         [SerializeField]
         private int m_Columns = 16;
 
-        [LabelText("图集行数")]
+        [InspectorLabel("图集行数")]
         [SerializeField]
         private int m_Rows = 3;
 
-        [LabelText("格子边长")]
+        [InspectorLabel("格子边长")]
         [SerializeField]
         private int m_CellSize = 64;
 
-        [LabelText("暴击符索引")]
+        [InspectorLabel("暴击符索引")]
         [SerializeField]
         private int m_CritIndex = 10;
 
-        [LabelText("字符表")]
+        [InspectorLabel("字符表")]
         [SerializeField]
         [TextArea(2, 6)]
         private string m_Charset = string.Empty;
 
-        [LabelText("索引数组")]
+        [InspectorLabel("索引数组")]
         [SerializeField]
         private ushort[] m_Indices;
 

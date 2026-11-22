@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,7 +9,7 @@ namespace MieMieFrameWork.Editor.ToolsCenter
     /// <summary>
     /// MieMie 编辑器工具中枢
     /// </summary>
-    public sealed class MieMieToolsWindow : OdinMenuEditorWindow
+    public sealed class MieMieToolsWindow : EditorWindow
     {
         #region 数据
 
@@ -155,10 +154,9 @@ namespace MieMieFrameWork.Editor.ToolsCenter
         /// <summary>
         /// 窗口启用时初始化窗口
         /// </summary>
-        protected override void OnEnable()
+        private void OnEnable()
         {
-            base.OnEnable();
-            BuildMenuTree();
+            Init();
             titleContent = new GUIContent("MieMie 工具中枢");
             minSize = new Vector2(900f, 560f);
         }
@@ -172,9 +170,9 @@ namespace MieMieFrameWork.Editor.ToolsCenter
         }
 
         /// <summary>
-        /// 窗口销毁时释放当前页面
+        /// 窗口停用时释放当前页面与样式纹理
         /// </summary>
-        protected override void OnDestroy()
+        private void OnDisable()
         {
             SelectedPage?.OnClose();
             for (int i = 0; i < TextureList.Count; i++)
@@ -184,13 +182,13 @@ namespace MieMieFrameWork.Editor.ToolsCenter
             }
 
             TextureList.Clear();
-            base.OnDestroy();
+            HeaderPanelStyle = null;
         }
 
         /// <summary>
         /// 绘制工具中枢界面
         /// </summary>
-        protected override void OnImGUI()
+        private void OnGUI()
         {
             EnsureStyles();
             DrawHeader();
@@ -205,19 +203,17 @@ namespace MieMieFrameWork.Editor.ToolsCenter
 
         #endregion
 
-        #region Odin 菜单树
+        #region 导航初始化
 
         /// <summary>
-        /// 构建工具中枢菜单树
+        /// 初始化工具页面和导航
         /// </summary>
-        protected override OdinMenuTree BuildMenuTree()
+        private void Init()
         {
             PageList = MieMieToolsPageCatalog.CreatePageList();
             HomePage = PageList.FirstOrDefault();
             SelectedPage = HomePage;
             BuildNavigationGroups();
-
-            return new OdinMenuTree(false);
         }
 
         /// <summary>

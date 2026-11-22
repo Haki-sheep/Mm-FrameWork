@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
+using MieMieFrameWork.Tools.Inspector;
 using UnityEngine;
 
 namespace MieMieFrameWork.Interaction
@@ -10,22 +10,30 @@ namespace MieMieFrameWork.Interaction
     [System.Serializable]
     public class InteractionDetector
     {
-        [SerializeField, LabelText("射线起点")]
+        [SerializeField]
+        [InspectorLabel("射线起点")]
         private Transform rayOrigin;
 
-        [SerializeField, LabelText("最大距离"), MinValue(0.1f)]
+        [SerializeField]
+        [InspectorLabel("最大距离")]
+        [Min(0.1f)]
         private float maxDistance = 3f;
 
-        [SerializeField, LabelText("投射半径"), MinValue(0.01f)]
+        [SerializeField]
+        [InspectorLabel("投射半径")]
+        [Min(0.01f)]
         private float sphereCastRadius = 0.2f;
 
-        [SerializeField, LabelText("检测 Layer")]
+        [SerializeField]
+        [InspectorLabel("检测 Layer")]
         private LayerMask interactLayer = ~0;
 
-        [SerializeField, LabelText("Trigger 检测")]
+        [SerializeField]
+        [InspectorLabel("Trigger 检测")]
         private QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.Collide;
 
-        [SerializeField, LabelText("调试投射")]
+        [SerializeField]
+        [InspectorLabel("调试投射")]
         private bool debugDraw;
 
         /// <summary>

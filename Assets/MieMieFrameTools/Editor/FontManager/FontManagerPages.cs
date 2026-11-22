@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using Sirenix.OdinInspector;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -20,28 +19,17 @@ namespace MieMieFrameWork.Localization.FontManagement
     }
 
     [Serializable]
-    [HideReferenceObjectPicker]
     public sealed class FontManagerMenuTarget
     {
         /// <summary> 所属工作台窗口 </summary>
-        [HideInInspector]
         public FontManagerWindow Window;
         /// <summary> 该菜单项绑定的 TMP </summary>
-        [HideInInspector]
         public TMP_FontAsset Font;
         /// <summary> 配置页绑定的 Profile </summary>
-        [HideInInspector]
         public FontBakeProfile BoundProfile;
         /// <summary> 右侧要画的功能页 </summary>
-        [HideInInspector]
         public FontManagerPageKind Kind;
 
-        [OnInspectorGUI]
-        private void Draw()
-        {
-            if (Window == null) return;
-            FontManagerPages.Draw(this);
-        }
     }
 
     public static class FontManagerPages

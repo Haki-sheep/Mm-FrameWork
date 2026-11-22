@@ -1,5 +1,6 @@
-using Sirenix.OdinInspector;
 using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace MieMieFrameWork.Editor.MmAssets
 {
@@ -16,25 +17,14 @@ namespace MieMieFrameWork.Editor.MmAssets
             Refresh();
         }
 
-        [Title("@TitleText", bold: true)]
-        [HideLabel, DisplayAsString]
-        [PropertyOrder(-10)]
         public string StatusLine;
 
-        [LabelText("分类")]
-        [ReadOnly, PropertyOrder(0)]
         public string Category;
 
-        [LabelText("版本")]
-        [ReadOnly, PropertyOrder(1)]
         public string Version;
 
-        [LabelText("标签")]
-        [ReadOnly, PropertyOrder(2)]
         public string Tags;
 
-        [LabelText("描述"), MultiLineProperty(4)]
-        [ReadOnly, PropertyOrder(3)]
         public string Description;
 
         public string TitleText => entry?.displayName ?? "未知模块";
@@ -62,8 +52,30 @@ namespace MieMieFrameWork.Editor.MmAssets
             return $"{install}   |   {builtIn}";
         }
 
-        [Button("编辑清单 JSON", ButtonSizes.Medium)]
-        [PropertyOrder(99)]
+        internal void Draw(VisualElement parent)
+        {
+            var Title = new Label(TitleText) { name = "module-title" };
+            Title.style.unityFontStyleAndWeight = FontStyle.Bold;
+            Title.style.fontSize = 16f;
+            Title.style.marginTop = 10f;
+            parent.Add(Title);
+            parent.Add(new Label(StatusLine));
+            AddDetail(parent, "分类", Category);
+            AddDetail(parent, "版本", Version);
+            AddDetail(parent, "标签", Tags);
+            AddDetail(parent, "描述", Description);
+            var EditButton = new Button(OpenCatalogJson) { text = "编辑清单 JSON" };
+            EditButton.style.alignSelf = Align.FlexStart;
+            parent.Add(EditButton);
+        }
+
+        private static void AddDetail(VisualElement parent, string label, string value)
+        {
+            var Detail = new Label(label + "　" + value);
+            Detail.style.whiteSpace = WhiteSpace.Normal;
+            parent.Add(Detail);
+        }
+
         private void OpenCatalogJson()
         {
             string assetPath = MmEditorPaths.EditorRoot + "/MmAssetsTopWindow/MmModuleCatalog.json";

@@ -3,13 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 
 namespace Miemie.Narrative.GraphViewFrame.Editor
 {
     /// <summary>
-    /// 按类型搜集 Graph 资产并填充 Odin 菜单树
+    /// 按类型搜集 Graph 资产并提供菜单路径
     /// 不绑定固定文件夹 SO 放哪都能被找到
     /// </summary>
     public static class GraphAssetMenuTreeUtility
@@ -19,13 +18,15 @@ namespace Miemie.Narrative.GraphViewFrame.Editor
         /// searchRoots 为空时搜索整个 Assets
         /// </summary>
         public static void AddAllAssetsByType(
-            OdinMenuTree tree,
+            Action<string, UnityEngine.Object> addEntry,
             string rootMenuName,
             Type assetType,
             string[] searchRoots = null)
         {
-            if (tree == null || assetType == null)
-                return;
+            if (addEntry == null)
+                throw new ArgumentNullException(nameof(addEntry));
+            if (assetType == null)
+                throw new ArgumentNullException(nameof(assetType));
 
             string typeName = assetType.Name;
             string[] guids = searchRoots == null || searchRoots.Length == 0
@@ -48,7 +49,7 @@ namespace Miemie.Narrative.GraphViewFrame.Editor
                 if (asset == null)
                     continue;
 
-                tree.Add(BuildMenuPath(rootMenuName, assetPath), asset);
+                addEntry(BuildMenuPath(rootMenuName, assetPath), asset);
             }
         }
 
@@ -76,7 +77,7 @@ namespace Miemie.Narrative.GraphViewFrame.Editor
             return $"{rootMenuName}/{folderMenu}/{fileName}";
         }
 
-        static string SanitizeMenuSegment(string segment) =>
+        private static string SanitizeMenuSegment(string segment) =>
             segment.Replace("/", "／").Replace("\n", " ").Replace("\r", string.Empty);
     }
 }

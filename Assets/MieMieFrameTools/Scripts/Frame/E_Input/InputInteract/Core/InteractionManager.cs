@@ -1,6 +1,6 @@
 using System;
 using MieMieFrameWork.M_InputSystem;
-using Sirenix.OdinInspector;
+using MieMieFrameWork.Tools.Inspector;
 using UnityEngine;
 using static MieMieFrameWork.ModuleHub;
 
@@ -12,7 +12,8 @@ namespace MieMieFrameWork.Interaction
     [ManagerAttribute(11)]
     public class InteractionManager : MonoBehaviour, IManagerBase, IDisposable
     {
-        [SerializeField, LabelText("射线检测")]
+        [SerializeField]
+        [InspectorLabel("射线检测")]
         private InteractionDetector detector = new();
 
         /// <summary>

@@ -1,4 +1,4 @@
-using Sirenix.OdinInspector;
+using MieMieFrameWork.Tools.Inspector;
 using UnityEngine;
 
 namespace MieMieUIFrameWork.UI.FloatingText
@@ -12,20 +12,20 @@ namespace MieMieUIFrameWork.UI.FloatingText
         private static FloatingTextManager instance;
 
         /// <summary> 跳字世界预制体 </summary>
-        [FoldoutGroup("资源")]
-        [LabelText("跳字世界预制体")]
+        [InspectorFoldout("资源")]
+        [InspectorLabel("跳字世界预制体")]
         [SerializeField]
         private FloatingTextWorld worldPrefab;
 
         /// <summary> 运行时世界实例 </summary>
-        [FoldoutGroup("资源")]
-        [LabelText("已有世界实例 可空")]
+        [InspectorFoldout("资源")]
+        [InspectorLabel("已有世界实例 可空")]
         [SerializeField]
         private FloatingTextWorld world;
 
         /// <summary> 切换场景不销毁 </summary>
-        [FoldoutGroup("生命周期")]
-        [LabelText("切换场景不销毁")]
+        [InspectorFoldout("生命周期")]
+        [InspectorLabel("切换场景不销毁")]
         [SerializeField]
         private bool dontDestroyOnLoad;
 

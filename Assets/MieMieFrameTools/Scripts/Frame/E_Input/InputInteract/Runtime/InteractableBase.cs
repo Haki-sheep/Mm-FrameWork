@@ -1,4 +1,4 @@
-using Sirenix.OdinInspector;
+using MieMieFrameWork.Tools.Inspector;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,13 +9,16 @@ namespace MieMieFrameWork.Interaction
     /// </summary>
     public class InteractableBase : MonoBehaviour, IInteractable
     {
-        [SerializeField, LabelText("提示文案")]
+        [SerializeField]
+        [InspectorLabel("提示文案")]
         private string promptText = "交互";
 
-        [SerializeField, LabelText("允许交互")]
+        [SerializeField]
+        [InspectorLabel("允许交互")]
         private bool allowInteract = true;
 
-        [SerializeField, LabelText("交互事件")]
+        [SerializeField]
+        [InspectorLabel("交互事件")]
         private UnityEvent onInteractEvent;
 
         public bool CanInteract(InteractionContext ctx)

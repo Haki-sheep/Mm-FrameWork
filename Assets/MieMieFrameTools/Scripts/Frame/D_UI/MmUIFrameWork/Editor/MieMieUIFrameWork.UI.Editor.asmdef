@@ -3,6 +3,7 @@
     "rootNamespace": "MieMieUITools.Editor",
     "references": [
         "MieMieUIFrameWork.UI",
+        "MieMieFrameWork.Inspector.Editor",
         "Unity.TextMeshPro",
         "UnityEngine.UI"
     ],

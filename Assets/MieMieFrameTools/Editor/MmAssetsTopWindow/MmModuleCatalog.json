@@ -279,15 +279,15 @@
             "id": "plugin-odin",
             "displayName": "Odin Inspector",
             "category": "插件",
-            "description": "Inspector 增强 序列化 表格与按钮系统 模块中心依赖",
-            "version": "内置",
+            "description": "可选的第三方 Inspector 与序列化工具",
+            "version": "可选",
             "installCheckPath": "Assets/MieMieFrameTools/Plugins/Sirenix/Assemblies/Sirenix.OdinInspector.Editor.dll",
             "tags": [
                 "第三方",
                 "商业",
                 "编辑器"
             ],
-            "isBuiltIn": true
+            "isBuiltIn": false
         },
         {
             "id": "plugin-epplus",

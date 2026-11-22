@@ -1,8 +1,8 @@
 namespace MieMieFrameWork
 {
     using System;
+    using MieMieFrameWork.Tools.Inspector;
     using MieMieFrameWork.Diagnostics;
-    using Sirenix.OdinInspector;
     using UnityEngine;
     using UnityEngine.Serialization;
 
@@ -18,7 +18,8 @@ namespace MieMieFrameWork
         /// UI管理器场景引用
         /// </summary>
         [FormerlySerializedAs("uICoreMgr")]
-        [SerializeField, LabelText("UI管理器")]
+        [SerializeField]
+        [InspectorLabel("UI管理器")]
         private MonoBehaviour uiCoreMgrBehaviour;
 
         /// <summary>

@@ -1,4 +1,4 @@
-using Sirenix.OdinInspector;
+using MieMieFrameWork.Tools.Inspector;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -49,119 +49,119 @@ namespace MieMieUIFrameWork.UI.FloatingText
         private static readonly int CritPopEndId = Shader.PropertyToID("_CritPopEnd");
         private static readonly int CritPopInvDurationId = Shader.PropertyToID("_CritPopInvDuration");
 
-        [FoldoutGroup("资源")]
-        [LabelText("图集")]
+        [InspectorFoldout("资源")]
+        [InspectorLabel("图集")]
         [SerializeField]
         private Texture2D m_Atlas;
 
-        [FoldoutGroup("资源")]
-        [LabelText("字符映射表")]
+        [InspectorFoldout("资源")]
+        [InspectorLabel("字符映射表")]
         [SerializeField]
         private FloatingTextCharMap m_CharMap;
 
-        [FoldoutGroup("资源")]
-        [LabelText("材质")]
+        [InspectorFoldout("资源")]
+        [InspectorLabel("材质")]
         [SerializeField]
         private Material m_Material;
 
-        [FoldoutGroup("资源")]
-        [LabelText("相机 可空则用 Main")]
+        [InspectorFoldout("资源")]
+        [InspectorLabel("相机 可空则用 Main")]
         [SerializeField]
         private Camera m_Camera;
 
-        [FoldoutGroup("容量")]
-        [LabelText("图集列数")]
+        [InspectorFoldout("容量")]
+        [InspectorLabel("图集列数")]
         [SerializeField]
         private int m_AtlasColumns = FloatingTextAtlasIds.Columns;
 
-        [FoldoutGroup("容量")]
-        [LabelText("图集行数")]
+        [InspectorFoldout("容量")]
+        [InspectorLabel("图集行数")]
         [SerializeField]
         private int m_AtlasRows = FloatingTextAtlasIds.Rows;
 
-        [FoldoutGroup("容量")]
-        [LabelText("最大同屏条数")]
+        [InspectorFoldout("容量")]
+        [InspectorLabel("最大同屏条数")]
         [SerializeField]
         private int m_MaxEntries = 102400;
 
-        [FoldoutGroup("容量")]
-        [LabelText("最大数字位数")]
+        [InspectorFoldout("容量")]
+        [InspectorLabel("最大数字位数")]
         [SerializeField]
         private int m_MaxDigits = 8;
 
-        [FoldoutGroup("字形尺寸")]
-        [LabelText("字形宽度")]
+        [InspectorFoldout("字形尺寸")]
+        [InspectorLabel("字形宽度")]
         [SerializeField]
         private float m_GlyphWidth = 0.35f;
 
-        [FoldoutGroup("字形尺寸")]
-        [LabelText("字形高度")]
+        [InspectorFoldout("字形尺寸")]
+        [InspectorLabel("字形高度")]
         [SerializeField]
         private float m_GlyphHeight = 0.45f;
 
-        [FoldoutGroup("普通跳字动画")]
-        [LabelText("持续时间 秒")]
+        [InspectorFoldout("普通跳字动画")]
+        [InspectorLabel("持续时间 秒")]
         [SerializeField]
         private float m_NormalLifetime = 0.85f;
 
-        [FoldoutGroup("普通跳字动画")]
-        [LabelText("上升速度")]
+        [InspectorFoldout("普通跳字动画")]
+        [InspectorLabel("上升速度")]
         [SerializeField]
         private float m_RiseSpeed = 1.6f;
 
-        [FoldoutGroup("普通跳字动画")]
-        [LabelText("缩放")]
+        [InspectorFoldout("普通跳字动画")]
+        [InspectorLabel("缩放")]
         [SerializeField]
         private float m_NormalScale = 1f;
 
-        [FoldoutGroup("普通跳字动画")]
-        [LabelText("颜色")]
+        [InspectorFoldout("普通跳字动画")]
+        [InspectorLabel("颜色")]
         [SerializeField]
         private Color m_NormalColor = new Color(1f, 0.92f, 0.4f, 1f);
 
-        [FoldoutGroup("暴击跳字动画")]
-        [LabelText("持续时间 秒")]
+        [InspectorFoldout("暴击跳字动画")]
+        [InspectorLabel("持续时间 秒")]
         [SerializeField]
         private float m_CritLifetime = 1.1f;
 
-        [FoldoutGroup("暴击跳字动画")]
-        [LabelText("上升速度")]
+        [InspectorFoldout("暴击跳字动画")]
+        [InspectorLabel("上升速度")]
         [SerializeField]
         private float m_CritRiseSpeed = 1.9f;
 
-        [FoldoutGroup("暴击跳字动画")]
-        [LabelText("基础缩放")]
+        [InspectorFoldout("暴击跳字动画")]
+        [InspectorLabel("基础缩放")]
         [SerializeField]
         private float m_CritScale = 1.35f;
 
-        [FoldoutGroup("暴击跳字动画")]
-        [LabelText("颜色")]
+        [InspectorFoldout("暴击跳字动画")]
+        [InspectorLabel("颜色")]
         [SerializeField]
         private Color m_CritColor = new Color(1f, 0.35f, 0.15f, 1f);
 
-        [FoldoutGroup("暴击跳字动画")]
-        [LabelText("弹出起始倍率")]
+        [InspectorFoldout("暴击跳字动画")]
+        [InspectorLabel("弹出起始倍率")]
         [SerializeField]
         private float m_CritPopStart = 1.2f;
 
-        [FoldoutGroup("暴击跳字动画")]
-        [LabelText("弹出结束倍率")]
+        [InspectorFoldout("暴击跳字动画")]
+        [InspectorLabel("弹出结束倍率")]
         [SerializeField]
         private float m_CritPopEnd = 1f;
 
-        [FoldoutGroup("暴击跳字动画")]
-        [LabelText("弹出占寿命比例")]
+        [InspectorFoldout("暴击跳字动画")]
+        [InspectorLabel("弹出占寿命比例")]
         [SerializeField]
         [Range(0.05f, 1f)]
         private float m_CritPopLifetimeRatio = 0.25f;
 
-        [FoldoutGroup("通用动画")]
-        [LabelText("水平随机偏移")]
+        [InspectorFoldout("通用动画")]
+        [InspectorLabel("水平随机偏移")]
         [SerializeField]
         private float m_HorizontalJitter = 0.35f;
 
-        [FoldoutGroup("通用动画")]
-        [LabelText("淡出曲线指数 越大越晚淡")]
+        [InspectorFoldout("通用动画")]
+        [InspectorLabel("淡出曲线指数 越大越晚淡")]
         [SerializeField]
         private float m_FadePower = 2f;
 

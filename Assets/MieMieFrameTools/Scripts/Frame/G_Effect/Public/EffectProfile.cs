@@ -1,6 +1,5 @@
 namespace MieMieFrameWork.Effects
 {
-    using Sirenix.OdinInspector;
     using UnityEngine;
 
     /// <summary>
@@ -10,7 +9,7 @@ namespace MieMieFrameWork.Effects
     public sealed class EffectProfile : ScriptableObject
     {
         /// <summary> 特效定义 全局预算与档位参数 </summary>
-        [SerializeField, InlineProperty, HideLabel]
+        [SerializeField]
         private EffectManager.EffectManagerConfig config = new EffectManager.EffectManagerConfig();
 
         public EffectManager.EffectManagerConfig Config => config;

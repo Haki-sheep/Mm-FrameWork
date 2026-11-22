@@ -63,7 +63,7 @@ UI 切换的是主字体 fallback 只用于补字 不把 fallback 插入当作�
 
 菜单 `Tools/MieMieFrameWork/工具中枢` 选择 `多语言与字体/字体管理器` 并执行操作打开完整字体工作台
 从顶点数工程的 FontManager 移植 字体烘焙 诊断 预览 优化和原位更新保持原实现
-工具位于 Editor 独立程序集 复用宿主的 Odin TMP UGUI UniTask 与 Newtonsoft 不携带第三方副本
+工具位于独立 Editor 程序集 使用 Unity 原生编辑器控件 复用宿主的 TMP UGUI UniTask 与 Newtonsoft
 烘焙配置中选择 Locale 并启用收集 Luban 语言表 可配合富文本过滤与忽略占位符收集真实文案
 占位符提供的运行时字符不在固定文案里 数字通过常用字符补充 任意用户输入应配置动态字库或明确的字符来源
 输出位于 `Assets/MieMieFrameTools/ADefaultRes/Fonts` 下的 Profiles Generated Backups

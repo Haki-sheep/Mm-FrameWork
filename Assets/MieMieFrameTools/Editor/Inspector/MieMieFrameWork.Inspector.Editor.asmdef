@@ -1,0 +1,8 @@
+{
+    "name": "MieMieFrameWork.Inspector.Editor",
+    "references": ["MieMieFrameWork.Runtime"],
+    "includePlatforms": ["Editor"],
+    "overrideReferences": true,
+    "precompiledReferences": [],
+    "autoReferenced": true
+}

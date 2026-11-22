@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sirenix.OdinInspector.Editor;
-using Sirenix.Utilities.Editor;
 using TMPro;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -11,7 +9,7 @@ using UnityEngine.TextCore.LowLevel;
 
 namespace MieMieFrameWork.Localization.FontManagement
 {
-    public sealed class FontManagerWindow : OdinMenuEditorWindow
+    public sealed partial class FontManagerWindow : EditorWindow
     {
         /// <summary> 当前烘焙配置 </summary>
         [SerializeField]
@@ -79,7 +77,6 @@ namespace MieMieFrameWork.Localization.FontManagement
         /// <summary> 候选字符码点 </summary>
         internal uint[] candidateCodes;
         TMP_FontAsset candidateTarget;
-        bool rebuildingMenu;
         GUIStyle wrappedHeading;
         GUIStyle WrappedHeading => wrappedHeading ?? (wrappedHeading = new GUIStyle(EditorStyles.boldLabel) { wordWrap = true });
 
@@ -100,139 +97,62 @@ namespace MieMieFrameWork.Localization.FontManagement
             window.Notify("已连接当前文案工作流 可导入规划文案并回填生成字体");
         }
 
-        public override float DefaultLabelWidth => 120f;
-
-        protected override void OnEnable()
+        private void OnEnable()
         {
             minSize = new Vector2(1100, 640);
             Discover();
-            DiscoverTmpAssets();
             EnsureProfile();
-            base.OnEnable();
-            MenuWidth = 240;
-            WindowPadding = new Vector4(8, 8, 0, 8);
-            UseScrollView = false;
+            RefreshMenuSelection();
             Undo.undoRedoPerformed += Invalidate;
             EditorApplication.update += Tick;
         }
 
-        protected override void OnDisable()
+        private void OnDisable()
         {
             EditorApplication.update -= Tick;
             Undo.undoRedoPerformed -= Invalidate;
             ClearPreviews();
             ClearCandidate();
-            base.OnDisable();
-        }
-
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
         }
 
         void OnSelectionChange() => Repaint();
 
         void OnProjectChange()
         {
-            DiscoverTmpAssets();
             RefreshMenuSelection();
             Invalidate();
         }
 
         #region 菜单与布局
 
-        protected override OdinMenuTree BuildMenuTree()
-        {
-            DiscoverTmpAssets();
-            var tree = new OdinMenuTree(false)
-            {
-                Config =
-                {
-                    DrawSearchToolbar = true,
-                    AutoFocusSearchBar = false,
-                    UseCachedExpandedStates = true
-                }
-            };
-            tree.DefaultMenuStyle.Height = 26;
-            tree.Selection.SupportsMultiSelect = false;
-            foreach (var tmp in tmpAssets)
-            {
-                string root = "TMP 字体/" + tmp.name;
-                tree.Add(root, Target(tmp, FontManagerPageKind.Identity), EditorIcons.Letter);
-                tree.Add(root + "/预览调参", Target(tmp, FontManagerPageKind.Preview), EditorIcons.EyeDropper);
-                tree.Add(root + "/缺失补齐", Target(tmp, FontManagerPageKind.Missing), EditorIcons.UnityInfoIcon);
-                tree.Add(root + "/性能优化", Target(tmp, FontManagerPageKind.Performance), EditorIcons.SmartPhone);
-                tree.Add(root + "/应用到 UI", Target(tmp, FontManagerPageKind.Apply), EditorIcons.File);
-            }
-            tree.Add("从源字体新建", Target(null, FontManagerPageKind.Create), EditorIcons.Plus);
-            var profiles = AssetDatabase.FindAssets("t:FontBakeProfile").Select(AssetDatabase.GUIDToAssetPath).Select(p => AssetDatabase.LoadAssetAtPath<FontBakeProfile>(p)).Where(p => p != null).ToArray();
-            foreach (var item in profiles)
-                tree.Add("配置/" + item.name, new FontManagerMenuTarget { Window = this, BoundProfile = item, Kind = FontManagerPageKind.Profile }, EditorIcons.SettingsCog);
-            tree.Add("配置/新建配置", new FontManagerMenuTarget { Window = this, Kind = FontManagerPageKind.Profile }, EditorIcons.Plus);
-            tree.Selection.SelectionChanged += OnMenuSelection;
-            return tree;
-        }
-
-        FontManagerMenuTarget Target(TMP_FontAsset font, FontManagerPageKind kind)
-        {
-            return new FontManagerMenuTarget { Window = this, Font = font, Kind = kind };
-        }
-
-        void OnMenuSelection(SelectionChangedType type)
-        {
-            if (rebuildingMenu || type == SelectionChangedType.SelectionCleared) return;
-            if (!(MenuTree.Selection.SelectedValue is FontManagerMenuTarget target)) return;
-            if (target.Kind == FontManagerPageKind.Profile)
-            {
-                if (target.BoundProfile != null && target.BoundProfile != profile)
-                {
-                    profile = target.BoundProfile;
-                    ClearCandidate();
-                    Invalidate();
-                }
-                return;
-            }
-            if (target.Font != selectedTmp) SelectTmp(target.Font);
-        }
-
-        internal void RefreshMenuSelection()
-        {
-            if (MenuTree == null) return;
-            rebuildingMenu = true;
-            try
-            {
-                ForceMenuTreeRebuild();
-                string path = selectedTmp == null ? "从源字体新建" : "TMP 字体/" + selectedTmp.name;
-                var item = MenuTree.GetMenuItem(path);
-                if (item != null) item.Select(true);
-                else TrySelectMenuItemWithObject(FindTarget(selectedTmp, selectedTmp == null ? FontManagerPageKind.Create : FontManagerPageKind.Identity));
-            }
-            finally { rebuildingMenu = false; }
-        }
-
-        FontManagerMenuTarget FindTarget(TMP_FontAsset font, FontManagerPageKind kind)
-        {
-            if (MenuTree == null) return null;
-            return MenuTree.EnumerateTree(false).Select(i => i.Value as FontManagerMenuTarget).FirstOrDefault(t => t != null && t.Font == font && t.Kind == kind);
-        }
-
-        protected override void OnImGUI()
+        private void OnGUI()
         {
             DrawToolbar();
             DrawStatusBar();
-            using (new EditorGUI.DisabledScope(EditorApplication.isPlayingOrWillChangePlaymode))
-                base.OnImGUI();
-        }
+            float LabelWidth = EditorGUIUtility.labelWidth;
+            EditorGUIUtility.labelWidth = 120f;
+            try
+            {
+                using (new EditorGUI.DisabledScope(EditorApplication.isPlayingOrWillChangePlaymode))
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    DrawNavigation();
+                    DrawEditor();
+                }
+            }
+            finally
+            {
+                EditorGUIUtility.labelWidth = LabelWidth;
+            }
 
+            ApplyNavigationSelection();
+        }
         void DrawToolbar()
         {
             using (new EditorGUILayout.HorizontalScope(EditorStyles.toolbar))
             {
                 if (GUILayout.Button("刷新列表", EditorStyles.toolbarButton, GUILayout.Width(76)))
-                {
-                    DiscoverTmpAssets();
                     RefreshMenuSelection();
-                }
                 GUILayout.FlexibleSpace();
                 GUILayout.Label("TMP 字体工作台", EditorStyles.miniLabel);
             }
@@ -248,7 +168,7 @@ namespace MieMieFrameWork.Localization.FontManagement
             GUI.Label(new Rect(rect.x + 8, rect.y + 3, rect.width - 16, rect.height - 6), label, style);
         }
 
-        protected override void DrawEditor(int index)
+        private void DrawEditor()
         {
             float maxPreview = Mathf.Max(280f, position.width - MenuWidth - 340f);
             previewPaneWidth = Mathf.Clamp(previewPaneWidth, 280f, maxPreview);
@@ -257,11 +177,11 @@ namespace MieMieFrameWork.Localization.FontManagement
             DrawPreviewPane();
             EditorGUILayout.EndVertical();
             var dragRect = GUILayoutUtility.GetRect(6f, 1f, GUILayout.Width(6f), GUILayout.ExpandHeight(true));
-            SirenixEditorGUI.DrawSolidRect(dragRect, EditorGUIUtility.isProSkin ? new Color(.12f, .12f, .12f, 1) : new Color(.55f, .55f, .55f, 1));
-            Vector2 delta = SirenixEditorGUI.SlideRect(dragRect, MouseCursor.ResizeHorizontal);
-            if (delta != Vector2.zero)
+            EditorGUI.DrawRect(dragRect, EditorGUIUtility.isProSkin ? new Color(.12f, .12f, .12f, 1) : new Color(.55f, .55f, .55f, 1));
+            float delta = ReadSplitterDelta(dragRect);
+            if (delta != 0f)
             {
-                previewPaneWidth = Mathf.Clamp(previewPaneWidth + delta.x, 280f, maxPreview);
+                previewPaneWidth = Mathf.Clamp(previewPaneWidth + delta, 280f, maxPreview);
                 Repaint();
             }
             EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
@@ -271,7 +191,7 @@ namespace MieMieFrameWork.Localization.FontManagement
                 EditorGUILayout.HelpBox("新建字体配置 或在左侧「配置」中选择已有 FontBakeProfile", MessageType.Info);
                 if (GUILayout.Button("创建第一个配置", GUILayout.Height(36))) Run(CreateProfile);
             }
-            else base.DrawEditor(index);
+            else FontManagerPages.Draw(SelectedTarget);
             EditorGUILayout.EndScrollView();
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndHorizontal();

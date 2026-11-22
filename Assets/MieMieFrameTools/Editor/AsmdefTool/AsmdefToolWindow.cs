@@ -258,8 +258,6 @@ namespace MieMieFrameWork.Editor.AsmdefTool
 
                 var editorRefList = new List<string> { runtimeAssemblyName };
                 var editorDllList = new List<string>(analyzedPrecompiledList);
-                EnsureDll(editorDllList, "Sirenix.OdinInspector.Editor.dll");
-                EnsureDll(editorDllList, "Sirenix.Utilities.Editor.dll");
 
                 if (WriteAsmdefFile(
                         editorAsmdefPath,
@@ -427,19 +425,6 @@ namespace MieMieFrameWork.Editor.AsmdefTool
                 }
                 else if (ns.StartsWith("Newtonsoft.Json", StringComparison.Ordinal))
                     precompiledHash.Add("Newtonsoft.Json.dll");
-                else if (ns.StartsWith("Sirenix.OdinInspector.Editor", StringComparison.Ordinal))
-                {
-                    precompiledHash.Add("Sirenix.OdinInspector.Attributes.dll");
-                    precompiledHash.Add("Sirenix.OdinInspector.Editor.dll");
-                    precompiledHash.Add("Sirenix.Utilities.dll");
-                    precompiledHash.Add("Sirenix.Utilities.Editor.dll");
-                }
-                else if (ns.StartsWith("Sirenix", StringComparison.Ordinal))
-                {
-                    precompiledHash.Add("Sirenix.OdinInspector.Attributes.dll");
-                    precompiledHash.Add("Sirenix.Serialization.dll");
-                    precompiledHash.Add("Sirenix.Utilities.dll");
-                }
             }
 
             // 用 CompilationPipeline 把命名空间落到已有程序集
@@ -593,15 +578,6 @@ namespace MieMieFrameWork.Editor.AsmdefTool
             // 多 Editor 目录时带上父级名避免重名
             string parentName = partList[partList.Length - 2];
             return $"{runtimeAssemblyName}.{parentName}.Editor";
-        }
-
-        /// <summary>
-        /// 确保 dll 列表含指定项
-        /// </summary>
-        private static void EnsureDll(List<string> dllList, string dllName)
-        {
-            if (!dllList.Contains(dllName))
-                dllList.Add(dllName);
         }
 
         /// <summary>

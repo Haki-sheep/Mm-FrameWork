@@ -1,5 +1,4 @@
 #if UNITY_EDITOR
-using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -47,34 +46,6 @@ namespace Miemie.Narrative.GraphViewFrame.Editor
             : new Color(0.16f, 0.44f, 0.86f, 0.45f);
 
         public static Color GraphPanelBackground => new Color(0.14f, 0.14f, 0.14f);
-
-        /// <summary>
-        /// Odin 左侧资源树菜单样式
-        /// </summary>
-        public static OdinMenuStyle CreateMenuStyle()
-        {
-            bool pro = EditorGUIUtility.isProSkin;
-            return new OdinMenuStyle
-            {
-                Height = 26,
-                Offset = 6,
-                IndentAmount = 14,
-                IconSize = 16,
-                IconPadding = 6,
-                IconOffset = 0,
-                NotSelectedIconAlpha = pro ? 0.55f : 0.75f,
-                Borders = true,
-                BorderPadding = 4,
-                BorderAlpha = pro ? 0.12f : 0.2f,
-                DrawFoldoutTriangle = true,
-                TriangleSize = 8,
-                TrianglePadding = 4,
-                SelectedColorDarkSkin = new Color(0.27f, 0.52f, 0.92f, 0.42f),
-                SelectedInactiveColorDarkSkin = new Color(0.27f, 0.52f, 0.92f, 0.22f),
-                SelectedColorLightSkin = new Color(0.24f, 0.49f, 0.90f, 0.32f),
-                SelectedInactiveColorLightSkin = new Color(0.24f, 0.49f, 0.90f, 0.18f),
-            };
-        }
 
         /// <summary>
         /// 侧栏顶栏标题

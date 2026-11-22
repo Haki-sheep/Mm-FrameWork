@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using Sirenix.OdinInspector;
+using MieMieFrameWork.Tools.Inspector;
 using static MieMieFrameWork.ModuleHub;
 
 namespace MieMieFrameWork.M_InputSystem
@@ -19,7 +19,10 @@ namespace MieMieFrameWork.M_InputSystem
     /// </summary>
     public class InputBuffer2D : MonoBehaviour, IManagerBase
     {
-        [Header("缓冲设置"), SerializeField, LabelText("默认缓冲时间"), Range(0.1f, 1f)]
+        [Header("缓冲设置")]
+        [SerializeField]
+        [InspectorLabel("默认缓冲时间")]
+        [Range(0.1f, 1f)]
         private float defaultBufferTime = 0.2f;
 
         //Buff消耗缓冲区

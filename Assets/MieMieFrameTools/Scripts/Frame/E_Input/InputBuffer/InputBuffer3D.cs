@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
+using MieMieFrameWork.Tools.Inspector;
 using UnityEngine;
 using UnityEngine.Events;
 using static MieMieFrameWork.ModuleHub;
@@ -24,8 +24,15 @@ namespace MieMieFrameWork.M_InputSystem
     {
 
         [Header("缓冲设置")]
-        [SerializeField, LabelText("默认缓冲时间"), Range(0.1f, 1f)] private float defaultBufferTime = 0.2f;
-        [SerializeField, LabelText("队列大小"), Range(1, 10)] private int maxQueueSize = 3;
+        [SerializeField]
+        [InspectorLabel("默认缓冲时间")]
+        [Range(0.1f, 1f)]
+        private float defaultBufferTime = 0.2f;
+
+        [SerializeField]
+        [InspectorLabel("队列大小")]
+        [Range(1, 10)]
+        private int maxQueueSize = 3;
         
         //Enum.GetValues是返回该枚举类型的数组 之后获取其长度
         private readonly BufferSlot[] bufferSlots = new BufferSlot[Enum.GetValues(typeof(E_InputType)).Length];

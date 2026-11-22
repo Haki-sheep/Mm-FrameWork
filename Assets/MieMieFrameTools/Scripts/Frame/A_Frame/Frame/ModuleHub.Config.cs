@@ -7,7 +7,7 @@ namespace MieMieFrameWork
     using MieMieFrameWork.Asset;
     using MieMieFrameWork.HotUpdate;
     using MieMieFrameWork.Pool;
-    using Sirenix.OdinInspector;
+    using MieMieFrameWork.Tools.Inspector;
     using UnityEngine;
 
     /// <summary>
@@ -16,49 +16,60 @@ namespace MieMieFrameWork
     public partial class ModuleHub
     {
         /// <summary> YooAsset 默认资源包 与采集器配置一致 </summary>
-        [SerializeField, LabelText("默认资源包")]
+        [SerializeField]
+        [InspectorLabel("默认资源包")]
         private string resourcePackageName = "DefaultPackage";
 
         /// <summary> 资源版本和清单请求超时秒数 </summary>
-        [SerializeField, LabelText("资源清单超时秒数")]
+        [SerializeField]
+        [InspectorLabel("资源清单超时秒数")]
         private int resourceManifestTimeout = 60;
 
         /// <summary> 资源联网更新配置 默认保留原离线启动 </summary>
         [SerializeField]
+        [InspectorLabel("资源更新配置")]
         private ResourceUpdateConfig resourceUpdateConfig = new ResourceUpdateConfig();
 
         /// <summary> 代码热更新配置 随 Player 固定基线标识 </summary>
         [SerializeField]
+        [InspectorLabel("代码热更新配置")]
         private HotUpdateConfig hotUpdateConfig = new HotUpdateConfig();
 
         /// <summary>
         /// 存档子目录名
         /// </summary>
-        [SerializeField, LabelText("存档子目录")]
+        [SerializeField]
+        [InspectorLabel("存档子目录")]
         private string archiveSubFolder = "Archives";
 
         /// <summary>
         /// 对象池管理器配置
         /// </summary>
-        [SerializeField, LabelText("对象池管理器配置")]
+        [SerializeField]
+        [InspectorLabel("对象池管理器配置")]
         private PoolManager.PoolManagerConfig poolManagerConfig = new PoolManager.PoolManagerConfig();
 
         /// <summary>
         /// 音频管理器配置
         /// </summary>
-        [SerializeField, LabelText("音频管理器配置")]
+        [SerializeField]
+        [InspectorLabel("音频管理器配置")]
         private AudioManager.AudioManagerConfig audioManagerConfig = new AudioManager.AudioManagerConfig();
 
         /// <summary> 视觉特效配置资产 启动时读取 不自动加载特效资源 </summary>
-        [SerializeField, LabelText("视觉特效配置")]
+        [SerializeField]
+        [InspectorLabel("视觉特效配置")]
         private EffectProfile effectProfile;
 
         /// <summary> 未绑定配置资产的旧根节点继续使用原内嵌配置 </summary>
-        [SerializeField, LabelText("旧版视觉特效配置"), HideIf("@effectProfile != null")]
+        [SerializeField]
+        [InspectorLabel("旧版视觉特效配置")]
+        [InspectorShowIf(nameof(effectProfile))]
         private EffectManager.EffectManagerConfig effectManagerConfig = new EffectManager.EffectManagerConfig();
 
         /// <summary> 画质档位映射与本机帧率偏好策略 </summary>
-        [SerializeField, LabelText("画质管理器配置")]
+        [SerializeField]
+        [InspectorLabel("画质管理器配置")]
         private QualityConfig qualityConfig = new QualityConfig();
 
         /// <summary> 从当前根节点获取并持有的可选配置生命周期接口 </summary>

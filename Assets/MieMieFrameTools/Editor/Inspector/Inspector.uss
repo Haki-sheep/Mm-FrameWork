@@ -1,0 +1,16 @@
+.mm-inspector-section {
+    margin-top: 4px;
+    margin-bottom: 2px;
+    padding-bottom: 2px;
+}
+
+.mm-inspector-section > .unity-foldout__toggle {
+    -unity-font-style: bold;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    background-color: rgba(128, 128, 128, 0.13);
+}
+
+.mm-inspector-readonly > .unity-text-field__input {
+    background-color: rgba(128, 128, 128, 0.10);
+}

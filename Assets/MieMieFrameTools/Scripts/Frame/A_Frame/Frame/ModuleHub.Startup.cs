@@ -1,50 +1,73 @@
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("MieMieFrameWork.Inspector.Editor")]
+
 namespace MieMieFrameWork
 {
     using System;
-    using Sirenix.OdinInspector;
+    using MieMieFrameWork.Tools.Inspector;
     using UnityEngine;
 
     public partial class ModuleHub
     {
         public enum EStartupPreset
         {
-            [LabelText("完整启动")] Full = 0,
-            [LabelText("资源和存档")] ResourcesAndArchive = 1,
-            [LabelText("自定义")] Custom = 2
+            [InspectorName("完整启动")]
+            Full = 0,
+            [InspectorName("资源和存档")]
+            ResourcesAndArchive = 1,
+            [InspectorName("自定义")]
+            Custom = 2
         }
 
         [Flags]
         public enum EStartupModules
         {
+            [InspectorName("无")]
             None = 0,
+            [InspectorName("配置")]
             Config = 1 << 0,
+            [InspectorName("代码热更新")]
             HotUpdate = 1 << 1,
+            [InspectorName("存档")]
             Archive = 1 << 2,
+            [InspectorName("画质")]
             Quality = 1 << 3,
+            [InspectorName("对象池")]
             Pool = 1 << 4,
+            [InspectorName("音频")]
             Audio = 1 << 5,
+            [InspectorName("异步任务")]
             AsyncTasks = 1 << 6,
+            [InspectorName("定时器")]
             Timers = 1 << 7,
+            [InspectorName("帧驱动")]
             FrameDriver = 1 << 8,
+            [InspectorName("特效")]
             Effects = 1 << 9,
+            [InspectorName("输入")]
             Input = 1 << 10,
+            [InspectorName("交互")]
             Interaction = 1 << 11,
+            [InspectorName("游戏流程")]
             GameFlow = 1 << 12,
+            [InspectorName("UI")]
             UI = 1 << 13,
+            [InspectorName("全部")]
             All = Config | HotUpdate | Archive | Quality | Pool | Audio | AsyncTasks | Timers |
                   FrameDriver | Effects | Input | Interaction | GameFlow | UI
         }
 
-        [SerializeField, LabelText("启动方案"), PropertyOrder(-3)]
+        [SerializeField]
+        [InspectorLabel("启动方案")]
         private EStartupPreset eStartupPreset = EStartupPreset.Full;
 
-        [SerializeField, LabelText("选用模块"), ShowIf(nameof(IsCustomStartup)), PropertyOrder(-2)]
+        [SerializeField]
+        [InspectorLabel("选用模块")]
+        [InspectorShowIf(nameof(eStartupPreset), (int)EStartupPreset.Custom)]
         private EStartupModules eSelectedModules = EStartupModules.Archive;
 
-        private bool IsCustomStartup => eStartupPreset == EStartupPreset.Custom;
-
-        [ShowInInspector, ReadOnly, LabelText("自动补入的依赖"), ShowIf(nameof(IsCustomStartup)), PropertyOrder(-1)]
-        private EStartupModules AddedDependencies => ResolveStartupModules() & ~eSelectedModules;
+        internal EStartupModules AddedDependencies => ResolveStartupModules() & ~eSelectedModules;
 
         internal EStartupModules ResolveStartupModules()
         {
