@@ -25,7 +25,7 @@ YooAssetMgr 是薄门面 负责默认资源包绑定和启动就绪校验 加载
 
 ## 启动与代码热更
 
-启动次序是资源包就绪 → 可选加载热更程序集 → 初始化配置 → 注册并初始化管理器 → 启动热更入口 → ReadyTask 完成 任一阶段失败会传播异常并中止后续阶段
+启动次序是资源包就绪 → 按方案和热更开关加载热更程序集 → 按方案初始化配置 → 注册并初始化选用的管理器 → 启动已加载的热更入口 → ReadyTask 完成 任一阶段失败会传播异常并中止后续阶段
 
 ModuleHub 的 hotUpdateConfig 默认关闭 启用时配置 playerBuildId 与 manifestLocation 默认清单地址 MmHotUpdateManifest 入口实现 IHotUpdateEntry 入口 StartAsync 执行时管理器已初始化 不能等待同一个 ModuleHub.ReadyTask
 

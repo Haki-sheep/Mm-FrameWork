@@ -10,7 +10,7 @@ Runtime 不引用 UI 程序集 不使用 UIHub 具体类型 仅沿用可选类�
 
 ## 初始化与查询
 
-1. `RegisterAllManagers` 定位已有 UIHub 未安装或场景没有组件时保留可选模块警告并跳过
+1. 选用 UI 后 `RegisterManagers` 定位已有 UIHub 未安装或场景没有组件时保留可选模块警告并跳过
 2. 已定位组件必须实现 `IManagerBase` 不符合接口时立即失败
 3. UIHub 按自身 `ManagerAttribute` 注册 优先级为十 位于输入之后与交互之前
 4. 统一管理器初始化阶段调用一次 `UIHub.Init` 再由该入口调用私有 `InitComponents` 缓存组件并创建 UIStack

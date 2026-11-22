@@ -7,9 +7,9 @@
 - `LubanTablesDataModule` 从指定本地目录加载 `cfg.Tables` 全部表并解析跨表引用 直接负责一次初始化 整份配置替换与释放 不持有全局静态状态 不依赖通用数据基类
 - `LubanConfigModule` 是根节点配置组件 不在 Awake Start 属性或 Reload 中自行初始化 保留类型供反射发现
 - `ModuleHub` 通过 `IConfigModule` 持有可选配置组件 不反向引用 Luban 程序集
-- ModuleHub 在唯一配置初始化入口优先复用同物体 `IConfigModule` 没有组件时发现已安装的 Luban 类型 并通过 `MmUnityExtension.GetOrAddComponent<IConfigModule>(Type)` 补挂 只持有接口 不需要 Inspector 拖拽槽位
+- 启动方案选用 Config 时 ModuleHub 在唯一配置初始化入口优先复用同物体 `IConfigModule` 没有组件时发现已安装的 Luban 类型 并通过 `MmUnityExtension.GetOrAddComponent<IConfigModule>(Type)` 补挂 只持有接口 不需要 Inspector 拖拽槽位
 - 配置组件必须位于同一个 FrameRoot 可以预挂或由配置阶段自动补挂 同一根节点按一个配置入口使用
-- 自建根节点没有预挂组件时 已安装 Luban 模块会自动添加 `LubanConfigModule` 并使用其默认目录 `DataTables` 只有既无同物体配置组件也未安装 Luban 模块时才跳过配置阶段
+- 已选用 Config 且根节点没有预挂组件时 已安装 Luban 模块会自动添加 `LubanConfigModule` 并使用其默认目录 `DataTables` 找不到配置实现则跳过 未选用 Config 时直接跳过整个配置阶段
 - 自定义目录仍通过预挂组件设置 已有配置实现优先使用 不覆盖其设置 缺少配置文件会使启动失败 不自动创建空表
 - 唯一调用顺序由 BootManager 编排 资源就绪 加载配置 注册管理器 初始化管理器 全部成功后完成 ReadyTask
 - 配置加载不能依赖尚未注册的管理器 配置加载失败时不会进入管理器创建与注册阶段

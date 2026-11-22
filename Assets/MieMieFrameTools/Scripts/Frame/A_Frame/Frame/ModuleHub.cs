@@ -74,6 +74,8 @@ namespace MieMieFrameWork
         /// </summary>
         public bool HasArchive => GetArchive<IArchiveMgr>() != null;
 
+        public bool HasManager<T>() where T : IManagerBase => managerDict.ContainsKey(typeof(T));
+
         /// <summary>
         /// 获取存档管理器 使用 MiMieSaver 命名空间下的 IArchiveMgr 等类型
         /// </summary>

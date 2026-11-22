@@ -4,7 +4,7 @@
 
 `MieMieFrameWork.Save.ArchiveManager` 是框架生命周期适配器 实现 `ModuleHub.IManagerBase` 与 `IDisposable`
 
-构造时只接收 `archiveSubFolder` 不创建目录 不读取索引 `RegisterAllManagers` 将适配器与音频等管理器一起入表
+选用存档时 `RegisterManagers` 构造适配器并入表 构造时只接收 `archiveSubFolder` 不创建目录 不读取索引
 
 统一 `InitManagers` 阶段按优先级调用 `Init` 存档优先级为零 早于帧代理和其他运行时管理器 此时创建原有 `MiMieSaver.ArchiveMgr`
 

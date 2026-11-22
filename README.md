@@ -6,9 +6,9 @@ Unity 游戏程序框架。共享构建列表以 `Assets/Scenes/TestScene.unity`
 
 ## 框架启动与生命周期
 
-`ModuleHub.Awake` 创建 `BootManager`。启动器依次准备 YooAsset 默认包、按配置加载热更程序集、初始化配置表、注册并初始化管理器，最后运行业务热更入口。业务代码等待 `ModuleHub.Instance.ReadyTask` 成功后再取得服务。启动异常通过同一任务传给等待者。
+`ModuleHub.Awake` 创建 `BootManager`。启动器准备 YooAsset 默认包，按本次启动方案执行热更加载、配置表初始化及管理器组装，最后运行已加载的热更入口。业务代码等待 `ModuleHub.Instance.ReadyTask` 成功后再取得服务。启动异常通过同一任务传给等待者。预设与自动补入的依赖见[框架说明](Assets/MieMieFrameTools/README.md)。
 
-管理器在 `ModuleHub.RegisterAllManagers` 显式组装。通过 `GetManager<T>()` 获取基础设施，通过 `GameHub.Get<T>()` 获取已注册的业务接口。失败或销毁时，框架逆序释放已取得的资源。业务自行建立的订阅和租约由业务持有者释放。
+管理器在 `ModuleHub.RegisterManagers` 显式组装。通过 `GetManager<T>()` 获取基础设施，通过 `GameHub.Get<T>()` 获取已注册的业务接口。失败或销毁时，框架逆序释放已取得的资源。业务自行建立的订阅和租约由业务持有者释放。
 
 Editor 默认用模拟包。离线 Player 还需把相同目标平台的真实 `DefaultPackage` 放入 `StreamingAssets/yoo`。资源构建、目录和首包配置见 [YooAsset 接入说明](Assets/MieMieFrameTools/Scripts/Frame/B_Assets/Yooasset/RuntimeAdapter/README.md)。
 

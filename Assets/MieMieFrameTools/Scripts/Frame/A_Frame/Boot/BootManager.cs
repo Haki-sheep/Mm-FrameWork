@@ -54,12 +54,13 @@ namespace MieMieFrameWork.Boot
             var CancellationToken = lifetimeCancellation.Token;
             try
             {
+                var eModules = moduleHub.ResolveStartupModules();
                 // 启动资源包
                 FrameLog.SetContext("BootStage", "Resources");
                 FrameLog.Info("开始初始化默认资源包", "Boot");
                 await startupResources.InitializeAsync(packageName, manifestTimeout, resourceConfig, CancellationToken);
                 CancellationToken.ThrowIfCancellationRequested();
-                if (codeConfig.enabled)
+                if (eModules.HasFlag(ModuleHub.EStartupModules.HotUpdate) && codeConfig.enabled)
                 {
                     FrameLog.SetContext("BootStage", "HotUpdate");
                     hotUpdateRuntime = new HotUpdateRuntime();
@@ -67,12 +68,15 @@ namespace MieMieFrameWork.Boot
                     CancellationToken.ThrowIfCancellationRequested();
                 }
                 // 初始化数据配置
-                FrameLog.SetContext("BootStage", "Config");
-                moduleHub.InitConfigModule();
+                if (eModules.HasFlag(ModuleHub.EStartupModules.Config))
+                {
+                    FrameLog.SetContext("BootStage", "Config");
+                    moduleHub.InitConfigModule();
+                }
                 CancellationToken.ThrowIfCancellationRequested();
                 // 注册管理器
                 FrameLog.SetContext("BootStage", "RegisterManagers");
-                moduleHub.RegisterAllManagers(CancellationToken);
+                moduleHub.RegisterManagers(eModules, CancellationToken);
                 CancellationToken.ThrowIfCancellationRequested();
                 // 初始化管理器
                 FrameLog.SetContext("BootStage", "Managers");

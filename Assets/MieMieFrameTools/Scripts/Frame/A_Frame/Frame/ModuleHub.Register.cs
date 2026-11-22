@@ -16,34 +16,55 @@ namespace MieMieFrameWork
     public partial class ModuleHub
     {
         /// <summary>
-        /// 按优先级顺序注册全部管理器 只入表不初始化
+        /// 只构造本次选用的管理器 按优先级入表
         /// </summary>
-        internal void RegisterAllManagers(CancellationToken cancellationToken)
+        internal void RegisterManagers(EStartupModules eModules, CancellationToken cancellationToken)
         {
-            BindUIHub();
-
             // 纯C#相关组件
             var ManagerList = new List<IManagerBase>();
-            ManagerList.Add(OwnManager(new ArchiveManager(archiveSubFolder)));
-            ManagerList.Add(OwnManager(new QualityManager(qualityConfig, MmGlobalEventBus.GlobalBus)));
-            var InstancePool = OwnManager(new PoolManager(poolManagerConfig, transform));
-            ManagerList.Add(InstancePool);
-            ManagerList.Add(OwnManager(new AudioManager(audioManagerConfig, transform)));
-            ManagerList.Add(OwnManager(new AsyncTaskManager(cancellationToken)));
-            ManagerList.Add(OwnManager(new UniTimerManager()));
+            if (eModules.HasFlag(EStartupModules.Archive))
+                ManagerList.Add(OwnManager(new ArchiveManager(archiveSubFolder)));
+            if (eModules.HasFlag(EStartupModules.Quality))
+                ManagerList.Add(OwnManager(new QualityManager(qualityConfig, MmGlobalEventBus.GlobalBus)));
+            PoolManager InstancePool = null;
+            if (eModules.HasFlag(EStartupModules.Pool))
+            {
+                InstancePool = OwnManager(new PoolManager(poolManagerConfig, transform));
+                ManagerList.Add(InstancePool);
+            }
+            if (eModules.HasFlag(EStartupModules.Audio))
+                ManagerList.Add(OwnManager(new AudioManager(audioManagerConfig, transform)));
+            if (eModules.HasFlag(EStartupModules.AsyncTasks))
+                ManagerList.Add(OwnManager(new AsyncTaskManager(cancellationToken)));
+            if (eModules.HasFlag(EStartupModules.Timers))
+                ManagerList.Add(OwnManager(new UniTimerManager()));
 
             // Mono 相关组件
-            var FrameDriver = this.GetOrAddComponent<MonoManager>();
-            ManagerList.Add(FrameDriver);
-            var EffectConfig = effectProfile != null ? effectProfile.Config : effectManagerConfig;
-            ManagerList.Add(OwnManager(new EffectManager(EffectConfig, transform, FrameDriver, InstancePool)));
-            ManagerList.Add(this.GetOrAddComponent<MieMieFrameWork.M_InputSystem.InputManager>());
-            ManagerList.Add(this.GetOrAddComponent<MieMieFrameWork.Interaction.InteractionManager>());
-            ManagerList.Add(OwnManager(new GameFlowManager(FrameDriver, MmGlobalEventBus.GlobalBus)));
+            MonoManager FrameDriver = null;
+            if (eModules.HasFlag(EStartupModules.FrameDriver))
+            {
+                FrameDriver = this.GetOrAddComponent<MonoManager>();
+                ManagerList.Add(FrameDriver);
+            }
+            if (eModules.HasFlag(EStartupModules.Effects))
+            {
+                var EffectConfig = effectProfile != null ? effectProfile.Config : effectManagerConfig;
+                ManagerList.Add(OwnManager(new EffectManager(EffectConfig, transform, FrameDriver, InstancePool)));
+            }
+            if (eModules.HasFlag(EStartupModules.Input))
+                ManagerList.Add(this.GetOrAddComponent<MieMieFrameWork.M_InputSystem.InputManager>());
+            if (eModules.HasFlag(EStartupModules.Interaction))
+                ManagerList.Add(this.GetOrAddComponent<MieMieFrameWork.Interaction.InteractionManager>());
+            if (eModules.HasFlag(EStartupModules.GameFlow))
+                ManagerList.Add(OwnManager(new GameFlowManager(FrameDriver, MmGlobalEventBus.GlobalBus)));
 
             // UI组件通过反射获取
-            if (uiCoreMgr != null)
-                ManagerList.Add(uiCoreMgr);
+            if (eModules.HasFlag(EStartupModules.UI))
+            {
+                BindUIHub();
+                if (uiCoreMgr != null)
+                    ManagerList.Add(uiCoreMgr);
+            }
 
             // 按优先级顺序注册管理器
             foreach (var Manager in ManagerList.OrderBy(GetManagerPriority))
